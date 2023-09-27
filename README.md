@@ -1,2 +1,2 @@
-# blinklink
+# Blink
 Empowering Connections, Fostering Growth
