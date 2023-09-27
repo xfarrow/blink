@@ -1,11 +1,12 @@
 /*
-**  This code is part of Blinklink
+**  This code is part of Blink
 **  licensed under GPLv3
 */
 
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
+const crypto = require('crypto');
 
 const app = express();
 const port = 3000;
@@ -38,9 +39,16 @@ app.post('/api/register', (req, res) => {
   }
 
   bcrypt.hash(userData.password, 10, (err, hashedPassword) => {
+    
     if (err) {
       console.error('Error hashing password:', err);
-    } else {
+    }
+
+    else {
+
+      // Generate activation link token
+      const activationLink = crypto.randomBytes(16).toString('hex');
+
       // Acquire a connection from the pool
       pool.connect()
       .then((client) => {
@@ -75,11 +83,12 @@ app.post('/api/register', (req, res) => {
       console.error('Error acquiring a connection from the pool:', error);
       res.status(500).json("Internal server error");
     });
-  }
-});
+    }
+
+  });
 });
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Blink API server is running on port ${port}`);
 });
