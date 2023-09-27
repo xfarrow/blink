@@ -5,10 +5,12 @@
 
 
 const express = require('express');
+const { Client } = require('pg');
+const bcrypt = require('bcrypt');
+
 const app = express();
 const port = 3000;
 
-const { Client } = require('pg');
 
 // Middleware which parses JSON for POST requests
 app.use(express.json());
