@@ -10,3 +10,5 @@ If you're a developer you can either set up your own infrastructure, or just set
 
 ## Federation
 Blink allows to create a form of federation
+
+<img src="demoimages/blink_banner.jpg">
