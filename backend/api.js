@@ -3,11 +3,16 @@
 **  licensed under GPLv3
 */
 
+// require() always returns a function
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 const crypto = require('crypto');
 
+// We can do express() because the express
+// module exports a function. Exporting a function
+// means making a JavaScript function defined in one
+// module available for use in another module.
 const app = express();
 const port = 3000;
 
