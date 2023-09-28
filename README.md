@@ -11,4 +11,6 @@ If you're a developer you can either set up your own infrastructure, or just set
 ## Federation
 Blink allows to create a form of federation
 
-<img src="demoimages/blink_banner.jpg">
+<h6>
+Footnote: This software may resemble more popular alternatives, such as Linkedin, or their open source counterparts such as vutuv (https://github.com/vutuv/vutuv), hence there should be no need to develop Blink, but I am doing it for learning purposes. Learning is fun!
+</h6>
