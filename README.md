@@ -13,6 +13,6 @@ Blink allows to create a form of federation
 
 <h6>
   
-Footnote: This software may resemble more popular alternatives, such as Linkedin, or their open source counterparts such as vutuv (https://github.com/vutuv/vutuv), hence there should be no need to develop Blink, but I am doing it for learning purposes. That's why you may encounter execcively verbose comments. Learning is fun!
+Footnote: This software may resemble more popular alternatives, such as Linkedin, or their open source counterparts such as vutuv (https://github.com/vutuv/vutuv), hence there should be no need to develop Blink, but I am doing it for learning purposes. That's why you may encounter excessively verbose comments. Learning is fun!
 
 </h6>
