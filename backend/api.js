@@ -43,6 +43,8 @@ app.post('/api/register', (req, res) => {
     return res.status(400).json("Invalid request");
   }
 
+  // The callback denoted by the arrow function is executed asynchronously
+  // from the rest of the code outside of the hash() function
   bcrypt.hash(userData.password, 10, (err, hashedPassword) => {
     
     if (err) {
