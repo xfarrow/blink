@@ -3,26 +3,26 @@
 // .then() returns a new Promise when you do "return",
 // internally calling resolve().
 
-// new Promise(function(resolve, reject) {
+new Promise(function(resolve, reject) {
 
-//     setTimeout(() => resolve(1), 1);
+    setTimeout(() => resolve(1), 1);
   
-//   }).then(function(result) {
+  }).then(function(result) {
   
-//     console.log(result);
-//     return result * 2;
+    console.log(result);
+    return result * 2;
   
-//   }).then(function(result) {
+  }).then(function(result) {
   
-//     console.log(result);
-//     return result * 2;
+    console.log(result);
+    return result * 2;
   
-//   }).then(function(result) {
+  }).then(function(result) {
   
-//     console.log(result);
-//     return result * 2;
+    console.log(result);
+    return result * 2;
   
-//   });
+  });
 
 /*
     It will print 
