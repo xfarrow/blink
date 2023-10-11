@@ -99,7 +99,7 @@ app.post('/api/register', (req, res) => {
   });
 });
 
-app.post('/api/registerv2', (req, res) => {
+app.post('/api/registerv2', async (req, res) => {
   const userData = req.body;
   
   // Ensure that the required fields are present before proceeding
@@ -107,46 +107,35 @@ app.post('/api/registerv2', (req, res) => {
     return res.status(400).json("Invalid request");
   }
 
-  bcrypt.hash(userData.password, 10)
-    .then( hashedPassword => {
-      // Generate activation link token
-      const activationLink = crypto.randomBytes(16).toString('hex');
-          // Acquire a connection from the pool
-          pool.connect()
-          .then(async (client) => {
-            // SQL query with placeholders for parameters
-            const insertQuery = `
-            INSERT INTO "User" (display_name, date_of_birth, place_of_living, is_looking_for_job, email, password)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING *`; // Return the inserted row
-      
-          try {
-              try {
-                const result = await client.query(insertQuery, [
-                  userData.display_name,
-                  userData.date_of_birth,
-                  userData.place_of_living,
-                  userData.is_looking_for_job,
-                  userData.email,
-                  hashedPassword
-                ]);
-                // Respond with the inserted user data
-                res.status(200).json(result.rows[0]);
-              } catch (error) {
-                console.error('Error inserting data:', error);
-                res.status(500).json("Internal server error");
-              }
-            } finally {
-              // Release the connection back to the pool
-              client.release();
-            }
-        })
-        .catch((error) => {
-          console.error('Error acquiring a connection from the pool:', error);
-          res.status(500).json("Internal server error");
-        });
-    });
+  const hashPasswordPromise = bcrypt.hash(userData.password, 10);
+  var client;
+  try{
+    client = await pool.connect();
+    const insertQuery = `
+      INSERT INTO "User" (display_name, date_of_birth, place_of_living, is_looking_for_job, email, password)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *`;
+    const result = await client.query(insertQuery, [
+      userData.display_name,
+      userData.date_of_birth,
+      userData.place_of_living,
+      userData.is_looking_for_job,
+      userData.email,
+      await hashPasswordPromise
+    ]);
+    res.status(200).json(result.rows[0]);
+  }
+  catch (error){
+    console.error('Error inserting data:', error);
+    res.status(500).json("Internal server error");
+  }
+  finally {
+    if (client) {
+      client.release();
+    }
+  }
 });
+
 
 // Start the server
 app.listen(port, () => {

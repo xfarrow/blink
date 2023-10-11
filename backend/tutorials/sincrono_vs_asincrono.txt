@@ -29,3 +29,4 @@ ASYNCHRONOUS
          |--------B--------|
 
 Where Process A overlaps Process B, they're running concurrently or synchronously (dictionary definition), hence the confusion. 
+
