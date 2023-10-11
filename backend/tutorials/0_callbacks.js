@@ -34,7 +34,7 @@ function entryPoint(){
     valore, in questo caso console.log("I started here!");
 
     Questo però è solo un esempio in quanto le istruzioni verranno
-    eseguite in maniera sincrona (non concorrenti), ma che ci permette di
+    eseguite in maniera sincrona, ma che ci permette di
     comprendere le basi di questo meccanismo.
     */
     

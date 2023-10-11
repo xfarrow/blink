@@ -26,6 +26,25 @@ async function f2() {
   
   f2();
 
+  // Tutto il codice nella stessa funzione (o nello stesso blocco di codice)
+  // dopo "await" è da considerarsi nel "then()" di una promessa. Pertanto dopo
+  // await, il flusso di esecuzione va fuori al blocco di codide. Ad esempio considera
+  // il seguente esempio:
+  async function exampleAsyncFunction() {
+    console.log('Before await');
+    await new Promise(function(resolve, reject) {
+        setTimeout(() => resolve("done"), 500);
+      }); // Pauses execution here until the promise resolves.
+    console.log('After await');
+  }
+  
+  console.log('Start');
+  exampleAsyncFunction();
+  console.log('End');
+
+  // Il risultato sarà:
+  // Start, Before Await, End, After await
+
   // Domande
   // 
   // Why await only works in async function in javascript?
@@ -37,3 +56,6 @@ async function f2() {
   // Si faccia presente che non è possibile creare da zero una funzione asincrona (come
   // setInterval o fetch)
   // https://stackoverflow.com/questions/61857274/how-to-create-custom-asynchronous-function-in-javascript
+  //
+  // Altra domanda interessante
+  // https://stackoverflow.com/questions/42624647/why-use-async-when-i-have-to-use-await

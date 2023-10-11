@@ -1,0 +1,31 @@
+Link utili:
+https://stackoverflow.com/questions/748175/asynchronous-vs-synchronous-execution-what-is-the-difference
+https://stackoverflow.com/questions/7131991/asynchronous-and-synchronous-terms
+
+La parola "sincrono" in contesto informatico vuol dire "sincronizzato", ovvero
+il chiamante deve aspettare la risposta del chiamato, mentre
+"async" vuol dire "non sincronizzato". 
+Ciò vuol dire (non)/sincronizzato con altre porzioni di codice.
+La definizione da dizionario invece differisce. 
+Per Treccani: "Sincrono: Che avviene nello stesso momento",
+mentre sappiamo che un'operazione sincrona rispetto ad un'altra
+non avviene allo stesso tempo.
+In informatica dire "un metodo è (a)sincrono" deve
+sempre accompagnate da "rispetto a chi" è (a)sincrono.
+
+Possiamo anche pensarla così: (https://stackoverflow.com/a/32052611/18371893)
+
+In a nutshell, synchronization refers to two or more processes' start and end points, NOT their executions. 
+In this example, Process A's endpoint is synchronized with Process B's start point:
+
+SYNCHRONOUS
+   |--------A--------|
+                     |--------B--------|
+
+Asynchronous processes, on the other hand, do not have their start and endpoints synchronized:
+
+ASYNCHRONOUS
+   |--------A--------|
+         |--------B--------|
+
+Where Process A overlaps Process B, they're running concurrently or synchronously (dictionary definition), hence the confusion. 
