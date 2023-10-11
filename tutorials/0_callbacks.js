@@ -42,3 +42,7 @@ function entryPoint(){
 }
 
 entryPoint();
+
+// callbacks usually indicate that the
+// execution of their code will continue
+// asynchronously.
