@@ -76,6 +76,7 @@ function register(req, res){
 }
 
 async function register_async(req, res){
+  console.log(process.env.DB_PASSWORD);
     const userData = req.body;
   
     // Ensure that the required fields are present before proceeding
@@ -93,7 +94,7 @@ async function register_async(req, res){
         // Inserting in "Person" table
         const userInsertQuery = `
           INSERT INTO "Person" (email, password, display_name, date_of_birth, available, enabled, place_of_living)
-          VALUES ($1, $2, $3, $4, $5, $6)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
           RETURNING id`;
   
         const userResult = await t.one(userInsertQuery, [
