@@ -14,7 +14,7 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const pgp = require('pg-promise')();
-const Pool = require('pg-pool');
+const jwt = require('jsonwebtoken');
 
 const database_configuration = {
   host: "localhost",
@@ -43,7 +43,7 @@ async function register(req, res){
 
     try{
         
-      // Begin transaction
+        // Begin transaction
         await db.tx(async (t) => {
         
           // Inserting in the "Person" table
@@ -83,10 +83,62 @@ async function register(req, res){
     }
 }
 
-function login(req, res){
+// When the user logs in, the API endpoint must generate a JWT
+async function login(req, res){
+  
+  const userData = req.body;
+      
+  // Ensure that the required fields are present before proceeding
+  if (!userData.email || !userData.password) {
+    return res.status(400).json("Invalid request");
+  }
 
+  const person = await checkUserCredentials(userData.email, userData.password);
+
+  if (person){
+    const token = generateToken(person);
+    res.status(200).json({ token });
+  }
+  else{ 
+    res.status(401).json("Unauthorized");
+  }
+}
+
+async function checkUserCredentials(email, password){
+  try {
+    const user = await db.oneOrNone('SELECT * FROM "Person" WHERE email = $1 and enabled = $2', [email, false]);
+    if(user){
+      const passwordMatches = await bcrypt.compare(password, user.password);
+      if (passwordMatches) {
+        return user;
+      }
+    }
+    return null;
+  }
+  catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+function generateToken(person) {
+  const payload = {
+    id: person.id,
+    email: person.email,
+    display_name: person.display_name,
+    date_of_birth: person.date_of_birth,
+    available: person.available,
+    enabled: person.enabled,
+    place_of_living: person.place_of_living
+  };
+
+  // const payload = person;
+
+  const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '1h' });
+  return token;
 }
 
 module.exports = {
-    register
+    register,
+    login
 };

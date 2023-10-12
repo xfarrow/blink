@@ -28,6 +28,8 @@ app.use(express.json());
 
 app.post('/blinkapi/register', api_controller.register);
 
+app.post('/blinkapi/login', api_controller.login);
+
 // Start the server
 app.listen(port, () => {
   console.log(`Blink API server is running on port ${port}`);
