@@ -4,10 +4,9 @@
 
 CREATE TABLE IF NOT EXISTS public."OrganizationPost"
 (
-    id integer NOT NULL DEFAULT nextval('"OrganizationPost_id_seq"'::regclass),
+    id SERIAL PRIMARY KEY,
     organization_id integer NOT NULL,
     content text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "OrganizationPost_pkey" PRIMARY KEY (id),
     CONSTRAINT "OrganizationIdFk" FOREIGN KEY (organization_id)
         REFERENCES public."Organization" (id) MATCH SIMPLE
         ON UPDATE CASCADE

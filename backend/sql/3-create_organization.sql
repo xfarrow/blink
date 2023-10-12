@@ -4,12 +4,11 @@
 
 CREATE TABLE IF NOT EXISTS public."Organization"
 (
-    id integer NOT NULL DEFAULT nextval('"Organization_id_seq"'::regclass),
+    id SERIAL PRIMARY KEY,
     name character varying(128) COLLATE pg_catalog."default" NOT NULL,
     location character varying COLLATE pg_catalog."default",
     description text COLLATE pg_catalog."default",
-    is_hiring boolean,
-    CONSTRAINT "Organization_pkey" PRIMARY KEY (id)
+    is_hiring boolean
 )
 
 TABLESPACE pg_default;
