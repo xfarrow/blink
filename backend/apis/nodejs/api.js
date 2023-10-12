@@ -26,7 +26,7 @@ const port = 3000;
 // Middleware which parses JSON for POST requests
 app.use(express.json());
 
-app.post('/blinkapi/register', api_controller.register_async);
+app.post('/blinkapi/register', api_controller.register);
 
 // Start the server
 app.listen(port, () => {
