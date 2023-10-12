@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const pgp = require('pg-promise')();
 const Pool = require('pg-pool');
 
-const dbConfig = {
+const database_configuration = {
   host: "localhost",
   port: 5432,
   database: "Blink",
@@ -11,10 +11,7 @@ const dbConfig = {
   password: "postgres"
 };
 
-// Create a new connection pool
-const db = pgp({
-  pool: new Pool(dbConfig),
-});
+const db = pgp(database_configuration);
 
 function register(req, res){
     const userData = req.body;
@@ -76,7 +73,7 @@ function register(req, res){
 }
 
 async function register_async(req, res){
-  console.log(process.env.DB_PASSWORD);
+
     const userData = req.body;
   
     // Ensure that the required fields are present before proceeding
@@ -89,7 +86,8 @@ async function register_async(req, res){
     const hashPasswordPromise = bcrypt.hash(userData.password, 10);
 
     try{
-        const result = await db.tx(async (t) => {
+        // Begin transaction
+        await db.tx(async (t) => {
         
         // Inserting in "Person" table
         const userInsertQuery = `
@@ -108,7 +106,7 @@ async function register_async(req, res){
         ]);
   
         const activationLinkInsertQuery = `
-          INSERT INTO "ActivationLink" (user_id, activation_code)
+          INSERT INTO "ActivationLink" (person_id, identifier)
           VALUES ($1, $2)
           RETURNING *`;
   
@@ -116,7 +114,7 @@ async function register_async(req, res){
           userResult.id,  
           activationLink,
         ]);
-        return res.status(200).json({ user: userResult, activationLink: activationLinkResult });
+        return res.status(200).json({ activationLink: activationLinkResult.identifier });
       });
     }
     catch (error){
