@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS public."Person"
     id integer NOT NULL DEFAULT nextval('"Person_id_seq"'::regclass),
     email character varying(128) COLLATE pg_catalog."default" NOT NULL,
     password character varying(128) COLLATE pg_catalog."default" NOT NULL,
-    displayname character varying(128) COLLATE pg_catalog."default" NOT NULL,
+    display_name character varying(128) COLLATE pg_catalog."default" NOT NULL,
     date_of_birth date,
     available boolean,
     enabled boolean NOT NULL DEFAULT false,
