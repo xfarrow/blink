@@ -18,7 +18,6 @@ const port = 3000;
 app.use(express.json());
 
 app.post('/blinkapi/register', api_controller.register_async);
-app.post('blinkapi/login', api_controller.login);
 
 // Start the server
 app.listen(port, () => {

@@ -1,15 +1,19 @@
 const bcrypt = require('bcrypt');
-const { Pool } = require('pg');
 const crypto = require('crypto');
+const pgp = require('pg-promise')();
+const Pool = require('pg-pool');
 
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'Blink',
-    password: 'postgres',
-    port: 5432,
-    max: 10, 
-    idleTimeoutMillis: 30000,
+const dbConfig = {
+  host: "localhost",
+  port: 5432,
+  database: "Blink",
+  user: "postgres",
+  password: "postgres"
+};
+
+// Create a new connection pool
+const db = pgp({
+  pool: new Pool(dbConfig),
 });
 
 function register(req, res){
@@ -81,33 +85,42 @@ async function register_async(req, res){
 
     // Generate activation link token
     const activationLink = crypto.randomBytes(16).toString('hex');
-
     const hashPasswordPromise = bcrypt.hash(userData.password, 10);
-    var client;
+
     try{
-      client = await pool.connect();
-      const insertQuery = `
-        INSERT INTO "User" (display_name, date_of_birth, place_of_living, is_looking_for_job, email, password)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *`;
-      const result = await client.query(insertQuery, [
-        userData.display_name,
-        userData.date_of_birth,
-        userData.place_of_living,
-        userData.is_looking_for_job,
-        userData.email,
-        await hashPasswordPromise
-      ]);
-      res.status(200).json(result.rows[0]);
+        const result = await db.tx(async (t) => {
+        
+        // Inserting in "Person" table
+        const userInsertQuery = `
+          INSERT INTO "Person" (email, password, display_name, date_of_birth, available, enabled, place_of_living)
+          VALUES ($1, $2, $3, $4, $5, $6)
+          RETURNING id`;
+  
+        const userResult = await t.one(userInsertQuery, [
+          userData.email,
+          await hashPasswordPromise,
+          userData.display_name,
+          userData.date_of_birth,
+          userData.available,
+          false,
+          userData.place_of_living
+        ]);
+  
+        const activationLinkInsertQuery = `
+          INSERT INTO "ActivationLink" (user_id, activation_code)
+          VALUES ($1, $2)
+          RETURNING *`;
+  
+        const activationLinkResult = await t.one(activationLinkInsertQuery, [
+          userResult.id,  
+          activationLink,
+        ]);
+        return res.status(200).json({ user: userResult, activationLink: activationLinkResult });
+      });
     }
     catch (error){
       console.error('Error inserting data:', error);
       res.status(500).json("Internal server error");
-    }
-    finally {
-      if (client) {
-        client.release();
-      }
     }
 }
 
@@ -116,6 +129,5 @@ function login(req, res){
 }
 
 module.exports = {
-    register_async,
-    login
+    register_async
 };
