@@ -21,9 +21,14 @@ const port = process.env.API_SERVER_PORT;
 // Middleware which parses JSON for POST requests
 app.use(express.json());
 
+// Register a Person
 app.post('/blinkapi/register', api_controller.register);
+// Login
 app.post('/blinkapi/login', api_controller.login);
+// Obtain Person's details
 app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.person);
+// Create organization
+app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.organization);
 
 // Start the server
 app.listen(port, () => {

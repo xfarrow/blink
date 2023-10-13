@@ -124,6 +124,53 @@ async function person(req, res){
   }
 }
 
+// POST
+async function organization(req, res){
+  const organizationData = req.body;
+  
+  // Ensure that the required fields are present before proceeding
+  if (!organizationData.name) {
+    return res.status(400).json("Invalid request.");
+  }
+
+  try{
+        
+    // Begin transaction
+    await db.tx(async (t) => {
+    
+      // Inserting in the "Organization" table
+      const OrganizationInsertQuery = `
+        INSERT INTO "Organization" (name, location, description, is_hiring)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *`;
+
+      const organizationResult = await t.one(OrganizationInsertQuery, [
+        organizationData.name,
+        organizationData.location,
+        organizationData.description,
+        organizationData.is_hiring
+      ]);
+
+      // Inserting in the "OrganizationAdministrator" table
+      const OrganizationAdministratorInsertQuery = `
+        INSERT INTO "OrganizationAdministrator" (id_person, id_organization)
+        VALUES ($1, $2)`;
+
+      await t.none(OrganizationAdministratorInsertQuery, [
+        req.jwt.person_id,
+        organizationResult.id
+      ]);
+
+      return res.status(200).json({ "Organization" : organizationResult});
+
+    });
+  }
+  catch (error){
+    console.error('Error inserting data:', error);
+    res.status(500).json("Internal server error");
+  }
+}
+
 // ======== END API ENDPOINTS ========
 
 async function checkUserCredentials(email, password){
@@ -178,5 +225,6 @@ module.exports = {
     register,
     login,
     person,
-    verifyToken
+    verifyToken,
+    organization
 };
