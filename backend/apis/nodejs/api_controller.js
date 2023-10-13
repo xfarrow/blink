@@ -188,6 +188,34 @@ async function deleteOrganization(req, res){
   }
 }
 
+// POST
+async function createOrganizationPost(req, res){
+  const organizationPostData = req.body;
+  
+  // Ensure that the required fields are present before proceeding
+  if (!organizationPostData.organization_id || !organizationPostData.content) {
+    return res.status(400).json("Invalid request.");
+  }
+
+  try {
+    if (await isPersonOrganizationAdmin(req.jwt.person_id, organizationPostData.organization_id)){
+      const organizationPost = await db.one('INSERT INTO "OrganizationPost" (organization_id, content) VALUES ($1, $2) RETURNING *', 
+                                            [organizationPostData.organization_id, organizationPostData.content]);
+      if(organizationPost){
+        return res.status(200).json(organizationPost);
+      }
+      else{
+        return res.status(500).json("Internal server error");
+      }
+    }
+    else{
+      return res.status(401).json("Forbidden");
+    }
+  } catch (error) {
+    return res.status(500).json("Internal server error");
+  }
+}
+
 // ======== END API ENDPOINTS ========
 
 async function checkUserCredentials(email, password){
@@ -256,5 +284,6 @@ module.exports = {
     getPerson,
     verifyToken,
     createOrganization,
-    deleteOrganization
+    deleteOrganization,
+    createOrganizationPost
 };

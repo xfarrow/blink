@@ -22,6 +22,7 @@ app.post('/blinkapi/login', api_controller.login); // Login
 app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.getPerson); // Obtain Person's details
 app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.createOrganization); // Create organization
 app.delete('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization); // Delete organization
+app.post('/blinkapi/organization/post', api_controller.verifyToken, api_controller.createOrganizationPost); // Create a organization's post
 
 // Start the server
 app.listen(process.env.API_SERVER_PORT, () => {
