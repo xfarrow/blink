@@ -1,5 +1,4 @@
 /*
-
     This code is part of Blink
     licensed under GPLv3
 
@@ -8,24 +7,27 @@
     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
     THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+    IN THE SOFTWARE.
 */
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const pgp = require('pg-promise')();
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const database_configuration = {
-  host: "localhost",
-  port: 5432,
+  host: process.env.POSTGRES_SERVER,
+  port: process.env.POSTGRES_PORT,
   database: "Blink",
-  user: "postgres",
-  password: "postgres"
+  user: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD
 };
-
 const db = pgp(database_configuration);
 
+// ======== API ENDPOINTS ========
+
+// POST
 async function register(req, res){
 
     const userData = req.body;
@@ -83,7 +85,7 @@ async function register(req, res){
     }
 }
 
-// When the user logs in, the API endpoint must generate a JWT
+// POST
 async function login(req, res){
   
   const userData = req.body;
@@ -96,13 +98,33 @@ async function login(req, res){
   const person = await checkUserCredentials(userData.email, userData.password);
 
   if (person){
-    const token = generateToken(person);
+    const token = generateToken(person.id);
     res.status(200).json({ token });
   }
   else{ 
     res.status(401).json("Unauthorized");
   }
 }
+
+// GET
+async function person(req, res){
+  try {
+    const user = await db.oneOrNone('SELECT * FROM "Person" WHERE id = $1 and enabled = $2' , [req.params.id, false]);
+    
+    if(user){
+      if(user.id == req.jwt.person_id || user.active == true){
+        return res.status(200).send(user);
+      }
+    }
+    return res.status(403);
+  }
+  catch (error) {
+    console.log(error);
+    return res.status(500);
+  }
+}
+
+// ======== END API ENDPOINTS ========
 
 async function checkUserCredentials(email, password){
   try {
@@ -121,24 +143,40 @@ async function checkUserCredentials(email, password){
   }
 }
 
-function generateToken(person) {
+function generateToken(person_id) {
   const payload = {
-    id: person.id,
-    email: person.email,
-    display_name: person.display_name,
-    date_of_birth: person.date_of_birth,
-    available: person.available,
-    enabled: person.enabled,
-    place_of_living: person.place_of_living
+    person_id: person_id
   };
-
-  // const payload = person;
 
   const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '1h' });
   return token;
 }
 
+// Middlware
+function verifyToken(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(403).send('No token provided');
+  }
+
+  jwt.verify(token, 'your-secret-key', (err, decoded) => {
+    if (err) {
+      return res.status(401).send('Failed to authenticate token');
+    }
+
+    // If the token is valid, store the decoded data in the request object
+    req.jwt = decoded;
+    next();
+  });
+}
+
+// Exporting a function
+// means making a JavaScript function defined in one
+// module available for use in another module.
 module.exports = {
     register,
-    login
+    login,
+    person,
+    verifyToken
 };
