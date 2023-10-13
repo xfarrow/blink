@@ -28,7 +28,7 @@ const db = pgp(database_configuration);
 // ======== API ENDPOINTS ========
 
 // POST
-async function register(req, res){
+async function registerPerson(req, res){
 
     const userData = req.body;
   
@@ -107,7 +107,7 @@ async function login(req, res){
 }
 
 // GET
-async function person(req, res){
+async function getPerson(req, res){
   try {
     const user = await db.oneOrNone('SELECT * FROM "Person" WHERE id = $1 and enabled = $2' , [req.params.id, false]);
     
@@ -125,7 +125,7 @@ async function person(req, res){
 }
 
 // POST
-async function organization(req, res){
+async function createOrganization(req, res){
   const organizationData = req.body;
   
   // Ensure that the required fields are present before proceeding
@@ -171,11 +171,28 @@ async function organization(req, res){
   }
 }
 
+// DELETE
+async function deleteOrganization(req, res){
+  const organizationIdToDelete = req.params.id;
+
+  try {
+    if(await isPersonOrganizationAdmin(req.jwt.person_id, organizationIdToDelete)){
+      await db.none('DELETE FROM "Organization" WHERE id = $1', [organizationIdToDelete]);
+      return res.status(200).json("Ok");
+    }
+    return res.status(403).json("Forbidden");
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500);
+  }
+}
+
 // ======== END API ENDPOINTS ========
 
 async function checkUserCredentials(email, password){
   try {
-    const user = await db.oneOrNone('SELECT * FROM "Person" WHERE email = $1 and enabled = $2', [email, false]);
+    const user = await db.oneOrNone('SELECT * FROM "Person" WHERE email = $1 and enabled = $2', [email, true]);
     if(user){
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (passwordMatches) {
@@ -187,6 +204,18 @@ async function checkUserCredentials(email, password){
   catch (error) {
     console.log(error);
     return null;
+  }
+}
+
+async function isPersonOrganizationAdmin(personId, organizationId){
+  try {
+    if(await db.oneOrNone('SELECT * FROM "OrganizationAdministrator" WHERE id_person = $1 AND id_organization = $2', [personId, organizationId])){
+      return true;
+    }
+    return false;
+  }
+  catch (error) {
+    return false;
   }
 }
 
@@ -222,9 +251,10 @@ function verifyToken(req, res, next) {
 // means making a JavaScript function defined in one
 // module available for use in another module.
 module.exports = {
-    register,
+    registerPerson,
     login,
-    person,
+    getPerson,
     verifyToken,
-    organization
+    createOrganization,
+    deleteOrganization
 };

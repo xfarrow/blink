@@ -22,14 +22,15 @@ const port = process.env.API_SERVER_PORT;
 app.use(express.json());
 
 // Register a Person
-app.post('/blinkapi/register', api_controller.register);
+app.post('/blinkapi/register', api_controller.registerPerson);
 // Login
 app.post('/blinkapi/login', api_controller.login);
 // Obtain Person's details
-app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.person);
+app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.getPerson);
 // Create organization
-app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.organization);
-
+app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.createOrganization);
+// Delete organization
+app.delete('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization);
 // Start the server
 app.listen(port, () => {
   console.log(`Blink API server is running on port ${port}`);
