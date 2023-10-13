@@ -16,22 +16,14 @@ const api_controller = require('./api_controller.js');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.API_SERVER_PORT;
+app.use(express.json()); // Middleware which parses JSON for POST requests
+app.post('/blinkapi/register', api_controller.registerPerson); // Register a Person
+app.post('/blinkapi/login', api_controller.login); // Login
+app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.getPerson); // Obtain Person's details
+app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.createOrganization); // Create organization
+app.delete('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization); // Delete organization
 
-// Middleware which parses JSON for POST requests
-app.use(express.json());
-
-// Register a Person
-app.post('/blinkapi/register', api_controller.registerPerson);
-// Login
-app.post('/blinkapi/login', api_controller.login);
-// Obtain Person's details
-app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.getPerson);
-// Create organization
-app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.createOrganization);
-// Delete organization
-app.delete('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization);
 // Start the server
-app.listen(port, () => {
-  console.log(`Blink API server is running on port ${port}`);
+app.listen(process.env.API_SERVER_PORT, () => {
+  console.log(`Blink API server is running on port ${process.env.API_SERVER_PORT}`);
 });
