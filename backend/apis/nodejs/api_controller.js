@@ -31,6 +31,10 @@ const jwt = require('jsonwebtoken');
 // POST
 async function registerPerson(req, res){
   
+    if (process.env.ALLOW_USER_REGISTRATION === 'false'){
+      return res.status(403).json({error : "Users cannot register on this server"});
+    }
+
     // Ensure that the required fields are present before proceeding
     if (!req.body.display_name || !req.body.email || !req.body.password) {
       return res.status(400).json("Invalid request.");
@@ -54,7 +58,8 @@ async function registerPerson(req, res){
               date_of_birth: req.body.date_of_birth,
               available: req.body.available,
               enabled: true,
-              place_of_living: req.body.place_of_living})
+              place_of_living: req.body.place_of_living
+            })
             .returning("id");
   
           await tr('ActivationLink')
