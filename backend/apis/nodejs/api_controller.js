@@ -12,7 +12,7 @@
 */
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const pgp = require('pg-promise')();
+const pgp = require('pg-promise')(); // In the future I'd like to use knex.js to avoid raw sql
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -116,11 +116,11 @@ async function getPerson(req, res){
         return res.status(200).send(user);
       }
     }
-    return res.status(403);
+    return res.status(403).json("Forbidden");
   }
   catch (error) {
     console.log(error);
-    return res.status(500);
+    return res.status(500).json("Internal server error");
   }
 }
 
@@ -184,7 +184,7 @@ async function deleteOrganization(req, res){
   }
   catch (error) {
     console.error(error);
-    return res.status(500);
+    return res.status(500).json("Internal server error");
   }
 }
 
@@ -212,6 +212,30 @@ async function createOrganizationPost(req, res){
       return res.status(401).json("Forbidden");
     }
   } catch (error) {
+    return res.status(500).json("Internal server error");
+  }
+}
+
+// DELETE
+async function deleteOrganizationPost(req, res){
+  const organizationPostIdToDelete = req.params.id;
+  try {
+    if(await db.oneOrNone(' SELECT *' +
+                          ' FROM "OrganizationPost"' +
+                          ' JOIN "OrganizationAdministrator"' +
+                          ' ON "OrganizationPost".organization_id = "OrganizationAdministrator".id_organization' +
+                          ' WHERE "OrganizationPost".id = $1 and "OrganizationAdministrator".id_person = $2', 
+                          [organizationPostIdToDelete, req.jwt.person_id])){
+      await db.none('DELETE FROM "OrganizationPost" WHERE id = $1', [organizationPostIdToDelete]);
+      return res.status(200).json("Ok");
+    }
+    else{
+      return res.status(403).json("Forbidden");
+    }
+
+  }
+  catch (error) {
+    console.error(error);
     return res.status(500).json("Internal server error");
   }
 }
@@ -285,5 +309,6 @@ module.exports = {
     verifyToken,
     createOrganization,
     deleteOrganization,
-    createOrganizationPost
+    createOrganizationPost,
+    deleteOrganizationPost
 };
