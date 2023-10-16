@@ -30,11 +30,9 @@ const jwt = require('jsonwebtoken');
 
 // POST
 async function registerPerson(req, res){
-
-    const userData = req.body;
   
     // Ensure that the required fields are present before proceeding
-    if (!userData.display_name || !userData.email || !userData.password) {
+    if (!req.body.display_name || !req.body.email || !req.body.password) {
       return res.status(400).json("Invalid request.");
     }
 
@@ -42,7 +40,7 @@ async function registerPerson(req, res){
     const activationLink = crypto.randomBytes(16).toString('hex');
 
     // Hash provided password
-    const hashPasswordPromise = bcrypt.hash(userData.password, 10);
+    const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
 
     try{
         // Begin transaction
@@ -50,13 +48,13 @@ async function registerPerson(req, res){
           
           const personIdResult = await tr('Person')
             .insert({ 
-              email: userData.email, 
+              email: req.body.email, 
               password: await hashPasswordPromise,
-              display_name: userData.display_name,
-              date_of_birth: userData.date_of_birth,
-              available: userData.available,
+              display_name: req.body.display_name,
+              date_of_birth: req.body.date_of_birth,
+              available: req.body.available,
               enabled: true,
-              place_of_living: userData.place_of_living})
+              place_of_living: req.body.place_of_living})
             .returning("id");
   
           await tr('ActivationLink')
@@ -75,15 +73,12 @@ async function registerPerson(req, res){
 
 // POST
 async function login(req, res){
-  
-  const userData = req.body;
-      
   // Ensure that the required fields are present before proceeding
-  if (!userData.email || !userData.password) {
+  if (!req.body.email || !req.body.password) {
     return res.status(400).json("Invalid request");
   }
 
-  const person = await checkUserCredentials(userData.email, userData.password);
+  const person = await checkUserCredentials(req.body.email, req.body.password);
 
   if (person){
     const token = generateToken(person.id);
@@ -117,10 +112,9 @@ async function getPerson(req, res){
 
 // POST
 async function createOrganization(req, res){
-  const organizationData = req.body;
   
   // Ensure that the required fields are present before proceeding
-  if (!organizationData.name) {
+  if (!req.body.name) {
     return res.status(400).json("Invalid request.");
   }
 
@@ -128,10 +122,10 @@ async function createOrganization(req, res){
     knex.transaction(async (trx) => {
       const organizationResult = await trx('Organization')
         .insert({
-          name: organizationData.name,
-          location: organizationData.location,
-          description: organizationData.description,
-          is_hiring: organizationData.is_hiring,
+          name: req.body.name,
+          location: req.body.location,
+          description: req.body.description,
+          is_hiring: req.body.is_hiring,
         })
         .returning('*');
 
@@ -174,19 +168,18 @@ async function deleteOrganization(req, res){
 
 // POST
 async function createOrganizationPost(req, res){
-  const organizationPostData = req.body;
   
   // Ensure that the required fields are present before proceeding
-  if (!organizationPostData.organization_id || !organizationPostData.content) {
+  if (!req.body.organization_id || !req.body.content) {
     return res.status(400).json("Invalid request.");
   }
 
   try {
-    if (await isPersonOrganizationAdmin(req.jwt.person_id, organizationPostData.organization_id)){
+    if (await isPersonOrganizationAdmin(req.jwt.person_id, req.body.organization_id)){
       const organizationPost = await knex('OrganizationPost')
         .insert({
-          organization_id: organizationPostData.organization_id,
-          content: organizationPostData.content,
+          organization_id: req.body.organization_id,
+          content: req.body.content,
         })
         .returning('*');
         return res.status(200).json(organizationPost[0]);
@@ -266,7 +259,7 @@ async function isPersonOrganizationAdmin(personId, organizationId){
       .where('id_person', personId)
       .where('id_organization', organizationId)
       .select('*')
-      .first(); // Retrieve the first matching row
+      .first();
 
     if (organizationAdministrator) {
       return true;
