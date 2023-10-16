@@ -10,20 +10,21 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 */
+
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const pgp = require('pg-promise')(); // In the future I'd like to use knex.js to avoid raw sql
+const knex = require('knex')({
+  client: 'pg',
+  connection: {
+    host: process.env.POSTGRES_SERVER,
+    user: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
+    port: process.env.POSTGRES_PORT,
+    database: 'Blink'
+  }
+});
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
-
-const database_configuration = {
-  host: process.env.POSTGRES_SERVER,
-  port: process.env.POSTGRES_PORT,
-  database: "Blink",
-  user: process.env.POSTGRES_USERNAME,
-  password: process.env.POSTGRES_PASSWORD
-};
-const db = pgp(database_configuration);
 
 // ======== API ENDPOINTS ========
 
@@ -44,40 +45,27 @@ async function registerPerson(req, res){
     const hashPasswordPromise = bcrypt.hash(userData.password, 10);
 
     try{
-        
         // Begin transaction
-        await db.tx(async (t) => {
-        
-          // Inserting in the "Person" table
-          const userInsertQuery = `
-            INSERT INTO "Person" (email, password, display_name, date_of_birth, available, enabled, place_of_living)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING id`;
+        await knex.transaction(async (tr) => {
+          
+          const personIdResult = await tr('Person')
+            .insert({ 
+              email: userData.email, 
+              password: await hashPasswordPromise,
+              display_name: userData.display_name,
+              date_of_birth: userData.date_of_birth,
+              available: userData.available,
+              enabled: true,
+              place_of_living: userData.place_of_living})
+            .returning("id");
   
-          const userResult = await t.one(userInsertQuery, [
-            userData.email,
-            await hashPasswordPromise,
-            userData.display_name,
-            userData.date_of_birth,
-            userData.available,
-            false,
-            userData.place_of_living
-          ]);
-  
-          // Inserting in the "ActivationLink" table
-          const activationLinkInsertQuery = `
-            INSERT INTO "ActivationLink" (person_id, identifier)
-            VALUES ($1, $2)
-            RETURNING *`;
-  
-          const activationLinkResult = await t.one(activationLinkInsertQuery, [
-            userResult.id,  
-            activationLink,
-          ]);
-
-          return res.status(200).json({ activationLink: activationLinkResult.identifier });
-
+          await tr('ActivationLink')
+            .insert({
+              person_id: personIdResult[0].id,
+              identifier: activationLink
+            });
       });
+      return res.status(200).json({ activationLink: activationLink });
     }
     catch (error){
       console.error('Error inserting data:', error);
@@ -109,10 +97,13 @@ async function login(req, res){
 // GET
 async function getPerson(req, res){
   try {
-    const user = await db.oneOrNone('SELECT * FROM "Person" WHERE id = $1 and enabled = $2' , [req.params.id, false]);
+    const user = await knex('Person')
+      .select('*')
+      .where({ id: req.params.id, enabled: true })
+      .first();
     
     if(user){
-      if(user.id == req.jwt.person_id || user.active == true){
+      if(user.id == req.jwt.person_id || user.enabled){
         return res.status(200).send(user);
       }
     }
@@ -134,35 +125,26 @@ async function createOrganization(req, res){
   }
 
   try{
-        
-    // Begin transaction
-    await db.tx(async (t) => {
-    
-      // Inserting in the "Organization" table
-      const OrganizationInsertQuery = `
-        INSERT INTO "Organization" (name, location, description, is_hiring)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *`;
-
-      const organizationResult = await t.one(OrganizationInsertQuery, [
-        organizationData.name,
-        organizationData.location,
-        organizationData.description,
-        organizationData.is_hiring
-      ]);
+    knex.transaction(async (trx) => {
+      const organizationResult = await trx('Organization')
+        .insert({
+          name: organizationData.name,
+          location: organizationData.location,
+          description: organizationData.description,
+          is_hiring: organizationData.is_hiring,
+        })
+        .returning('*');
 
       // Inserting in the "OrganizationAdministrator" table
-      const OrganizationAdministratorInsertQuery = `
-        INSERT INTO "OrganizationAdministrator" (id_person, id_organization)
-        VALUES ($1, $2)`;
+      await trx('OrganizationAdministrator')
+        .insert({
+          id_person: req.jwt.person_id,
+          id_organization: organizationResult[0].id,
+        });
+          
+      await trx.commit();
 
-      await t.none(OrganizationAdministratorInsertQuery, [
-        req.jwt.person_id,
-        organizationResult.id
-      ]);
-
-      return res.status(200).json({ "Organization" : organizationResult});
-
+      return res.status(200).json({ Organization: organizationResult[0] });
     });
   }
   catch (error){
@@ -177,7 +159,9 @@ async function deleteOrganization(req, res){
 
   try {
     if(await isPersonOrganizationAdmin(req.jwt.person_id, organizationIdToDelete)){
-      await db.none('DELETE FROM "Organization" WHERE id = $1', [organizationIdToDelete]);
+      await knex('Organization')
+        .where({ id: organizationIdToDelete })
+        .del();
       return res.status(200).json("Ok");
     }
     return res.status(403).json("Forbidden");
@@ -199,19 +183,20 @@ async function createOrganizationPost(req, res){
 
   try {
     if (await isPersonOrganizationAdmin(req.jwt.person_id, organizationPostData.organization_id)){
-      const organizationPost = await db.one('INSERT INTO "OrganizationPost" (organization_id, content) VALUES ($1, $2) RETURNING *', 
-                                            [organizationPostData.organization_id, organizationPostData.content]);
-      if(organizationPost){
-        return res.status(200).json(organizationPost);
-      }
-      else{
-        return res.status(500).json("Internal server error");
-      }
+      const organizationPost = await knex('OrganizationPost')
+        .insert({
+          organization_id: organizationPostData.organization_id,
+          content: organizationPostData.content,
+        })
+        .returning('*');
+        return res.status(200).json(organizationPost[0]);
     }
     else{
       return res.status(401).json("Forbidden");
     }
-  } catch (error) {
+  } 
+  catch (error) {
+    console.log(error);
     return res.status(500).json("Internal server error");
   }
 }
@@ -219,32 +204,48 @@ async function createOrganizationPost(req, res){
 // DELETE
 async function deleteOrganizationPost(req, res){
   const organizationPostIdToDelete = req.params.id;
-  try {
-    if(await db.oneOrNone(' SELECT *' +
-                          ' FROM "OrganizationPost"' +
-                          ' JOIN "OrganizationAdministrator"' +
-                          ' ON "OrganizationPost".organization_id = "OrganizationAdministrator".id_organization' +
-                          ' WHERE "OrganizationPost".id = $1 and "OrganizationAdministrator".id_person = $2', 
-                          [organizationPostIdToDelete, req.jwt.person_id])){
-      await db.none('DELETE FROM "OrganizationPost" WHERE id = $1', [organizationPostIdToDelete]);
-      return res.status(200).json("Ok");
-    }
-    else{
-      return res.status(403).json("Forbidden");
-    }
-
+  try{
+    knex.transaction(async (trx) => {
+      // Check if user is allowed to delete the post
+      const result = await trx('OrganizationPost')
+        .join('OrganizationAdministrator', 'OrganizationPost.organization_id', 'OrganizationAdministrator.id_organization')
+        .where('OrganizationPost.id', organizationPostIdToDelete)
+        .where('OrganizationAdministrator.id_person', req.jwt.person_id)
+        .select('*')
+        .first();
+  
+      if (result) {
+        await trx('OrganizationPost')
+          .where('id', organizationPostIdToDelete)
+          .del();
+          await trx.commit();
+          return res.status(200).json('Ok');
+        } else {
+          return res.status(401).json('Forbidden');
+        }
+    });
   }
   catch (error) {
-    console.error(error);
-    return res.status(500).json("Internal server error");
+    console.log(error);
+    res.status(500).json("Internal server error");
   }
+}
+
+// POST [NOT COMPLETE]
+async function makeAdmin(req, res){
+
 }
 
 // ======== END API ENDPOINTS ========
 
 async function checkUserCredentials(email, password){
   try {
-    const user = await db.oneOrNone('SELECT * FROM "Person" WHERE email = $1 and enabled = $2', [email, true]);
+    const user = await knex('Person')
+      .where('email', email)
+      .where('enabled', true)
+      .select('*')
+      .first();
+
     if(user){
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (passwordMatches) {
@@ -260,11 +261,19 @@ async function checkUserCredentials(email, password){
 }
 
 async function isPersonOrganizationAdmin(personId, organizationId){
-  try {
-    if(await db.oneOrNone('SELECT * FROM "OrganizationAdministrator" WHERE id_person = $1 AND id_organization = $2', [personId, organizationId])){
+  try { 
+    const organizationAdministrator = await knex('OrganizationAdministrator')
+      .where('id_person', personId)
+      .where('id_organization', organizationId)
+      .select('*')
+      .first(); // Retrieve the first matching row
+
+    if (organizationAdministrator) {
       return true;
+    } 
+    else {
+      return false;
     }
-    return false;
   }
   catch (error) {
     return false;
@@ -310,5 +319,6 @@ module.exports = {
     createOrganization,
     deleteOrganization,
     createOrganizationPost,
-    deleteOrganizationPost
+    deleteOrganizationPost,
+    makeAdmin
 };
