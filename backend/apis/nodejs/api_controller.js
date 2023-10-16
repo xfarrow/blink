@@ -283,7 +283,9 @@ function generateToken(person_id) {
     person_id: person_id
   };
 
-  const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '1h' });
+  const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { 
+    expiresIn: '1h' 
+  });
   return token;
 }
 
@@ -292,12 +294,12 @@ function verifyToken(req, res, next) {
   const token = req.headers.authorization;
 
   if (!token) {
-    return res.status(403).send('No token provided');
+    return res.status(401).send({error : 'No token provided'});
   }
 
-  jwt.verify(token, 'your-secret-key', (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(401).send('Failed to authenticate token');
+      return res.status(401).send({error : 'Failed to authenticate token'});
     }
 
     // If the token is valid, store the decoded data in the request object
