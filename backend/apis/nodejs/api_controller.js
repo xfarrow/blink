@@ -117,6 +117,24 @@ async function getPerson(req, res){
   }
 }
 
+// GET
+async function deletePerson(req, res){
+  if(req.params.id != req.jwt.person_id){
+    return res.status(403).json({error: "Forbidden"});
+  }
+
+  try {
+    await knex('Person')
+      .where({id : req.jwt.person_id})
+      .del();
+    return res.status(200).json({success: true});
+  } catch (error) {
+    console.log("Error deleting a Person: " + error);
+    return res.status(500).json({error : "Internal server error"});
+  }
+
+}
+
 // POST
 async function createOrganization(req, res){
   
@@ -318,6 +336,7 @@ module.exports = {
     registerPerson,
     login,
     getPerson,
+    deletePerson,
     verifyToken,
     createOrganization,
     deleteOrganization,
