@@ -250,8 +250,35 @@ async function deleteOrganizationPost(req, res){
   }
 }
 
-// POST [NOT COMPLETE]
-async function makeAdmin(req, res){
+// POST
+async function addOrganizationAdmin(req, res){
+  // Check whether I am admin and if I'm not trying to make myself admin, if I already am
+  if(await isPersonOrganizationAdmin(req.jwt.person_id, req.body.organization_id) 
+    && req.jwt.person_id != req.body.person_id){
+      // Check whether user exists
+      const userToInsert = await knex('Person')
+        .select('*')
+        .where({ id: req.body.person_id, enabled: true })
+        .first();
+      if(userToInsert){
+        await knex('OrganizationAdministrator')
+          .insert({
+            id_person: req.jwt.person_id,
+            id_organization: req.body.organization_id
+          });
+        return res.status(200).json({success : true});
+      }
+    else {
+      return res.status(401).json({ error : "Forbidden"});
+    }
+  }
+  else {
+    return res.status(401).json({ error : "Forbidden"});
+  }
+}
+
+// DELETE
+async function removeOrganizationAdmin(req, res){
 
 }
 
@@ -342,5 +369,6 @@ module.exports = {
     deleteOrganization,
     createOrganizationPost,
     deleteOrganizationPost,
-    makeAdmin
+    addOrganizationAdmin,
+    removeOrganizationAdmin
 };

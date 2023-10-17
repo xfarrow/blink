@@ -25,7 +25,9 @@ app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.cr
 app.delete('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization); // Delete organization
 app.post('/blinkapi/organization/post', api_controller.verifyToken, api_controller.createOrganizationPost); // Create a organization's post
 app.delete('/blinkapi/organization/post/:id', api_controller.verifyToken, api_controller.deleteOrganizationPost); // Delete a organization's post
-app.post('/blinkapi/organization/admin', api_controller.verifyToken, api_controller.makeAdmin); // Make someone a organization's administrator
+app.post('/blinkapi/organization/admin', api_controller.verifyToken, api_controller.addOrganizationAdmin); // Add Organization Administrator
+app.delete('/blinkapi/organization/admin/:id', api_controller.verifyToken, api_controller.removeOrganizationAdmin); // Remove Organization Administrator
+
 // Start the server
 app.listen(process.env.API_SERVER_PORT, () => {
   console.log(`Blink API server is running on port ${process.env.API_SERVER_PORT}`);
