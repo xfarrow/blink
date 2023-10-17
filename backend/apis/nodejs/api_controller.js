@@ -37,7 +37,7 @@ async function registerPerson(req, res){
 
     // Ensure that the required fields are present before proceeding
     if (!req.body.display_name || !req.body.email || !req.body.password) {
-      return res.status(400).json("Invalid request.");
+      return res.status(400).json({ error : "Invalid request"});
     }
 
     // Generate activation link token
@@ -47,7 +47,8 @@ async function registerPerson(req, res){
     const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
 
     try{
-        // Begin transaction
+        // Begin transaction. We need to insert both in the "Person" table
+        // and in the "ActivationLink" one.
         await knex.transaction(async (tr) => {
           
           const personIdResult = await tr('Person')
@@ -71,16 +72,17 @@ async function registerPerson(req, res){
       return res.status(200).json({ activationLink: activationLink });
     }
     catch (error){
-      console.error('Error inserting data:', error);
-      res.status(500).json("Internal server error");
+      console.error('Error registering person:', error);
+      res.status(500).json({error : "Internal server error"});
     }
 }
 
 // POST
 async function login(req, res){
+
   // Ensure that the required fields are present before proceeding
   if (!req.body.email || !req.body.password) {
-    return res.status(400).json("Invalid request");
+    return res.status(400).json({error : "Invalid request"});
   }
 
   const person = await checkUserCredentials(req.body.email, req.body.password);
@@ -90,7 +92,7 @@ async function login(req, res){
     res.status(200).json({ token });
   }
   else{ 
-    res.status(401).json("Unauthorized");
+    res.status(401).json({error : "Unauthorized"});
   }
 }
 
@@ -107,11 +109,11 @@ async function getPerson(req, res){
         return res.status(200).send(user);
       }
     }
-    return res.status(403).json("Forbidden");
+    return res.status(403).json({error: "Forbidden"});
   }
   catch (error) {
-    console.log(error);
-    return res.status(500).json("Internal server error");
+    console.log("Error logging in:" + error);
+    return res.status(500).json({error : "Internal server error"});
   }
 }
 
@@ -120,7 +122,7 @@ async function createOrganization(req, res){
   
   // Ensure that the required fields are present before proceeding
   if (!req.body.name) {
-    return res.status(400).json("Invalid request.");
+    return res.status(400).json({ error : "Invalid request"});
   }
 
   try{
@@ -147,8 +149,8 @@ async function createOrganization(req, res){
     });
   }
   catch (error){
-    console.error('Error inserting data:', error);
-    res.status(500).json("Internal server error");
+    console.error('Error creating Organization:', error);
+    res.status(500).json({error : "Internal server error"});
   }
 }
 
@@ -161,13 +163,13 @@ async function deleteOrganization(req, res){
       await knex('Organization')
         .where({ id: organizationIdToDelete })
         .del();
-      return res.status(200).json("Ok");
+      return res.status(200).json({success: true});
     }
-    return res.status(403).json("Forbidden");
+    return res.status(403).json({ error : "Forbidden" });
   }
   catch (error) {
     console.error(error);
-    return res.status(500).json("Internal server error");
+    return res.status(500).json({error : "Internal server error"});
   }
 }
 
@@ -176,7 +178,7 @@ async function createOrganizationPost(req, res){
   
   // Ensure that the required fields are present before proceeding
   if (!req.body.organization_id || !req.body.content) {
-    return res.status(400).json("Invalid request.");
+    return res.status(400).json({ error : "Invalid request"});
   }
 
   try {
@@ -190,12 +192,12 @@ async function createOrganizationPost(req, res){
         return res.status(200).json(organizationPost[0]);
     }
     else{
-      return res.status(401).json("Forbidden");
+      return res.status(401).json({ error : "Forbidden"});
     }
   } 
   catch (error) {
     console.log(error);
-    return res.status(500).json("Internal server error");
+    return res.status(500).json({error : "Internal server error"});
   }
 }
 
@@ -217,15 +219,16 @@ async function deleteOrganizationPost(req, res){
           .where('id', organizationPostIdToDelete)
           .del();
           await trx.commit();
-          return res.status(200).json('Ok');
-        } else {
-          return res.status(401).json('Forbidden');
+          return res.status(200).json({success: true});
+        } 
+        else {
+          return res.status(401).json({error : "Forbidden"});
         }
     });
   }
   catch (error) {
     console.log(error);
-    res.status(500).json("Internal server error");
+    res.status(500).json({error : "Internal server error"});
   }
 }
 
@@ -284,7 +287,7 @@ function generateToken(person_id) {
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { 
-    expiresIn: '1h' 
+    expiresIn: '8h' 
   });
   return token;
 }
