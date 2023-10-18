@@ -216,6 +216,27 @@ async function createOrganizationPost(req, res){
   }
 }
 
+// GET
+async function getOrganization(req, res){
+  const organizationId = req.params.id;
+  try {
+    const organization = await knex('Organization')
+      .where('id', organizationId)
+      .select('*')
+      .first();
+    if(organization) {
+      return res.status(200).json(organization);
+    }
+    else{
+      return res.status(404).json({error : "Not found"});
+    }
+  }
+  catch (error) {
+    console.error("Error retrieving an organization: " + error);
+    return res.status(500).json({error : "Internal server error"});
+  }
+}
+
 // DELETE
 async function deleteOrganizationPost(req, res){
   const organizationPostIdToDelete = req.params.id;
@@ -370,6 +391,7 @@ module.exports = {
     deletePerson,
     verifyToken,
     createOrganization,
+    getOrganization,
     deleteOrganization,
     createOrganizationPost,
     deleteOrganizationPost,
