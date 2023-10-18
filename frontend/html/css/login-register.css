@@ -48,7 +48,7 @@ a:active:hover {
   padding: 0 60px;
 }
 
-input {
+input, button {
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -130,7 +130,7 @@ input[type="email"]:valid ~ .validation span:last-child {
   top: 0px;
 }
 
-input[type="submit"] {
+button[type="button"] {
   border: none;
   display: block;
   background-color: #3ca9e2;
@@ -146,7 +146,7 @@ input[type="submit"] {
   cursor: pointer;
   text-align: center;
 }
-input[type="submit"]:hover {
+button[type="button"]:hover {
   background-color: #329dd5;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;

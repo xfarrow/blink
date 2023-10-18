@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8">
+    <title>HTML5 Login Form with validation Example</title>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"> -->
+    <link rel="stylesheet" href="../css/login-register.css">
+    <script src=""></script>
+  </head>
+    <body>
+      <!-- partial:index.partial.html -->
+      <div id="login-form-wrap">
+        <h2>Sign Up</h2>
+        <form id="login-form">
+
+          <p>
+            <input type="text" id="displayname" name="displayname" placeholder="Your name" required><i class="validation"><span></span><span></span></i>
+          </p>
+
+          <p>
+            <input type="email" id="email" name="email" placeholder="Email Address" required><i class="validation"><span></span><span></span></i>
+          </p>
+
+          <p>
+            <input type="password" id="password" name="password" placeholder="Password" required><i class="validation"><span></span><span></span></i>
+          </p>
+
+          <p>
+            <button type="button" onclick="register()">Register</button>
+          </p>
+        </form>
+        <div id="create-account-wrap">
+          <p>Already a member? <a href="./login.html">Login</a><p>
+        </div>
+      </div>
+
+      <script>
+        function register(){
+          const display_name = document.getElementById("displayname").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          
+          if(!display_name || !email || !password){
+            return;
+          }
+
+          const options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ display_name, email, password }),
+          };
+          alert(JSON.stringify({ display_name, email, password }));
+          fetch('http://localhost:3000/blinkapi/register', options)
+            .then(response => {
+              if (response.ok) {
+                alert('You successfully registered an account')
+              } 
+            })
+            .catch(err => {
+              console.error(err);
+              alert("An error has occurred. Try again later");              
+            });
+        }
+      </script>
+
+    </body>
+</html>
