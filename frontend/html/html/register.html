@@ -52,15 +52,18 @@
             },
             body: JSON.stringify({ display_name, email, password }),
           };
+
           fetch('http://localhost:3000/blinkapi/register', options)
             .then(response => {
               if (response.ok) {
-                alert("Congratulations! You've successfully registered to Blink. Please click on the e-mail we sent you to confirm your account");
-              // Redirect to a different page on the same domain using a relative path
-              window.location.href = '/newpage.html';
+                alert("Congratulations! You've successfully registered to Blink." +
+                  " Please click on the e-mail we sent you to confirm your account");
+                
+              window.location.href = '/login.html';
               } 
             })
             .catch(err => {
+              alert("An error has occured :-( please try again later")
               console.error(err);
             });
         }

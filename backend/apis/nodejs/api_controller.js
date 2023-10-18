@@ -37,7 +37,11 @@ async function registerPerson(req, res){
 
     // Ensure that the required fields are present before proceeding
     if (!req.body.display_name || !req.body.email || !req.body.password) {
-      return res.status(400).json({ error : "Invalid request"});
+      return res.status(400).json({ error : "Some or all required fields are missing"});
+    }
+
+    if(!validateEmail(req.body.email)){
+      return res.status(400).json({ error : "The email is not in a valid format"});
     }
 
     // Generate activation link token
@@ -375,6 +379,11 @@ function verifyToken(req, res, next) {
     req.jwt = decoded;
     next();
   });
+}
+
+function validateEmail(email) {
+  const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  return regex.test(email);
 }
 
 // Exporting a function
