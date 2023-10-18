@@ -277,9 +277,8 @@ async function addOrganizationAdmin(req, res){
     return res.status(400).json({ error : "Invalid request"});
   }  
 
-  // Check whether I am admin and if I'm not trying to make myself admin
-  if(await isPersonOrganizationAdmin(req.jwt.person_id, req.body.organization_id) 
-  && req.jwt.person_id != req.body.person_id){
+  // Check whether I am admin
+  if(await isPersonOrganizationAdmin(req.jwt.person_id, req.body.organization_id)){
     try {
       // We suppose that the database has Foreign Key constraints
       await knex('OrganizationAdministrator')
@@ -291,10 +290,6 @@ async function addOrganizationAdmin(req, res){
     } 
     catch (error) {
       console.error('Error while adding organization admin: ' + error);
-      // Foreign Key Constraint Violation
-      if (error.code === '23503') {
-        return res.status(404).json({ error : "Not found"});
-      }
       res.status(500).json({error : "Internal server error"});
     }
   }
