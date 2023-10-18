@@ -109,20 +109,17 @@ async function getPerson(req, res){
         return res.status(200).send(user);
       }
     }
-    return res.status(403).json({error: "Forbidden"});
+    return res.status(404).json({error: "Not found"});
   }
   catch (error) {
-    console.log("Error logging in:" + error);
+    console.log("Error while getting person: " + error);
     return res.status(500).json({error : "Internal server error"});
   }
 }
 
 // GET
-async function deletePerson(req, res){
-  if(req.params.id != req.jwt.person_id){
-    return res.status(403).json({error: "Forbidden"});
-  }
-
+async function deletePerson(req, res) {
+  // A user can only delete themselves
   try {
     await knex('Person')
       .where({id : req.jwt.person_id})
@@ -132,7 +129,6 @@ async function deletePerson(req, res){
     console.log("Error deleting a Person: " + error);
     return res.status(500).json({error : "Internal server error"});
   }
-
 }
 
 // POST
@@ -205,6 +201,7 @@ async function createOrganizationPost(req, res){
         .insert({
           organization_id: req.body.organization_id,
           content: req.body.content,
+          original_author: req.jwt.person_id
         })
         .returning('*');
         return res.status(200).json(organizationPost[0]);
@@ -252,24 +249,31 @@ async function deleteOrganizationPost(req, res){
 
 // POST
 async function addOrganizationAdmin(req, res){
-  // Check whether I am admin and if I'm not trying to make myself admin, if I already am
+
+  // Ensure that the required fields are present before proceeding
+  if (!req.body.organization_id || !req.body.person_id) {
+    return res.status(400).json({ error : "Invalid request"});
+  }  
+
+  // Check whether I am admin and if I'm not trying to make myself admin
   if(await isPersonOrganizationAdmin(req.jwt.person_id, req.body.organization_id) 
-    && req.jwt.person_id != req.body.person_id){
-      // Check whether user exists
-      const userToInsert = await knex('Person')
-        .select('*')
-        .where({ id: req.body.person_id, enabled: true })
-        .first();
-      if(userToInsert){
-        await knex('OrganizationAdministrator')
-          .insert({
-            id_person: req.jwt.person_id,
-            id_organization: req.body.organization_id
-          });
-        return res.status(200).json({success : true});
+  && req.jwt.person_id != req.body.person_id){
+    try {
+      // We suppose that the database has Foreign Key constraints
+      await knex('OrganizationAdministrator')
+      .insert({
+        id_person: req.body.person_id,
+        id_organization: req.body.organization_id
+      });
+      return res.status(200).json({success : true});
+    } 
+    catch (error) {
+      console.error('Error while adding organization admin: ' + error);
+      // Foreign Key Constraint Violation
+      if (error.code === '23503') {
+        return res.status(404).json({ error : "Not found"});
       }
-    else {
-      return res.status(401).json({ error : "Forbidden"});
+      res.status(500).json({error : "Internal server error"});
     }
   }
   else {
