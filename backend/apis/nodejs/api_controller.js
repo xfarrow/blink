@@ -106,6 +106,7 @@ async function getPerson(req, res){
     
     if(user){
       if(user.id == req.jwt.person_id || user.enabled){
+        delete user['password']; // remove password field for security reasons
         return res.status(200).send(user);
       }
     }
