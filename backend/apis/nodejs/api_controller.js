@@ -128,6 +128,10 @@ async function updatePerson(req, res){
     return res.status(403).json({ error : "Forbidden"});
   }
 
+  if(!req.body.display_name || req.body.display_name.trim().length === 0){
+    return res.status(400).json({ error : "Invalid request"});
+  }
+
   try {
     await knex('Person')
     .where('id', req.params.id)
@@ -168,7 +172,7 @@ async function createOrganization(req, res){
   }
 
   try{
-    knex.transaction(async (trx) => {
+    await knex.transaction(async (trx) => {
       const organizationResult = await trx('Organization')
         .insert({
           name: req.body.name,
@@ -193,6 +197,42 @@ async function createOrganization(req, res){
   catch (error){
     console.error('Error creating Organization:', error);
     res.status(500).json({error : "Internal server error"});
+  }
+}
+
+// PUT
+async function updateOrganization(req, res){
+  if(!req.body.name || req.body.name.trim().length === 0){
+    return res.status(400).json({ error : "Invalid request"});
+  }
+  try {
+    await knex.transaction(async (trx) => {
+      // Check if the current user is a organization's administrator
+      const isOrganizationAdmin = await trx('OrganizationAdministrator')
+        .where('id_person', req.jwt.person_id)
+        .where('id_organization', req.params.id)
+        .select('*')
+        .first();
+
+      if(!isOrganizationAdmin){
+        return res.status(403).json({error : "Forbidden"});
+      }
+
+      await knex('Organization')
+        .where('id', req.params.id)
+        .update({
+          name: req.body.name,
+          location: req.body.location,
+          description: req.body.description,
+          is_hiring: req.body.is_hiring
+        });
+      
+      return res.status(200).json({ success : "true"});
+    });
+  } 
+  catch (error) {
+    console.log(error);
+    return res.status(500).json({error : "Internal server error"});
   }
 }
 
@@ -430,6 +470,7 @@ module.exports = {
     verifyToken,
     createOrganization,
     getOrganization,
+    updateOrganization,
     deleteOrganization,
     createOrganizationPost,
     deleteOrganizationPost,

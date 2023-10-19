@@ -27,6 +27,7 @@ app.put('/blinkapi/person/:id', api_controller.verifyToken, api_controller.updat
 app.delete('/blinkapi/person/delete', api_controller.verifyToken, api_controller.deletePerson); // Delete a Person
 app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.createOrganization); // Create organization
 app.get('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.getOrganization); // Get Organization data
+app.put('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.updateOrganization); // Update organization
 app.delete('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization); // Delete organization
 app.post('/blinkapi/organization/post', api_controller.verifyToken, api_controller.createOrganizationPost); // Create a organization's post
 app.delete('/blinkapi/organization/post/:id', api_controller.verifyToken, api_controller.deleteOrganizationPost); // Delete a organization's post
