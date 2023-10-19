@@ -178,13 +178,31 @@ async function deleteOrganization(req, res){
   const organizationIdToDelete = req.params.id;
 
   try {
-    if(await isPersonOrganizationAdmin(req.jwt.person_id, organizationIdToDelete)){
-      await knex('Organization')
-        .where({ id: organizationIdToDelete })
-        .del();
-      return res.status(200).json({success: true});
-    }
-    return res.status(403).json({ error : "Forbidden" });
+    // Here we do not actually need a transaction. Two different queries,
+    // one who checks if the user is admin and one to add the user would've
+    // been sufficient and non-exploitable, but still it'd have been a
+    // TOC/TOU weakness (https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use).
+    // Whether a good practice or not is matter of debate.
+    // There are other points in the code using the same technique to address the same
+    // problematic
+    knex.transaction(async (trx) => {
+      // Check if the current user is a organization's administrator
+      const isOrganizationAdmin = await trx('OrganizationAdministrator')
+        .where('id_person', req.jwt.person_id)
+        .where('id_organization', req.body.organization_id)
+        .select('*')
+        .first();
+
+        if(!isOrganizationAdmin){
+          return res.status(403).json({error : "Forbidden"});
+        }
+
+        await knex('Organization')
+          .where({ id: organizationIdToDelete })
+          .del();
+
+        return res.status(200).json({success: true});
+      });
   }
   catch (error) {
     console.error(error);
@@ -201,7 +219,18 @@ async function createOrganizationPost(req, res){
   }
 
   try {
-    if (await isPersonOrganizationAdmin(req.jwt.person_id, req.body.organization_id)){
+    knex.transaction(async (trx) => {
+      // Check if the current user is a organization's administrator
+      const isOrganizationAdmin = await trx('OrganizationAdministrator')
+        .where('id_person', req.jwt.person_id)
+        .where('id_organization', req.body.organization_id)
+        .select('*')
+        .first();
+
+      if(!isOrganizationAdmin){
+        return res.status(403).json({error : "Forbidden"});
+      }
+
       const organizationPost = await knex('OrganizationPost')
         .insert({
           organization_id: req.body.organization_id,
@@ -209,11 +238,9 @@ async function createOrganizationPost(req, res){
           original_author: req.jwt.person_id
         })
         .returning('*');
-        return res.status(200).json(organizationPost[0]);
-    }
-    else{
-      return res.status(401).json({ error : "Forbidden"});
-    }
+      
+      return res.status(200).json(organizationPost[0]);
+    });
   } 
   catch (error) {
     console.log(error);
@@ -248,14 +275,14 @@ async function deleteOrganizationPost(req, res){
   try{
     knex.transaction(async (trx) => {
       // Check if user is allowed to delete the post
-      const result = await trx('OrganizationPost')
+      const isOrganizationAdmin = await trx('OrganizationPost')
         .join('OrganizationAdministrator', 'OrganizationPost.organization_id', 'OrganizationAdministrator.id_organization')
         .where('OrganizationPost.id', organizationPostIdToDelete)
         .where('OrganizationAdministrator.id_person', req.jwt.person_id)
         .select('*')
         .first();
   
-      if (result) {
+      if (isOrganizationAdmin) {
         await trx('OrganizationPost')
           .where('id', organizationPostIdToDelete)
           .del();
@@ -282,10 +309,6 @@ async function addOrganizationAdmin(req, res){
   }  
 
   try {
-    // Here we do not actually need a transaction. Two different queries,
-    // one who checks if the user is admin and one to add the user would've
-    // been sufficient and non-exploitable, but still it'd have been a
-    // TOC/TOU weakness (https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use)
     knex.transaction(async (trx) => {
       // Check if the current user is a organization's administrator
       const result = await trx('OrganizationAdministrator')
@@ -339,26 +362,6 @@ async function checkUserCredentials(email, password){
   catch (error) {
     console.log(error);
     return null;
-  }
-}
-
-async function isPersonOrganizationAdmin(personId, organizationId){
-  try { 
-    const organizationAdministrator = await knex('OrganizationAdministrator')
-      .where('id_person', personId)
-      .where('id_organization', organizationId)
-      .select('*')
-      .first();
-
-    if (organizationAdministrator) {
-      return true;
-    } 
-    else {
-      return false;
-    }
-  }
-  catch (error) {
-    return false;
   }
 }
 
