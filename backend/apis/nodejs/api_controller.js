@@ -281,24 +281,35 @@ async function addOrganizationAdmin(req, res){
     return res.status(400).json({ error : "Invalid request"});
   }  
 
-  // Check whether I am admin
-  if(await isPersonOrganizationAdmin(req.jwt.person_id, req.body.organization_id)){
-    try {
-      // We suppose that the database has Foreign Key constraints
-      await knex('OrganizationAdministrator')
-      .insert({
-        id_person: req.body.person_id,
-        id_organization: req.body.organization_id
-      });
-      return res.status(200).json({success : true});
-    } 
-    catch (error) {
-      console.error('Error while adding organization admin: ' + error);
-      res.status(500).json({error : "Internal server error"});
-    }
-  }
-  else {
-    return res.status(401).json({ error : "Forbidden"});
+  try {
+    // Here we do not actually need a transaction. Two different queries,
+    // one who checks if the user is admin and one to add the user would've
+    // been sufficient and non-exploitable, but still it'd have been a
+    // TOC/TOU weakness (https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use)
+    knex.transaction(async (trx) => {
+      // Check if the current user is a organization's administrator
+      const result = await trx('OrganizationAdministrator')
+        .where('id_person', req.jwt.person_id)
+        .where('id_organization', req.body.organization_id)
+        .select('*')
+        .first();
+
+        if(!result){
+          return res.status(401).json({error : "Forbidden"});
+        }
+
+        // We suppose that the database has Foreign Key constraints
+        await knex('OrganizationAdministrator')
+          .insert({
+            id_person: req.body.person_id,
+            id_organization: req.body.organization_id
+          });
+        return res.status(200).json({success : true});
+    });
+  } 
+  catch (error) {
+    console.error('Error while adding organization admin: ' + error);
+    res.status(500).json({error : "Internal server error"});
   }
 }
 
