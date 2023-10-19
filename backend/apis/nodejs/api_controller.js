@@ -122,6 +122,29 @@ async function getPerson(req, res){
   }
 }
 
+// PUT
+async function updatePerson(req, res){
+  if (req.jwt.person_id != req.params.id){
+    return res.status(403).json({ error : "Forbidden"});
+  }
+
+  try {
+    await knex('Person')
+    .where('id', req.params.id)
+    .update({
+      display_name: req.body.display_name,
+      date_of_birth: req.body.date_of_birth,
+      available: req.body.available,
+      place_of_living: req.body.place_of_living
+    });
+    return res.status(200).json({ success : "true"});
+  }
+  catch (error) {
+    console.log("Error while updating a Person: " + error);
+    return res.status(500).json({ error : "Internal server error"});
+  }
+}
+
 // GET
 async function deletePerson(req, res) {
   // A user can only delete themselves
@@ -336,11 +359,6 @@ async function addOrganizationAdmin(req, res){
   }
 }
 
-// DELETE
-async function removeOrganizationAdmin(req, res){
-
-}
-
 // ======== END API ENDPOINTS ========
 
 async function checkUserCredentials(email, password){
@@ -407,6 +425,7 @@ module.exports = {
     registerPerson,
     login,
     getPerson,
+    updatePerson,
     deletePerson,
     verifyToken,
     createOrganization,
@@ -414,6 +433,5 @@ module.exports = {
     deleteOrganization,
     createOrganizationPost,
     deleteOrganizationPost,
-    addOrganizationAdmin,
-    removeOrganizationAdmin
+    addOrganizationAdmin
 };
