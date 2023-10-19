@@ -18,8 +18,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(express.json()); // Middleware which parses JSON for POST requests
-// Enable CORS for all routes
-app.use(cors());
+app.use(cors()); // Enable CORS for all routes
 app.post('/blinkapi/register', api_controller.registerPerson); // Register a Person
 app.post('/blinkapi/login', api_controller.login); // Login
 app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.getPerson); // Obtain Person's details

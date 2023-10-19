@@ -242,12 +242,12 @@ async function deleteOrganization(req, res){
 
   try {
     // Here we do not actually need a transaction. Two different queries,
-    // one who checks if the user is admin and one to add the user would've
+    // one who checks if the user is admin and one to delete the organization would've
     // been sufficient and non-exploitable, but still it'd have been a
     // TOC/TOU weakness (https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use).
     // Whether a good practice or not is matter of debate.
     // There are other points in the code using the same technique to address the same
-    // problematic
+    // problem
     knex.transaction(async (trx) => {
       // Check if the current user is a organization's administrator
       const isOrganizationAdmin = await trx('OrganizationAdministrator')
