@@ -399,6 +399,49 @@ async function addOrganizationAdmin(req, res){
   }
 }
 
+// DELETE
+async function removeOrganizationAdmin(req, res){
+  
+    // Ensure that the required fields are present before proceeding
+    if (!req.body.organization_id || !req.body.person_id) {
+      return res.status(400).json({ error : "Invalid request"});
+    }
+
+    // I can remove only myself from the list of administrators
+    if(req.body.person_id != req.jwt.person_id){
+      return res.status(403).json({ error : "Forbidden"});
+    }
+
+    try{
+      knex.transaction(async (trx) => {
+        await trx('OrganizationAdministrator')
+          .where('id_person', req.jwt.person_id)
+          .where('id_organization', req.body.organization_id)
+          .del();
+  
+          // Delete Organization if there are no admins left
+          // Note: If the user instead deletes the entire profile,
+          // the Organization will not be deleted. Fix.
+          // Note: Check what level of transaction we are using
+          // to avoid inconsistencies
+          const count = await trx('OrganizationAdministrator')
+            .count('id as count')
+            .where('id', req.body.organization_id);
+
+          if(count[0].count == 1){
+            await trx('Organization')
+            .where('id', req.body.organization_id)
+            .del();
+          }
+          return res.status(200).json({success : true});
+      });
+    }
+    catch (error){
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error"});
+    }
+}
+
 // ======== END API ENDPOINTS ========
 
 async function checkUserCredentials(email, password){
@@ -474,5 +517,6 @@ module.exports = {
     deleteOrganization,
     createOrganizationPost,
     deleteOrganizationPost,
-    addOrganizationAdmin
+    addOrganizationAdmin,
+    removeOrganizationAdmin
 };

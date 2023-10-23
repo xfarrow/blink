@@ -19,18 +19,19 @@ require('dotenv').config();
 const app = express();
 app.use(express.json()); // Middleware which parses JSON for POST requests
 app.use(cors()); // Enable CORS for all routes
-app.post('/blinkapi/register', api_controller.registerPerson); // Register a Person
-app.post('/blinkapi/login', api_controller.login); // Login
-app.get('/blinkapi/person/:id', api_controller.verifyToken, api_controller.getPerson); // Obtain Person's details
-app.put('/blinkapi/person/:id', api_controller.verifyToken, api_controller.updatePerson); // Update Person's details
-app.delete('/blinkapi/person/delete', api_controller.verifyToken, api_controller.deletePerson); // Delete a Person
-app.post('/blinkapi/organization', api_controller.verifyToken, api_controller.createOrganization); // Create organization
-app.get('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.getOrganization); // Get Organization data
-app.put('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.updateOrganization); // Update organization
-app.delete('/blinkapi/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization); // Delete organization
-app.post('/blinkapi/organization/post', api_controller.verifyToken, api_controller.createOrganizationPost); // Create a organization's post
-app.delete('/blinkapi/organization/post/:id', api_controller.verifyToken, api_controller.deleteOrganizationPost); // Delete a organization's post
-app.post('/blinkapi/organization/admin', api_controller.verifyToken, api_controller.addOrganizationAdmin); // Add Organization Administrator
+app.post('/api/register', api_controller.registerPerson); // Register a Person
+app.post('/api/login', api_controller.login); // Login
+app.get('/api/person/:id', api_controller.verifyToken, api_controller.getPerson); // Obtain Person's details
+app.put('/api/person/:id', api_controller.verifyToken, api_controller.updatePerson); // Update Person's details
+app.delete('/api/person/delete', api_controller.verifyToken, api_controller.deletePerson); // Delete a Person
+app.post('/api/organization/admin', api_controller.verifyToken, api_controller.addOrganizationAdmin); // Add Organization Administrator
+app.delete('/api/organization/removeadmin', api_controller.verifyToken, api_controller.removeOrganizationAdmin); // Remove Organization Administrator
+app.post('/api/organization', api_controller.verifyToken, api_controller.createOrganization); // Create organization
+app.get('/api/organization/:id', api_controller.verifyToken, api_controller.getOrganization); // Get Organization data
+app.put('/api/organization/:id', api_controller.verifyToken, api_controller.updateOrganization); // Update organization
+app.delete('/api/organization/:id', api_controller.verifyToken, api_controller.deleteOrganization); // Delete organization
+app.post('/api/organization/post', api_controller.verifyToken, api_controller.createOrganizationPost); // Create a organization's post
+app.delete('/api/organization/post/:id', api_controller.verifyToken, api_controller.deleteOrganizationPost); // Delete a organization's post
 
 // Start the server
 app.listen(process.env.API_SERVER_PORT, () => {
