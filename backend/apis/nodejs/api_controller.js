@@ -93,7 +93,7 @@ async function login(req, res){
 
   if (person){
     const token = generateToken(person.id);
-    res.status(200).json({ token });
+    res.status(200).json({token: token });
   }
   else{ 
     res.status(401).json({error : "Unauthorized"});
@@ -109,6 +109,7 @@ async function getPerson(req, res){
       .first();
     
     if(user){
+      // TODO: Check first whether req.jwt.person_id matches req.params.id before requesting the user from the database
       if(user.id == req.jwt.person_id || user.enabled){
         delete user['password']; // remove password field for security reasons
         return res.status(200).send(user);
@@ -467,6 +468,7 @@ async function checkUserCredentials(email, password){
 }
 
 function generateToken(person_id) {
+  // The payload the JWT will carry within itself
   const payload = {
     person_id: person_id
   };

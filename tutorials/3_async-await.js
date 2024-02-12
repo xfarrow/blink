@@ -15,14 +15,14 @@ async function f1() {
 // and then resumes it with the promise result.
 async function f2() {
 
-    let promise = new Promise((resolve, reject) => {
-      setTimeout(() => resolve("done!"), 1000)
-    });
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve("done!"), 1000)
+  });
   
-    let result = await promise; // wait until the promise resolves (*)
+  let result = await promise; // wait until the promise resolves (*)
   
-    console.log(result); // "done!"
-  }
+  console.log(result); // "done!"
+}
   
   f2();
 
