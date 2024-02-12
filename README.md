@@ -9,7 +9,7 @@ If you're an individual you can use one of the available instances.
 If you're a developer you can either set up your own infrastructure, or just set up a front-end using another instance's APIs. Consult the Wiki for further details.
 
 ## Federation
-Blink allows to create a form of federation
+Blink allows to create a form of federation with other Blink instances.
 
 <h6>
   
