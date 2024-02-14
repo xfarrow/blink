@@ -11,14 +11,23 @@
     IN THE SOFTWARE.
 */
 
+// Importing modules
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const api_controller = require('./api_controller.js');
 require('dotenv').config();
 
+// Application configuration
 const app = express();
 app.use(express.json()); // Middleware which parses JSON for POST requests
 app.use(cors()); // Enable CORS for all routes
+app.use(rateLimit({
+  windowMs: process.env.LIMITER_WINDOW,
+  max: process.env.LIMITER_MAXIMUM_PER_WINDOW,
+  message: 'Too many requests from this IP, please try again later'
+})); // Apply the rate limiter middleware to all routes
+
 app.post('/api/register', api_controller.registerPerson); // Register a Person
 app.post('/api/login', api_controller.login); // Login
 app.get('/api/person/:id', api_controller.verifyToken, api_controller.getPerson); // Obtain Person's details
