@@ -26,7 +26,7 @@ const knex = require('knex')({
 });
 const jwt = require('jsonwebtoken');
 
-// ======== API ENDPOINTS ========
+// ======== BEGIN API ENDPOINTS ========
 
 // POST
 async function registerPerson(req, res){
@@ -51,8 +51,8 @@ async function registerPerson(req, res){
     const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
 
     try{
-        // Begin transaction. We need to insert both in the "Person" table
-        // and in the "ActivationLink" one.
+        // We need to insert either both in the "Person" table
+        // and in the "ActivationLink" one, or in neither
         await knex.transaction(async (tr) => {
           
           const personIdResult = await tr('Person')
@@ -62,7 +62,7 @@ async function registerPerson(req, res){
               display_name: req.body.display_name,
               date_of_birth: req.body.date_of_birth,
               available: req.body.available,
-              enabled: true, // Change this in production
+              enabled: true,
               place_of_living: req.body.place_of_living
             })
             .returning("id");
@@ -109,7 +109,7 @@ async function getPerson(req, res){
       .first();
     
     if(user){
-      // TODO: Check first whether req.jwt.person_id matches req.params.id before requesting the user from the database
+      // I am retrieving myself or an enabled user
       if(user.id == req.jwt.person_id || user.enabled){
         delete user['password']; // remove password field for security reasons
         return res.status(200).send(user);
@@ -158,7 +158,8 @@ async function deletePerson(req, res) {
       .where({id : req.jwt.person_id})
       .del();
     return res.status(200).json({success: true});
-  } catch (error) {
+  } 
+  catch (error) {
     console.log("Error deleting a Person: " + error);
     return res.status(500).json({error : "Internal server error"});
   }
@@ -174,6 +175,9 @@ async function createOrganization(req, res){
 
   try{
     await knex.transaction(async (trx) => {
+
+      // We have to insert either both in Organization and in OrganizationAdministrator
+      // or in neither
       const organizationResult = await trx('Organization')
         .insert({
           name: req.body.name,
