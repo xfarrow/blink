@@ -62,7 +62,7 @@ async function registerPerson(req, res){
               display_name: req.body.display_name,
               date_of_birth: req.body.date_of_birth,
               available: req.body.available,
-              enabled: true,
+              enabled: true, // Change this in production
               place_of_living: req.body.place_of_living
             })
             .returning("id");
@@ -424,7 +424,7 @@ async function removeOrganizationAdmin(req, res){
   
           // Delete Organization if there are no admins left.
           // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix.
-          // TODO: Check what level of transaction we are using to avoid inconsistencies
+          // TODO: Check what level of transaction we are using to avoid inconsistencies. Update: it is READ COMMITTED see https://www.geeksforgeeks.org/transaction-isolation-levels-dbms/
           const count = await trx('OrganizationAdministrator')
             .count('id as count')
             .where('id', req.body.organization_id);
