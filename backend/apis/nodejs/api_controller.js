@@ -338,7 +338,7 @@ async function deleteOrganizationPost(req, res){
   const organizationPostIdToDelete = req.params.id;
   try{
     knex.transaction(async (trx) => {
-      // Check if user is allowed to delete the post
+      // Check if user is allowed to delete the post (they must have created it)
       const isOrganizationAdmin = await trx('OrganizationPost')
         .join('OrganizationAdministrator', 'OrganizationPost.organization_id', 'OrganizationAdministrator.id_organization')
         .where('OrganizationPost.id', organizationPostIdToDelete)
@@ -350,12 +350,12 @@ async function deleteOrganizationPost(req, res){
         await trx('OrganizationPost')
           .where('id', organizationPostIdToDelete)
           .del();
-          await trx.commit();
-          return res.status(200).json({success: true});
-        } 
-        else {
-          return res.status(401).json({error : "Forbidden"});
-        }
+        await trx.commit();
+        return res.status(200).json({success: true});
+      } 
+      else {
+        return res.status(401).json({error : "Forbidden"});
+      }
     });
   }
   catch (error) {
@@ -386,6 +386,7 @@ async function addOrganizationAdmin(req, res){
         }
 
         // We suppose that the database has Foreign Key constraints
+        // otherwise we should've checked whether person_id exists.
         await knex('OrganizationAdministrator')
           .insert({
             id_person: req.body.person_id,
@@ -409,6 +410,7 @@ async function removeOrganizationAdmin(req, res){
     }
 
     // I can remove only myself from the list of administrators
+    // TODO: What's the point for having 'body.person_id' then?
     if(req.body.person_id != req.jwt.person_id){
       return res.status(403).json({ error : "Forbidden"});
     }
@@ -420,11 +422,9 @@ async function removeOrganizationAdmin(req, res){
           .where('id_organization', req.body.organization_id)
           .del();
   
-          // Delete Organization if there are no admins left
-          // Note: If the user instead deletes the entire profile,
-          // the Organization will not be deleted. Fix.
-          // Note: Check what level of transaction we are using
-          // to avoid inconsistencies
+          // Delete Organization if there are no admins left.
+          // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix.
+          // TODO: Check what level of transaction we are using to avoid inconsistencies
           const count = await trx('OrganizationAdministrator')
             .count('id as count')
             .where('id', req.body.organization_id);

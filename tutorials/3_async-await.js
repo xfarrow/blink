@@ -28,7 +28,8 @@ async function f2() {
 
   // Tutto il codice nella stessa funzione (o nello stesso blocco di codice)
   // dopo "await" è da considerarsi nel "then()" di una promessa. Pertanto dopo
-  // await, il flusso di esecuzione va fuori a quel blocco di codice. Ad esempio considera
+  // await (ma prima del completamento della Promise), 
+  // il flusso di esecuzione va fuori a quel blocco di codice. Ad esempio considera
   // il seguente esempio:
   async function exampleAsyncFunction() {
     console.log('Before await');
