@@ -25,7 +25,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use(rateLimit({
   windowMs: process.env.LIMITER_WINDOW,
   max: process.env.LIMITER_MAXIMUM_PER_WINDOW,
-  message: 'Too many requests from this IP, please try again later'
+  message: {error : "Too many requests from this IP, please try again later"}
 })); // Apply the rate limiter middleware to all routes
 
 app.post('/api/register', api_controller.registerPerson); // Register a Person
