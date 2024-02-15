@@ -153,11 +153,9 @@ async function getPerson(req, res){
  * 
  * Updates a Person's details. If some details are
  * not present, they shall be ignored.
- * To update the password, both the old_password
- * and new_password fields must be specified.
  * 
  * Required field(s): none. Both old_password and
- * new_password if updating the password
+ * new_password if updating the password.
  *
  */
 async function updatePerson(req, res){
@@ -287,35 +285,88 @@ async function createOrganization(req, res){
   }
 }
 
-// PUT
+/**
+ * PUT Request
+ * Updates an Organization's details
+ *
+ * @returns 
+ */
 async function updateOrganization(req, res){
-  if(!req.body.name || req.body.name.trim().length === 0){
-    return res.status(400).json({ error : "Invalid request"});
+
+  const updateOrganization = {};
+
+  if(req.body.name){
+    updateOrganization.name = req.body.name;
   }
+
+  if(req.body.location){
+    updateOrganization.location = req.body.location;
+  }
+
+  if(req.body.description){
+    updateOrganization.description = req.body.description;
+  }
+
+  if(req.body.is_hiring){
+    updateOrganization.is_hiring = req.body.is_hiring;
+  }
+
+  if (Object.keys(updateOrganization).length === 0) {
+    return res.status(400).json({ error : "Bad request. No data to update"});
+  }
+
   try {
-    await knex.transaction(async (trx) => {
-      // Check if the current user is a organization's administrator
-      const isOrganizationAdmin = await trx('OrganizationAdministrator')
+
+    // const isOrganizationAdmin = await knex('OrganizationAdministrator')
+    // .where('id_person', req.jwt.person_id)
+    // .where('id_organization', req.params.id)
+    // .select('*')
+    // .first();
+
+    // // This introduces a Time of check Time of use weakeness
+    // // which could'have been fixed by either
+    // // 1) Using "whereExists", thanks to the "it's easier to ask for
+    // // forgiveness than for permission" padarigm. Or,
+    // // 2) Using a serializable transaction.
+    // //
+    // // The undersigned chose not to follow these approaches because
+    // // this does not introduces any serious vulnerability. In this
+    // // way it seems more readable.
+
+    // if(!isOrganizationAdmin){
+    //   return res.status(403).json({error : "Forbidden"});
+    // }
+
+    // await knex('Organization')
+    // .where('id', req.params.id)
+    // .update({
+    //   name: req.body.name,
+    //   location: req.body.location,
+    //   description: req.body.description,
+    //   is_hiring: req.body.is_hiring
+    // });
+
+    const updatedRows = await knex('Organization')
+    .where('id', req.params.id)
+    .whereExists(function(){
+      this.select('*')
+        .from('OrganizationAdministrator')
         .where('id_person', req.jwt.person_id)
         .where('id_organization', req.params.id)
-        .select('*')
-        .first();
-
-      if(!isOrganizationAdmin){
-        return res.status(403).json({error : "Forbidden"});
-      }
-
-      await knex('Organization')
-        .where('id', req.params.id)
-        .update({
-          name: req.body.name,
-          location: req.body.location,
-          description: req.body.description,
-          is_hiring: req.body.is_hiring
-        });
-      
-      return res.status(200).json({ success : "true"});
+    })
+    .update({
+      name: req.body.name,
+      location: req.body.location,
+      description: req.body.description,
+      is_hiring: req.body.is_hiring
     });
+
+    if(updatedRows == 1){
+      return res.status(200).json({ success : "true"});
+    }
+    else{
+      return res.status(404).json({error : "Company either not found or not sufficient permissions"});
+    }
   } 
   catch (error) {
     console.log(error);
