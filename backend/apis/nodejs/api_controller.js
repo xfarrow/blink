@@ -28,7 +28,14 @@ const jwt = require('jsonwebtoken');
 
 // ======== BEGIN API ENDPOINTS ========
 
-// POST
+/**
+ * POST Request
+ *
+ * Register a Person
+ * 
+ * @returns The activationLink identifier if
+ * the registration is successful
+ */
 async function registerPerson(req, res){
   
     if (process.env.ALLOW_USER_REGISTRATION === 'false'){
@@ -81,7 +88,14 @@ async function registerPerson(req, res){
     }
 }
 
-// POST
+/**
+ * POST Request
+ * 
+ * Creates a token if the specified email
+ * and password are valid
+ *
+ * @returns The token
+ */
 async function login(req, res){
 
   // Ensure that the required fields are present before proceeding
@@ -100,7 +114,13 @@ async function login(req, res){
   }
 }
 
-// GET
+/**
+ * Obtain a Person's details if the
+ * specified person is myself or an
+ * enabled Person
+ *
+ * @returns The Person
+ */
 async function getPerson(req, res){
   try {
     const user = await knex('Person')
@@ -192,9 +212,14 @@ async function updatePerson(req, res){
   }
 }
 
-// GET
+/**
+ * GET Request
+ * 
+ * Deletes a User. An user can only delete 
+ * themselves.
+ *
+ */
 async function deletePerson(req, res) {
-  // A user can only delete themselves
   try {
     await knex('Person')
       .where({id : req.jwt.person_id})
