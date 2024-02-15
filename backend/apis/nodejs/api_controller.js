@@ -526,6 +526,8 @@ async function deleteOrganizationPost(req, res){
  * 
  * Add an Administrator to an Organization. Allowed only if the
  * logged user is an Administrator themselves.
+ * 
+ * Required field(s): organization_id, person_id
  */
 async function addOrganizationAdmin(req, res){
 
@@ -558,18 +560,21 @@ async function addOrganizationAdmin(req, res){
   }
 }
 
-// DELETE
+// todo check correctness
+/**
+ * DELETE Request
+ * 
+ * Deletes a Person from the list of Administrators of an Organization.
+ * The logged user can only remove themselves.
+ * 
+ * Required field(s): organization_id
+ * @returns 
+ */
 async function removeOrganizationAdmin(req, res){
   
     // Ensure that the required fields are present before proceeding
-    if (!req.body.organization_id || !req.body.person_id) {
+    if (!req.body.organization_id) {
       return res.status(400).json({ error : "Invalid request"});
-    }
-
-    // I can remove only myself from the list of administrators
-    // TODO: What's the point for having 'body.person_id' then?
-    if(req.body.person_id != req.jwt.person_id){
-      return res.status(403).json({ error : "Forbidden"});
     }
 
     try{
