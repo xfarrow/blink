@@ -289,7 +289,6 @@ async function createOrganization(req, res){
  * PUT Request
  * Updates an Organization's details
  *
- * @returns 
  */
 async function updateOrganization(req, res){
 
@@ -317,34 +316,34 @@ async function updateOrganization(req, res){
 
   try {
 
-    // const isOrganizationAdmin = await knex('OrganizationAdministrator')
-    // .where('id_person', req.jwt.person_id)
-    // .where('id_organization', req.params.id)
-    // .select('*')
-    // .first();
+    // // const isOrganizationAdmin = await knex('OrganizationAdministrator')
+    // // .where('id_person', req.jwt.person_id)
+    // // .where('id_organization', req.params.id)
+    // // .select('*')
+    // // .first();
 
-    // // This introduces a Time of check Time of use weakeness
-    // // which could'have been fixed by either
-    // // 1) Using "whereExists", thanks to the "it's easier to ask for
-    // // forgiveness than for permission" padarigm. Or,
-    // // 2) Using a serializable transaction.
-    // //
-    // // The undersigned chose not to follow these approaches because
-    // // this does not introduces any serious vulnerability. In this
-    // // way it seems more readable.
+    // // // This introduces a Time of check Time of use weakeness
+    // // // which could'have been fixed by either
+    // // // 1) Using "whereExists", thanks to the "it's easier to ask for
+    // // // forgiveness than for permission" padarigm. Or,
+    // // // 2) Using a serializable transaction.
+    // // //
+    // // // The undersigned chose not to follow these approaches because
+    // // // this does not introduces any serious vulnerability. In this
+    // // // way it seems more readable.
 
-    // if(!isOrganizationAdmin){
-    //   return res.status(403).json({error : "Forbidden"});
-    // }
+    // // if(!isOrganizationAdmin){
+    // //   return res.status(403).json({error : "Forbidden"});
+    // // }
 
-    // await knex('Organization')
-    // .where('id', req.params.id)
-    // .update({
-    //   name: req.body.name,
-    //   location: req.body.location,
-    //   description: req.body.description,
-    //   is_hiring: req.body.is_hiring
-    // });
+    // // await knex('Organization')
+    // // .where('id', req.params.id)
+    // // .update({
+    // //   name: req.body.name,
+    // //   location: req.body.location,
+    // //   description: req.body.description,
+    // //   is_hiring: req.body.is_hiring
+    // // });
 
     const updatedRows = await knex('Organization')
     .where('id', req.params.id)
@@ -374,6 +373,7 @@ async function updateOrganization(req, res){
   }
 }
 
+// TODO CHECK CORRECTNESS !!
 // DELETE
 async function deleteOrganization(req, res){
   const organizationIdToDelete = req.params.id;
@@ -411,7 +411,13 @@ async function deleteOrganization(req, res){
   }
 }
 
-// POST
+/**
+ * POST Request
+ * 
+ * Creates a Post belonging to an organization
+ *
+ * @returns the inserted Post 
+ */
 async function createOrganizationPost(req, res){
   
   // Ensure that the required fields are present before proceeding
@@ -420,28 +426,26 @@ async function createOrganizationPost(req, res){
   }
 
   try {
-    knex.transaction(async (trx) => {
-      // Check if the current user is a organization's administrator
-      const isOrganizationAdmin = await trx('OrganizationAdministrator')
-        .where('id_person', req.jwt.person_id)
-        .where('id_organization', req.body.organization_id)
-        .select('*')
-        .first();
+    // Check if the current user is a organization's administrator
+    const isOrganizationAdmin = await knex('OrganizationAdministrator')
+    .where('id_person', req.jwt.person_id)
+    .where('id_organization', req.body.organization_id)
+    .select('*')
+    .first();
+    
+    // Non-exploitable TOC/TOU weakness
+    if(!isOrganizationAdmin){
+      return res.status(403).json({error : "Forbidden"});
+    }
 
-      if(!isOrganizationAdmin){
-        return res.status(403).json({error : "Forbidden"});
-      }
-
-      const organizationPost = await knex('OrganizationPost')
-        .insert({
-          organization_id: req.body.organization_id,
-          content: req.body.content,
-          original_author: req.jwt.person_id
-        })
-        .returning('*');
-      
-      return res.status(200).json(organizationPost[0]);
-    });
+    const organizationPost = await knex('OrganizationPost')
+    .insert({
+      organization_id: req.body.organization_id,
+      content: req.body.content,
+      original_author: req.jwt.person_id
+    })
+    .returning('*');
+    return res.status(200).json(organizationPost[0]);
   } 
   catch (error) {
     console.log(error);
