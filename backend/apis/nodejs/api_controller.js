@@ -31,10 +31,11 @@ const jwt = require('jsonwebtoken');
 /**
  * POST Request
  *
- * Register a Person
+ * Registers a Person
  * 
- * @returns The activationLink identifier if
- * the registration is successful
+ * Required field(s): name, email (valid ISO standard), password
+ * 
+ * @returns The activationlink identifier
  */
 async function registerPerson(req, res){
   
@@ -92,7 +93,9 @@ async function registerPerson(req, res){
  * POST Request
  * 
  * Creates a token if the specified email
- * and password are valid
+ * and password are valid.
+ * 
+ * Required field(s): email, password
  *
  * @returns The token
  */
@@ -116,8 +119,10 @@ async function login(req, res){
 
 /**
  * Obtain a Person's details if the
- * specified person is myself or an
- * enabled Person
+ * Person to retrieve is either myself or an
+ * enabled Person.
+ * 
+ * Required field(s): none
  *
  * @returns The Person
  */
@@ -129,7 +134,7 @@ async function getPerson(req, res){
       .first();
     
     if(user){
-      // I am retrieving myself or an enabled user
+      // I am retrieving either myself or an enabled user
       if(user.id == req.jwt.person_id || user.enabled){
         delete user['password']; // remove password field for security reasons
         return res.status(200).send(user);
@@ -149,7 +154,10 @@ async function getPerson(req, res){
  * Updates a Person's details. If some details are
  * not present, they shall be ignored.
  * To update the password, both the old_password
- * and new_password field must be specified.
+ * and new_password fields must be specified.
+ * 
+ * Required field(s): none. Both old_password and
+ * new_password if updating the password
  *
  */
 async function updatePerson(req, res){
@@ -215,8 +223,10 @@ async function updatePerson(req, res){
 /**
  * GET Request
  * 
- * Deletes a User. An user can only delete 
+ * Deletes a Person. An user can only delete 
  * themselves.
+ * 
+ * Required field(s): none
  *
  */
 async function deletePerson(req, res) {
@@ -232,7 +242,15 @@ async function deletePerson(req, res) {
   }
 }
 
-// POST
+/**
+ * POST Request
+ * 
+ * Creates an Organization and its Administrator.
+ * 
+ * Required field(s): name
+ *
+ * @returns the inserted organization
+ */
 async function createOrganization(req, res){
   
   // Ensure that the required fields are present before proceeding
@@ -241,7 +259,7 @@ async function createOrganization(req, res){
   }
 
   try{
-    await knex.transaction(async (trx) => {
+    const insertedOrganization = await knex.transaction(async (trx) => {
 
       // We have to insert either both in Organization and in OrganizationAdministrator
       // or in neither
@@ -251,8 +269,7 @@ async function createOrganization(req, res){
           location: req.body.location,
           description: req.body.description,
           is_hiring: req.body.is_hiring,
-        })
-        .returning('*');
+        }, '*');
 
       // Inserting in the "OrganizationAdministrator" table
       await trx('OrganizationAdministrator')
@@ -260,11 +277,9 @@ async function createOrganization(req, res){
           id_person: req.jwt.person_id,
           id_organization: organizationResult[0].id,
         });
-          
-      await trx.commit();
-
-      return res.status(200).json({ Organization: organizationResult[0] });
+      return organizationResult[0];
     });
+    return res.status(200).json({ Organization: insertedOrganization });
   }
   catch (error){
     console.error('Error creating Organization:', error);
