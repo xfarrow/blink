@@ -365,7 +365,7 @@ async function updateOrganization(req, res){
       return res.status(200).json({ success : "true"});
     }
     else{
-      return res.status(404).json({error : "Organization either not found or not sufficient permissions"});
+      return res.status(404).json({error : "Organization either not found or insufficient permissions"});
     }
   } 
   catch (error) {
@@ -521,37 +521,37 @@ async function deleteOrganizationPost(req, res){
   }
 }
 
-// POST
+/**
+ * POST Method
+ * 
+ * Add an Administrator to an Organization. Allowed only if the
+ * logged user is an Administrator themselves.
+ */
 async function addOrganizationAdmin(req, res){
 
   // Ensure that the required fields are present before proceeding
   if (!req.body.organization_id || !req.body.person_id) {
     return res.status(400).json({ error : "Invalid request"});
-  }  
+  }
 
   try {
-    knex.transaction(async (trx) => {
-      // Check if the current user is a organization's administrator
-      const result = await trx('OrganizationAdministrator')
-        .where('id_person', req.jwt.person_id)
-        .where('id_organization', req.body.organization_id)
-        .select('*')
-        .first();
+    const isPersonAdmin = await knex('OrganizationAdministrator')
+      .where('id_person', req.jwt.person_id)
+      .where('id_organization', req.body.organization_id)
+      .select('*')
+      .first();
 
-        if(!result){
-          return res.status(401).json({error : "Forbidden"});
-        }
+    if(!isPersonAdmin){
+      return res.status(401).json({error : "Forbidden"});
+    }
 
-        // We suppose that the database has Foreign Key constraints
-        // otherwise we should've checked whether person_id exists.
-        await knex('OrganizationAdministrator')
-          .insert({
-            id_person: req.body.person_id,
-            id_organization: req.body.organization_id
-          });
-        return res.status(200).json({success : true});
-    });
-  } 
+    await knex('OrganizationAdministrator')
+      .insert({
+        id_person: req.body.person_id,
+        id_organization: req.body.organization_id
+      });
+    return res.status(200).json({success : true});
+  }
   catch (error) {
     console.error('Error while adding organization admin: ' + error);
     res.status(500).json({error : "Internal server error"});
