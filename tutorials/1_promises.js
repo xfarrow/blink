@@ -7,6 +7,8 @@
     callbacks:
     resolve(value) — if the job is finished successfully, with result value.
     reject(error) — if an error has occurred, error is the error object.
+
+    Remember that Promises are not intrensically asyncronous
 */
 let promise = new Promise(function(resolve, reject) {
     setTimeout(() => resolve("done"), 500);

@@ -289,6 +289,7 @@ async function createOrganization(req, res){
  * PUT Request
  * Updates an Organization's details
  *
+ * Required field(s): none.
  */
 async function updateOrganization(req, res){
 
@@ -364,7 +365,7 @@ async function updateOrganization(req, res){
       return res.status(200).json({ success : "true"});
     }
     else{
-      return res.status(404).json({error : "Company either not found or not sufficient permissions"});
+      return res.status(404).json({error : "Organization either not found or not sufficient permissions"});
     }
   } 
   catch (error) {
@@ -416,6 +417,7 @@ async function deleteOrganization(req, res){
  * 
  * Creates a Post belonging to an organization
  *
+ * Required field(s): organization_id, content
  * @returns the inserted Post 
  */
 async function createOrganizationPost(req, res){
@@ -457,6 +459,9 @@ async function createOrganizationPost(req, res){
  * GET Request
  * 
  * Obtains an organization by its identifier.
+ * 
+ * Required field(s): none.
+ * 
  * @returns the organization.
  */
 async function getOrganization(req, res){
@@ -479,30 +484,36 @@ async function getOrganization(req, res){
   }
 }
 
-// DELETE
+/**
+ * DELETE Request
+ * 
+ * Deletes a Post belonging to an Organization, only if
+ * the logged user is an administrator of that Organization.
+ * 
+ * Required field(s): none.
+ */
 async function deleteOrganizationPost(req, res){
+
   const organizationPostIdToDelete = req.params.id;
+
   try{
-    knex.transaction(async (trx) => {
-      // Check if user is allowed to delete the post (they must have created it)
-      const isOrganizationAdmin = await trx('OrganizationPost')
-        .join('OrganizationAdministrator', 'OrganizationPost.organization_id', 'OrganizationAdministrator.id_organization')
-        .where('OrganizationPost.id', organizationPostIdToDelete)
-        .where('OrganizationAdministrator.id_person', req.jwt.person_id)
-        .select('*')
-        .first();
-  
-      if (isOrganizationAdmin) {
-        await trx('OrganizationPost')
+    const isOrganizationAdmin = await knex('OrganizationPost')
+      .join('OrganizationAdministrator', 'OrganizationPost.organization_id', 'OrganizationAdministrator.id_organization')
+      .where('OrganizationPost.id', organizationPostIdToDelete)
+      .where('OrganizationAdministrator.id_person', req.jwt.person_id)
+      .select('*')
+      .first();
+
+      // Unexploitable TOC/TOU
+      if(isOrganizationAdmin){
+        await knex('OrganizationPost')
           .where('id', organizationPostIdToDelete)
           .del();
-        await trx.commit();
-        return res.status(200).json({success: true});
-      } 
-      else {
+        return res.status(200).json({success : true});
+      }
+      else{
         return res.status(401).json({error : "Forbidden"});
       }
-    });
   }
   catch (error) {
     console.log(error);
