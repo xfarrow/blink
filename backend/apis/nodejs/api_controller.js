@@ -123,25 +123,67 @@ async function getPerson(req, res){
   }
 }
 
-// PUT
+/**
+ * PUT request
+ * 
+ * Updates a Person's details. If some details are
+ * not present, they shall be ignored.
+ * To update the password, both the old_password
+ * and new_password field must be specified.
+ *
+ */
 async function updatePerson(req, res){
+  
   if (req.jwt.person_id != req.params.id){
     return res.status(403).json({ error : "Forbidden"});
   }
 
-  if(!req.body.display_name || req.body.display_name.trim().length === 0){
-    return res.status(400).json({ error : "Invalid request"});
+  const updatePerson = {};
+
+  if(req.body.display_name){
+    updatePerson.display_name = req.body.display_name;
+  }
+
+  if(req.body.date_of_birth){
+    if(isPostgresDateFormatValid(req.body.date_of_birth)){
+      updatePerson.date_of_birth = req.body.date_of_birth;
+    }
+    else{
+      return res.status(400).json({ error : "Date of birth format not valid. Please specify a YYYY-MM-DD date"});
+    }
+  }
+
+  if(req.body.available){
+    updatePerson.available = req.body.available;
+  }
+
+  if(req.body.place_of_living){
+    updatePerson.place_of_living = req.body.place_of_living;
+  }
+
+  // If we are tying to change password, the old password must be provided
+  if(req.body.old_password && req.body.new_password){
+    const user = await knex('Person')
+      .select('password')
+      .where({ id: req.jwt.person_id })
+      .first();
+      const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
+      if(passwordMatches){
+        updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
+      }
+      else{
+        return res.status(401).json({ error : "Password verification failed"});
+      }
+  }
+
+  if (Object.keys(updatePerson).length === 0) {
+    return res.status(400).json({ error : "Bad request. No data to update"});
   }
 
   try {
     await knex('Person')
-    .where('id', req.params.id)
-    .update({
-      display_name: req.body.display_name,
-      date_of_birth: req.body.date_of_birth,
-      available: req.body.available,
-      place_of_living: req.body.place_of_living
-    });
+      .where('id', req.params.id)
+      .update(updatePerson);
     return res.status(200).json({ success : "true"});
   }
   catch (error) {
@@ -505,6 +547,11 @@ function verifyToken(req, res, next) {
 function validateEmail(email) {
   const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
   return regex.test(email);
+}
+
+function isPostgresDateFormatValid(dateString) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  return regex.test(dateString);
 }
 
 // Exporting a function
