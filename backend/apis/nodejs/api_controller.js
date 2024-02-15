@@ -453,7 +453,12 @@ async function createOrganizationPost(req, res){
   }
 }
 
-// GET
+/**
+ * GET Request
+ * 
+ * Obtains an organization by its identifier.
+ * @returns the organization.
+ */
 async function getOrganization(req, res){
   const organizationId = req.params.id;
   try {
