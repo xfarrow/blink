@@ -565,10 +565,10 @@ async function addOrganizationAdmin(req, res){
  * DELETE Request
  * 
  * Deletes a Person from the list of Administrators of an Organization.
- * The logged user can only remove themselves.
+ * The logged user can only remove themselves. If no more Administrators
+ * are left, the Organization is removed.
  * 
  * Required field(s): organization_id
- * @returns 
  */
 async function removeOrganizationAdmin(req, res){
   
@@ -578,26 +578,31 @@ async function removeOrganizationAdmin(req, res){
     }
 
     try{
-      knex.transaction(async (trx) => {
-        await trx('OrganizationAdministrator')
-          .where('id_person', req.jwt.person_id)
-          .where('id_organization', req.body.organization_id)
-          .del();
-  
-          // Delete Organization if there are no admins left.
-          // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix.
-          // TODO: Check what level of transaction we are using to avoid inconsistencies. Update: it is READ COMMITTED see https://www.geeksforgeeks.org/transaction-isolation-levels-dbms/
-          const count = await trx('OrganizationAdministrator')
-            .count('id as count')
-            .where('id', req.body.organization_id);
+      const transaction = await knex.transaction();
 
-          if(count[0].count == 1){
-            await trx('Organization')
+      // We lock the table to ensure that we won't have concurrency issues
+      // while checking remainingAdministrators.
+      // TODO: Understand whether a lock on the table is necessary
+      await transaction.raw('LOCK TABLE "OrganizationAdministrator" IN SHARE MODE');
+      
+      await transaction('OrganizationAdministrator')
+        .where('id_person', req.jwt.person_id)
+        .where('id_organization', req.body.organization_id)
+        .del();
+
+      // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix. (database schema)
+      const remainingAdministrators = await transaction('OrganizationAdministrator')
+        .where({ id_organization: req.body.organization_id });
+
+      if (remainingAdministrators.length === 0) {
+        // If no more users, delete the organization
+        await transaction('Organization')
             .where('id', req.body.organization_id)
             .del();
-          }
-          return res.status(200).json({success : true});
-      });
+      }
+
+      await transaction.commit();
+      return res.status(200).json({success : true});
     }
     catch (error){
       console.error(error);
