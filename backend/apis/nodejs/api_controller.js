@@ -560,7 +560,6 @@ async function addOrganizationAdmin(req, res){
   }
 }
 
-// todo check correctness
 /**
  * DELETE Request
  * 
