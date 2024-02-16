@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public."OrganizationPost"
     CONSTRAINT "AuthorIdFK" FOREIGN KEY (original_author)
         REFERENCES public."Person" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID,
     CONSTRAINT "OrganizationIdFk" FOREIGN KEY (organization_id)
         REFERENCES public."Organization" (id) MATCH SIMPLE

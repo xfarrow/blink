@@ -10,12 +10,12 @@ CREATE TABLE IF NOT EXISTS public."OrganizationAdministrator"
     CONSTRAINT "OrganizationAdministratorOrganizationId" FOREIGN KEY (id_organization)
         REFERENCES public."Organization" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
         NOT VALID,
     CONSTRAINT "OrganizationAdministratorUserId" FOREIGN KEY (id_person)
         REFERENCES public."Person" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 )
 
 TABLESPACE pg_default;
