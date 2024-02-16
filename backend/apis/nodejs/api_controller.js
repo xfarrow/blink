@@ -374,37 +374,33 @@ async function updateOrganization(req, res){
   }
 }
 
-// TODO CHECK CORRECTNESS !!
-// DELETE
+/**
+ * DELETE Request
+ * 
+ * Deletes the specified organization if the logged user is
+ * one of its administrator 
+ */
 async function deleteOrganization(req, res){
   const organizationIdToDelete = req.params.id;
 
   try {
-    // Here we do not actually need a transaction. Two different queries,
-    // one who checks if the user is admin and one to delete the organization would've
-    // been sufficient and non-exploitable, but still it'd have been a
-    // TOC/TOU weakness (https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use).
-    // Whether a good practice or not is matter of debate.
-    // There are other points in the code using the same technique to address the same
-    // problem
-    knex.transaction(async (trx) => {
-      // Check if the current user is a organization's administrator
-      const isOrganizationAdmin = await trx('OrganizationAdministrator')
-        .where('id_person', req.jwt.person_id)
-        .where('id_organization', req.body.organization_id)
-        .select('*')
-        .first();
 
-        if(!isOrganizationAdmin){
-          return res.status(403).json({error : "Forbidden"});
-        }
+    const isOrganizationAdmin = await knex('OrganizationAdministrator')
+      .where('id_person', req.jwt.person_id)
+      .where('id_organization', organizationIdToDelete)
+      .select('*')
+      .first();
 
-        await knex('Organization')
-          .where({ id: organizationIdToDelete })
-          .del();
+    // Potential TOCTOU weakeness not to be worried about
+    if(!isOrganizationAdmin){
+      return res.status(403).json({error : "Forbidden"});
+    }
 
-        return res.status(200).json({success: true});
-      });
+    await knex('Organization')
+      .where({ id: organizationIdToDelete })
+      .del();
+
+    return res.status(200).json({success: true});
   }
   catch (error) {
     console.error(error);
