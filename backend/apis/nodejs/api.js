@@ -28,19 +28,27 @@ app.use(rateLimit({
   message: {error : "Too many requests from this IP, please try again later"}
 })); // Apply the rate limiter middleware to all routes
 
-app.post('/api/register', apiController.registerPerson); // Register a Person
-app.post('/api/login', apiController.login); // Login
-app.get('/api/person/:id', apiController.verifyToken, apiController.getPerson); // Obtain Person's details
-app.put('/api/person/:id', apiController.verifyToken, apiController.updatePerson); // Update Person's details
-app.delete('/api/person/delete', apiController.verifyToken, apiController.deletePerson); // Delete a Person
-app.post('/api/organization/admin', apiController.verifyToken, apiController.addOrganizationAdmin); // Add Organization Administrator
-app.delete('/api/organization/removeadmin', apiController.verifyToken, apiController.removeOrganizationAdmin); // Remove Organization Administrator
-app.post('/api/organization', apiController.verifyToken, apiController.createOrganization); // Create organization
-app.get('/api/organization/:id', apiController.verifyToken, apiController.getOrganization); // Get Organization data
-app.put('/api/organization/:id', apiController.verifyToken, apiController.updateOrganization); // Update organization
-app.delete('/api/organization/:id', apiController.verifyToken, apiController.deleteOrganization); // Delete organization
-app.post('/api/organization/post', apiController.verifyToken, apiController.createOrganizationPost); // Create a organization's post
-app.delete('/api/organization/post/:id', apiController.verifyToken, apiController.deleteOrganizationPost); // Delete a organization's post
+const publicRoutes = express.Router();
+publicRoutes.post('/register', apiController.registerPerson);
+publicRoutes.post('/login', apiController.login);
+
+const protectedRoutes = express.Router();
+protectedRoutes.use(apiController.verifyToken);
+protectedRoutes.get('/person/:id', apiController.getPerson);
+protectedRoutes.put('/person/:id', apiController.updatePerson);
+protectedRoutes.delete('/person/delete', apiController.deletePerson);
+protectedRoutes.post('/organization/admin', apiController.addOrganizationAdmin);
+protectedRoutes.delete('/organization/removeadmin', apiController.removeOrganizationAdmin);
+protectedRoutes.post('/organization', apiController.createOrganization);
+protectedRoutes.get('/organization/:id', apiController.getOrganization);
+protectedRoutes.put('/organization/:id', apiController.updateOrganization);
+protectedRoutes.delete('/organization/:id', apiController.deleteOrganization);
+protectedRoutes.post('/organization/post', apiController.createOrganizationPost);
+protectedRoutes.delete('/organization/post/:id', apiController.deleteOrganizationPost);
+
+// Mounting routes
+app.use('/api', publicRoutes); // Routes not requiring token
+app.use('/api', protectedRoutes); // Routes requiring token
 
 // Start the server
 app.listen(process.env.API_SERVER_PORT, () => {
