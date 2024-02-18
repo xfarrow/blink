@@ -59,6 +59,16 @@ async function registerPerson(req, res){
     const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
 
     try{
+
+      // Check whether e-mail exists already (enforced by database constraints)
+      const existingUser = await knex('Person')
+        .where('email', req.body.email)
+        .first();
+
+        if(existingUser){
+          return res.status(409).json({ error: "E-mail already in use" });
+        }
+
         // We need to insert either both in the "Person" table
         // and in the "ActivationLink" one, or in neither
         await knex.transaction(async (tr) => {
