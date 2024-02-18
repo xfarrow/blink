@@ -5,13 +5,13 @@
 CREATE TABLE IF NOT EXISTS public."Person"
 (
     id SERIAL PRIMARY KEY,
-    email character varying(128) COLLATE pg_catalog."default" NOT NULL,
-    password character varying(128) COLLATE pg_catalog."default" NOT NULL,
-    display_name character varying(128) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(128) NOT NULL UNIQUE,
+    password character varying(128) NOT NULL,
+    display_name character varying(128) NOT NULL,
     date_of_birth date,
     available boolean,
     enabled boolean NOT NULL DEFAULT false,
-    place_of_living character varying(128) COLLATE pg_catalog."default"
+    place_of_living character varying(128)
 )
 
 TABLESPACE pg_default;

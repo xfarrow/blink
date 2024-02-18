@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS public."Message"
     organization_id integer NOT NULL,
     author_on_behalf_of_organization integer,
     "timestamp" timestamp without time zone NOT NULL,
-    content character varying(4096) COLLATE pg_catalog."default" NOT NULL,
-    sender_type character varying(12) COLLATE pg_catalog."default" NOT NULL,
+    content character varying(4096) NOT NULL,
+    sender_type character varying(12) NOT NULL,
     CONSTRAINT "Message_pkey" PRIMARY KEY (id),
     CONSTRAINT "Message_author_on_behalf_of_company_fkey" FOREIGN KEY (author_on_behalf_of_organization)
         REFERENCES public."Person" (id) MATCH SIMPLE

@@ -5,9 +5,9 @@
 CREATE TABLE IF NOT EXISTS public."Organization"
 (
     id SERIAL PRIMARY KEY,
-    name character varying(128) COLLATE pg_catalog."default" NOT NULL,
-    location character varying COLLATE pg_catalog."default",
-    description text COLLATE pg_catalog."default",
+    name character varying(128) NOT NULL,
+    location character varying,
+    description text,
     is_hiring boolean
 )
 

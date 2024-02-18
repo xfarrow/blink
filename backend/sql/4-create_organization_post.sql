@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS public."OrganizationPost"
 (
     id SERIAL PRIMARY KEY,
     organization_id integer NOT NULL,
-    content text COLLATE pg_catalog."default" NOT NULL,
+    content text NOT NULL,
     created_at timestamp without time zone DEFAULT now(),
     original_author integer NOT NULL,
     CONSTRAINT "AuthorIdFK" FOREIGN KEY (original_author)
