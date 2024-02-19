@@ -140,7 +140,7 @@ async function getPerson(req, res){
   try {
     const user = await knex('Person')
       .select('*')
-      .where({ id: req.params.id, enabled: true })
+      .where({ id: req.params.id })
       .first();
     
     if(user){
@@ -154,6 +154,33 @@ async function getPerson(req, res){
   }
   catch (error) {
     console.log("Error while getting person: " + error);
+    return res.status(500).json({error : "Internal server error"});
+  }
+}
+
+/**
+ * 
+ * GET Request
+ * 
+ * Get myself, from the JWT token
+ *
+ * @returns Person's details
+ */
+async function getMyself(req, res){
+  try{
+    const person = await knex('Person')
+      .select('*')
+      .where({ id: req.jwt.person_id })
+      .first();
+
+      if(person){
+        delete person['password'];
+        return res.status(200).send(person);
+      }
+      return res.status(404).json({error: "Not found"});
+  }
+  catch (error){
+    console.log("Error while getting myself: " + error);
     return res.status(500).json({error : "Internal server error"});
   }
 }
@@ -243,6 +270,8 @@ async function deletePerson(req, res) {
       .where({id : req.jwt.person_id})
       .del();
     return res.status(200).json({success: true});
+
+    // TODO: Delete Organization if this user was its only administrator
   } 
   catch (error) {
     console.log("Error deleting a Person: " + error);
@@ -687,6 +716,7 @@ module.exports = {
     registerPerson,
     login,
     getPerson,
+    getMyself,
     updatePerson,
     deletePerson,
     verifyToken,
