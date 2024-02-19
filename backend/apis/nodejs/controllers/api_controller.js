@@ -173,6 +173,8 @@ async function getMyself(req, res){
       .where({ id: req.jwt.person_id })
       .first();
 
+      console.log(req.jwt.person_id);
+
       if(person){
         delete person['password'];
         return res.status(200).send(person);

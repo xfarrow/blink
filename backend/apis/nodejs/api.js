@@ -15,7 +15,7 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const apiController = require('./api_controller.js');
+const apiController = require('./controllers/api_controller.js');
 require('dotenv').config();
 
 // Application configuration
@@ -34,8 +34,8 @@ publicRoutes.post('/login', apiController.login);
 
 const protectedRoutes = express.Router();
 protectedRoutes.use(apiController.verifyToken);
-protectedRoutes.get('/person/:id', apiController.getPerson);
 protectedRoutes.get('/person/myself', apiController.getMyself);
+protectedRoutes.get('/person/:id', apiController.getPerson);
 protectedRoutes.put('/person/:id', apiController.updatePerson);
 protectedRoutes.delete('/person/delete', apiController.deletePerson);
 protectedRoutes.post('/organization/admin', apiController.addOrganizationAdmin);
