@@ -426,22 +426,24 @@ async function deleteOrganization(req, res){
 
   try {
 
-    const isOrganizationAdmin = await knex('OrganizationAdministrator')
-      .where('id_person', req.jwt.person_id)
-      .where('id_organization', organizationIdToDelete)
-      .select('*')
-      .first();
-
-    // Potential TOCTOU weakeness not to be worried about
-    if(!isOrganizationAdmin){
-      return res.status(403).json({error : "Forbidden"});
-    }
-
-    await knex('Organization')
+    // Delete organization if admin
+    const deletedRows = await knex('Organization')
       .where({ id: organizationIdToDelete })
+      .whereExists(function(){
+        this.select('*')
+          .from('OrganizationAdministrator')
+          .where('id_person', req.jwt.person_id)
+          .where('id_organization', organizationIdToDelete)
+      })
       .del();
 
-    return res.status(200).json({success: true});
+    if(deletedRows == 0){
+      return res.status(403).json({error: "Forbidden"});
+    }
+    else{
+      return res.status(200).json({success: true});
+    }
+      
   }
   catch (error) {
     console.error(error);
@@ -473,6 +475,7 @@ async function createOrganizationPost(req, res){
     .first();
     
     // Non-exploitable TOC/TOU weakness
+    // For more information https://softwareengineering.stackexchange.com/questions/451038/when-should-i-be-worried-of-time-of-check-time-of-use-vulnerabilities-during-dat
     if(!isOrganizationAdmin){
       return res.status(403).json({error : "Forbidden"});
     }
