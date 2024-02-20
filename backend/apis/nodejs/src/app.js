@@ -17,6 +17,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const apiController = require('./controllers/api_controller.js'); // todo refactor
 const personRoutes = require('./routes/person_routes.js');
+const organizationRoutes = require('./routes/organization_routes.js');
 const jwt_utils = require('./utils/jwt_utils.js');
 require('dotenv').config();
 
@@ -42,10 +43,10 @@ protectedRoutes.put('/person/:id', personRoutes.updatePerson);
 protectedRoutes.delete('/person/delete', personRoutes.deletePerson);
 protectedRoutes.post('/organization/admin', apiController.addOrganizationAdmin);
 protectedRoutes.delete('/organization/removeadmin', apiController.removeOrganizationAdmin);
-protectedRoutes.post('/organization', apiController.createOrganization);
-protectedRoutes.get('/organization/:id', apiController.getOrganization);
-protectedRoutes.put('/organization/:id', apiController.updateOrganization);
-protectedRoutes.delete('/organization/:id', apiController.deleteOrganization);
+protectedRoutes.post('/organization', organizationRoutes.createOrganization);
+protectedRoutes.get('/organization/:id', organizationRoutes.getOrganization);
+protectedRoutes.put('/organization/:id', organizationRoutes.updateOrganization);
+protectedRoutes.delete('/organization/:id', organizationRoutes.deleteOrganization);
 protectedRoutes.post('/organization/post', apiController.createOrganizationPost);
 protectedRoutes.delete('/organization/post/:id', apiController.deleteOrganizationPost);
 
