@@ -12,14 +12,17 @@
 */
 
 // Importing modules
+// TODO: clean up
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const apiController = require('./controllers/api_controller.js'); // todo refactor
 const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
+const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
+const organizationPostRoutes = require('./routes/organization_post_routes.js')
 const jwt_utils = require('./utils/jwt_utils.js');
-require('dotenv').config();
+
 
 // Application configuration
 const app = express();
@@ -41,14 +44,14 @@ protectedRoutes.get('/person/myself', personRoutes.getMyself);
 protectedRoutes.get('/person/:id', personRoutes.getPerson);
 protectedRoutes.put('/person/:id', personRoutes.updatePerson);
 protectedRoutes.delete('/person/delete', personRoutes.deletePerson);
-protectedRoutes.post('/organization/admin', apiController.addOrganizationAdmin);
-protectedRoutes.delete('/organization/removeadmin', apiController.removeOrganizationAdmin);
+protectedRoutes.post('/organization/admin', organizationAdminRoutes.addOrganizationAdmin);
+protectedRoutes.delete('/organization/removeadmin', organizationAdminRoutes.removeOrganizationAdmin);
 protectedRoutes.post('/organization', organizationRoutes.createOrganization);
 protectedRoutes.get('/organization/:id', organizationRoutes.getOrganization);
 protectedRoutes.put('/organization/:id', organizationRoutes.updateOrganization);
 protectedRoutes.delete('/organization/:id', organizationRoutes.deleteOrganization);
-protectedRoutes.post('/organization/post', apiController.createOrganizationPost);
-protectedRoutes.delete('/organization/post/:id', apiController.deleteOrganizationPost);
+protectedRoutes.post('/organization/post', organizationPostRoutes.createOrganizationPost);
+protectedRoutes.delete('/organization/post/:id', organizationPostRoutes.deleteOrganizationPost);
 
 // Mounting routes
 app.use('/api', publicRoutes); // Routes not requiring token
