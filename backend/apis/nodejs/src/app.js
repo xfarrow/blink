@@ -53,7 +53,8 @@ protectedRoutes.delete('/organization/post/:id', apiController.deleteOrganizatio
 app.use('/api', publicRoutes); // Routes not requiring token
 app.use('/api', protectedRoutes); // Routes requiring token
 
-// Start the server
-app.listen(process.env.API_SERVER_PORT, () => {
-  console.log(`Blink API server is running on port ${process.env.API_SERVER_PORT}`);
+// Start the server. Default port is 3000
+const port = process.env.API_SERVER_PORT || 3000;
+app.listen(port, () => {
+  console.log(`Blink API server is running on port ${port}`);
 });

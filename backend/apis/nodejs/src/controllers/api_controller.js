@@ -10,7 +10,7 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 */
-
+// todo this file shall be deleted
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
