@@ -26,6 +26,7 @@ function generateToken(person_id) {
       }
   
       // If the token is valid, store the decoded data in the request object
+      // req.jwt will contain the payload created in generateToken
       req.jwt = decoded;
       next();
     });
