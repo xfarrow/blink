@@ -12,10 +12,7 @@
 */
 // todo this file shall be deleted
 require('dotenv').config();
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const knex = require('../utils/knex_config');
-const jwt = require('jsonwebtoken');
 
 // ======== BEGIN API ENDPOINTS ========
 
