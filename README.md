@@ -1,6 +1,4 @@
-<p align="center">
-<img src="/frontend/html/content/blink-logo-small.jpg" height="150">
-</p>
+
 
 # Blink
 Empowering Connections, Fostering Growth
