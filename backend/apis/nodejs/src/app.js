@@ -15,7 +15,9 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const apiController = require('./controllers/api_controller.js');
+const apiController = require('./controllers/api_controller.js'); // todo refactor
+const personRoutes = require('./routes/person_routes.js');
+const jwt_utils = require('./utils/jwt_utils.js');
 require('dotenv').config();
 
 // Application configuration
@@ -29,15 +31,15 @@ app.use(rateLimit({
 })); // Apply the rate limiter middleware to all routes
 
 const publicRoutes = express.Router();
-publicRoutes.post('/register', apiController.registerPerson);
-publicRoutes.post('/login', apiController.login);
+publicRoutes.post('/register', personRoutes.registerPerson);
+publicRoutes.post('/login', personRoutes.login);
 
 const protectedRoutes = express.Router();
-protectedRoutes.use(apiController.verifyToken);
-protectedRoutes.get('/person/myself', apiController.getMyself);
-protectedRoutes.get('/person/:id', apiController.getPerson);
-protectedRoutes.put('/person/:id', apiController.updatePerson);
-protectedRoutes.delete('/person/delete', apiController.deletePerson);
+protectedRoutes.use(jwt_utils.verifyToken);
+protectedRoutes.get('/person/myself', personRoutes.getMyself);
+protectedRoutes.get('/person/:id', personRoutes.getPerson);
+protectedRoutes.put('/person/:id', personRoutes.updatePerson);
+protectedRoutes.delete('/person/delete', personRoutes.deletePerson);
 protectedRoutes.post('/organization/admin', apiController.addOrganizationAdmin);
 protectedRoutes.delete('/organization/removeadmin', apiController.removeOrganizationAdmin);
 protectedRoutes.post('/organization', apiController.createOrganization);
