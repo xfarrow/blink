@@ -14,16 +14,7 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: process.env.POSTGRES_SERVER,
-    user: process.env.POSTGRES_USERNAME,
-    password: process.env.POSTGRES_PASSWORD,
-    port: process.env.POSTGRES_PORT,
-    database: 'Blink'
-  }
-});
+const knex = require('../utils/knex_config');
 const jwt = require('jsonwebtoken');
 
 // ======== BEGIN API ENDPOINTS ========
