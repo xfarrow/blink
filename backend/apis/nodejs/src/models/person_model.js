@@ -49,6 +49,11 @@ async function getPersonByEmail(email){
         .first();
 }
 
+/**
+ * Get Person by Id
+ * @param {*} id - The id to look the person for
+ * @returns 
+ */
 async function getPersonById(id){
     return await knex('Person')
       .select('*')
