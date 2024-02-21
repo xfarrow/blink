@@ -27,7 +27,7 @@ const bcrypt = require('bcrypt');
  */
 function createPerson(email, password, display_name, date_of_birth, available, enabled, place_of_living) {
     const person = {
-        email: email,
+        email: email.toLowerCase(),
         password: password,
         display_name: display_name,
         date_of_birth: date_of_birth,
@@ -45,7 +45,7 @@ function createPerson(email, password, display_name, date_of_birth, available, e
  */
 async function getPersonByEmail(email){
     return await knex('Person')
-        .where('email', email)
+        .where('email', email.toLowerCase())
         .first();
 }
 
@@ -73,7 +73,7 @@ async function registerPerson(person, activationLink){
     await knex.transaction(async (tr) => {
       const personIdResult = await tr('Person')
         .insert({ 
-          email: person.email, 
+          email: person.email.toLowerCase(), 
           password: person.password,
           display_name: person.display_name,
           date_of_birth: person.date_of_birth,
@@ -99,7 +99,7 @@ async function registerPerson(person, activationLink){
  */
 async function getPersonByEmailAndPassword(email, password){
     const person = await knex('Person')
-      .where('email', email)
+      .where('email', email.toLowerCase())
       .where('enabled', true)
       .select('*')
       .first();
