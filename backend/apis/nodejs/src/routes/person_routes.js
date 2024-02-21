@@ -16,6 +16,7 @@ const knex = require('../utils/knex_config');
 const jwt_utils = require('../utils/jwt_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const person_model = require('../models/person_model');
 
 /**
  * POST Request
@@ -28,64 +29,44 @@ const crypto = require('crypto');
  */
 async function registerPerson(req, res){
   
-    if (process.env.ALLOW_USER_REGISTRATION === 'false'){
-      return res.status(403).json({error : "Users cannot register on this server"});
+  // Does this server allow users to register?
+  if (process.env.ALLOW_USER_REGISTRATION === 'false'){
+    return res.status(403).json({error : "Users cannot register on this server"});
+  }
+  // Ensure that the required fields are present before proceeding
+  if (!req.body.display_name || !req.body.email || !req.body.password) {
+    return res.status(400).json({ error : "Some or all required fields are missing"});
+  }
+  if(!validator.validateEmail(req.body.email)){
+    return res.status(400).json({ error : "The email is not in a valid format"});
+  }
+
+  // Generate activation link token
+  const activationLink = crypto.randomBytes(16).toString('hex');
+  // Hash provided password
+  const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
+
+  try{
+    // Check whether e-mail exists already (enforced by database constraints)
+    const existingUser = await person_model.getPersonByEmail(req.body.email);
+    if(existingUser){
+      return res.status(409).json({ error: "E-mail already in use" });
     }
-
-    // Ensure that the required fields are present before proceeding
-    if (!req.body.display_name || !req.body.email || !req.body.password) {
-      return res.status(400).json({ error : "Some or all required fields are missing"});
-    }
-
-    if(!validator.validateEmail(req.body.email)){
-      return res.status(400).json({ error : "The email is not in a valid format"});
-    }
-
-    // Generate activation link token
-    const activationLink = crypto.randomBytes(16).toString('hex');
-
-    // Hash provided password
-    const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
-
-    try{
-
-      // Check whether e-mail exists already (enforced by database constraints)
-      const existingUser = await knex('Person')
-        .where('email', req.body.email)
-        .first();
-
-        if(existingUser){
-          return res.status(409).json({ error: "E-mail already in use" });
-        }
-
-        // We need to insert either both in the "Person" table
-        // and in the "ActivationLink" one, or in neither
-        await knex.transaction(async (tr) => {
-          
-          const personIdResult = await tr('Person')
-            .insert({ 
-              email: req.body.email, 
-              password: await hashPasswordPromise,
-              display_name: req.body.display_name,
-              date_of_birth: req.body.date_of_birth,
-              available: req.body.available,
-              enabled: true,
-              place_of_living: req.body.place_of_living
-            })
-            .returning("id");
-  
-          await tr('ActivationLink')
-            .insert({
-              person_id: personIdResult[0].id,
-              identifier: activationLink
-            });
-      });
-      return res.status(200).json({ activationLink: activationLink });
-    }
-    catch (error){
-      console.error('Error registering person:', error);
-      res.status(500).json({error : "Internal server error"});
-    }
+    const personToInsert = person_model.createPerson(
+      req.body.email, 
+      await hashPasswordPromise,
+      req.body.display_name,
+      req.body.date_of_birth,
+      req.body.available,
+      true,
+      req.body.place_of_living);
+    await person_model.registerPerson(personToInsert, activationLink);
+    return res.status(200).json({ activationLink: activationLink });
+  }
+  catch (error){
+    console.error('Error registering person:', error);
+    res.status(500).json({error : "Internal server error"});
+  }
 }
 
 /**
@@ -105,14 +86,18 @@ async function login(req, res){
     return res.status(400).json({error : "Invalid request"});
   }
 
-  const person = await checkUserCredentials(req.body.email, req.body.password);
-
-  if (person){
-    const token = jwt_utils.generateToken(person.id);
-    res.status(200).json({token: token });
-  }
-  else{ 
-    res.status(401).json({error : "Unauthorized"});
+  try{
+    const person = await person_model.getPersonByEmailAndPassword(req.body.email, req.body.password);
+    if (person){
+      const token = jwt_utils.generateToken(person.id);
+      res.status(200).json({token: token });
+    }
+    else{ 
+      res.status(401).json({error : "Unauthorized"});
+    }
+  } catch(error){
+    console.error('Error logging in: ', error);
+    res.status(500).json({error : "Internal server error"});
   }
 }
 
@@ -127,16 +112,12 @@ async function login(req, res){
  */
 async function getPerson(req, res){
   try {
-    const user = await knex('Person')
-      .select('*')
-      .where({ id: req.params.id })
-      .first();
-    
-    if(user){
+    const person = await person_model.getPersonById(req.params.id);
+    if(person){
       // I am retrieving either myself or an enabled user
-      if(user.id == req.jwt.person_id || user.enabled){
-        delete user['password']; // remove password field for security reasons
-        return res.status(200).send(user);
+      if(person.id == req.jwt.person_id || person.enabled){
+        delete person['password']; // remove password field for security reasons
+        return res.status(200).send(person);
       }
     }
     return res.status(404).json({error: "Not found"});
@@ -157,18 +138,12 @@ async function getPerson(req, res){
  */
 async function getMyself(req, res){
   try{
-    const person = await knex('Person')
-      .select('*')
-      .where({ id: req.jwt.person_id })
-      .first();
-
-      console.log(req.jwt.person_id);
-
-      if(person){
-        delete person['password'];
-        return res.status(200).send(person);
-      }
-      return res.status(404).json({error: "Not found"});
+    const person = await person_model.getPersonById(req.jwt.person_id);
+    if(person){
+      delete person['password'];
+      return res.status(200).send(person);
+    }
+    return res.status(404).json({error: "Not found"});
   }
   catch (error){
     console.log("Error while getting myself: " + error);
@@ -214,7 +189,7 @@ async function updatePerson(req, res){
   if(req.body.place_of_living){
     updatePerson.place_of_living = req.body.place_of_living;
   }
-
+ 
   // If we are tying to change password, the old password must be provided
   if(req.body.old_password && req.body.new_password){
     const user = await knex('Person')
@@ -235,9 +210,7 @@ async function updatePerson(req, res){
   }
 
   try {
-    await knex('Person')
-      .where('id', req.params.id)
-      .update(updatePerson);
+    await person_model.updatePerson(updatePerson, req.params.id);
     return res.status(200).json({ success : "true"});
   }
   catch (error) {
@@ -256,41 +229,16 @@ async function updatePerson(req, res){
  *
  */
 async function deletePerson(req, res) {
+  // TODO: Delete Organization if this user was its only administrator
   try {
-    await knex('Person')
-      .where({id : req.jwt.person_id})
-      .del();
+    await person_model.deletePerson(req.jwt.person_id);
     return res.status(200).json({success: true});
-
-    // TODO: Delete Organization if this user was its only administrator
   } 
   catch (error) {
     console.log("Error deleting a Person: " + error);
     return res.status(500).json({error : "Internal server error"});
   }
 }
-
-async function checkUserCredentials(email, password){
-    try {
-      const user = await knex('Person')
-        .where('email', email)
-        .where('enabled', true)
-        .select('*')
-        .first();
-  
-      if(user){
-        const passwordMatches = await bcrypt.compare(password, user.password);
-        if (passwordMatches) {
-          return user;
-        }
-      }
-      return null;
-    }
-    catch (error) {
-      console.log(error);
-      return null;
-    }
-  }
 
 // Exporting a function
 // means making a JavaScript function defined in one
