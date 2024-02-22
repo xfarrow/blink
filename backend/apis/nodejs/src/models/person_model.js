@@ -25,7 +25,7 @@ const bcrypt = require('bcrypt');
  * @param {*} place_of_living 
  * @returns 
  */
-function createPerson(email, password, display_name, date_of_birth, available, enabled, place_of_living) {
+function person(email, password, display_name, date_of_birth, available, enabled, place_of_living) {
     const person = {
         email: email.toLowerCase(),
         password: password,
@@ -139,7 +139,7 @@ async function deletePerson(person_id){
 // means making a JavaScript function defined in one
 // module available for use in another module.
 module.exports = {
-    createPerson,
+    person,
     getPersonByEmail,
     getPersonById,
     getPersonByEmailAndPassword,

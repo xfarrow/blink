@@ -52,7 +52,7 @@ async function registerPerson(req, res){
     if(existingUser){
       return res.status(409).json({ error: "E-mail already in use" });
     }
-    const personToInsert = person_model.createPerson(
+    const personToInsert = person_model.person(
       req.body.email, 
       await hashPasswordPromise,
       req.body.display_name,
