@@ -62,3 +62,5 @@ const port = process.env.API_SERVER_PORT || 3000;
 app.listen(port, () => {
   console.log(`Blink API server is running on port ${port}`);
 });
+
+module.exports = app;
