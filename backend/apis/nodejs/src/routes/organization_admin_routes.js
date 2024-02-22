@@ -12,6 +12,7 @@
 */
 
 const knex = require('../utils/knex_config');
+const organization_admin_model = require('../models/organization_admin_model');
 
 /**
  * POST Method
@@ -29,28 +30,19 @@ async function addOrganizationAdmin(req, res){
     }
   
     try {
-      const isPersonAdmin = await knex('OrganizationAdministrator')
-        .where('id_person', req.jwt.person_id)
-        .where('id_organization', req.body.organization_id)
-        .select('*')
-        .first();
-  
+      const isPersonAdmin = await organization_admin_model.isPersonAdmin(req.jwt.person_id, req.body.organization_id);
+      // TOC/TOU
       if(!isPersonAdmin){
         return res.status(401).json({error : "Forbidden"});
       }
-  
-      await knex('OrganizationAdministrator')
-        .insert({
-          id_person: req.body.person_id,
-          id_organization: req.body.organization_id
-        });
+      await organization_admin_model.addOrganizationAdministrator(req.body.person_id, req.body.organization_id);
       return res.status(200).json({success : true});
     }
     catch (error) {
       console.error('Error while adding organization admin: ' + error);
       res.status(500).json({error : "Internal server error"});
     }
-  }
+}
   
   /**
    * DELETE Request
@@ -69,39 +61,16 @@ async function addOrganizationAdmin(req, res){
       }
   
       try{
-        const transaction = await knex.transaction();
-  
-        // We lock the table to ensure that we won't have concurrency issues
-        // while checking remainingAdministrators.
-        // TODO: Understand whether a lock on the table is necessary
-        await transaction.raw('LOCK TABLE "OrganizationAdministrator" IN SHARE MODE');
-        
-        await transaction('OrganizationAdministrator')
-          .where('id_person', req.jwt.person_id)
-          .where('id_organization', req.body.organization_id)
-          .del();
-  
-        // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix. (database schema)
-        const remainingAdministrators = await transaction('OrganizationAdministrator')
-          .where({ id_organization: req.body.organization_id });
-  
-        if (remainingAdministrators.length === 0) {
-          // If no more users, delete the organization
-          await transaction('Organization')
-              .where('id', req.body.organization_id)
-              .del();
-        }
-  
-        await transaction.commit();
+        await organization_admin_model.removeOrganizationAdmin(req.jwt.person_id, req.body.organization_id);
         return res.status(200).json({success : true});
       }
       catch (error){
         console.error(error);
         return res.status(500).json({ error: "Internal server error"});
       }
-  }
+}
 
-  module.exports = {
-    addOrganizationAdmin,
-    removeOrganizationAdmin
+module.exports = {
+  addOrganizationAdmin,
+  removeOrganizationAdmin
 };
