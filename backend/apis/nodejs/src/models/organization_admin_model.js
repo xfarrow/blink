@@ -11,7 +11,6 @@
     IN THE SOFTWARE.
 */
 
-const { removeOrganizationAdmin } = require('../routes/organization_admin_routes');
 const knex = require('../utils/knex_config');
 
 /**
