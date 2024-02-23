@@ -10,24 +10,24 @@
 
     Remember that Promises are not intrensically asyncronous
 */
-let promise = new Promise(function(resolve, reject) {
-    setTimeout(() => resolve("done"), 500);
-  });
+const promise = new Promise(function (resolve, reject) {
+  setTimeout(() => resolve('done'), 500);
+});
 
 /*
     The first argument of .then is a function that runs when the promise is resolved and receives the result.
     The second argument of .then is a function that runs when the promise is rejected and receives the error.
 */
 promise.then(
-    result => console.log("The operation was successful. It returned " + result),
-    error => console.log("The operation was not successful: " + error)
+  result => console.log('The operation was successful. It returned ' + result),
+  error => console.log('The operation was not successful: ' + error)
 );
 
 /*
     Or we can pass only one argument if we're interested only in a positive result
 */
 promise.then(
-    result => console.log("The operation was successful. It returned " + result)
+  result => console.log('The operation was successful. It returned ' + result)
 );
 
 /*
@@ -37,12 +37,12 @@ promise.then(
     promise.catch internally just calls promise.then(null, f)
 */
 promise.catch(
-    error => console.log(error)
+  error => console.log(error)
 );
 
 /*
     finally gets always called
 */
 promise.finally(
-    () => console.log("The execution has terminated. Bye")
+  () => console.log('The execution has terminated. Bye')
 );

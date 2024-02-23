@@ -2,11 +2,11 @@
     This code is part of Blink
     licensed under GPLv3
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-    IMPLIED,  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED,  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
     THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 */
@@ -20,9 +20,8 @@ const rateLimit = require('express-rate-limit');
 const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
-const organizationPostRoutes = require('./routes/organization_post_routes.js')
+const organizationPostRoutes = require('./routes/organization_post_routes.js');
 const jwt_utils = require('./utils/jwt_utils.js');
-
 
 // Application configuration
 const app = express();
@@ -31,7 +30,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use(rateLimit({
   windowMs: process.env.LIMITER_WINDOW,
   max: process.env.LIMITER_MAXIMUM_PER_WINDOW,
-  message: {error : "Too many requests from this IP, please try again later"}
+  message: { error: 'Too many requests from this IP, please try again later' }
 })); // Apply the rate limiter middleware to all routes
 
 const publicRoutes = express.Router();
