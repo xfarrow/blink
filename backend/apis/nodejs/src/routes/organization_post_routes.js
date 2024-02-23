@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const knex = require('../utils/knex_config');
+const organizationPostModel = require('../models/organization_post_model');
 
 /**
    * POST Request
@@ -27,28 +27,14 @@ async function createOrganizationPost (req, res) {
     return res.status(400).json({ error: 'Invalid request' });
   }
 
+  const organization = organizationPostModel.organizationPost(
+    req.body.organization_id,
+    req.body.content,
+    req.jwt.person_id);
+
   try {
-    // Check if the current user is a organization's administrator
-    const isOrganizationAdmin = await knex('OrganizationAdministrator')
-      .where('id_person', req.jwt.person_id)
-      .where('id_organization', req.body.organization_id)
-      .select('*')
-      .first();
-
-    // Non-exploitable TOC/TOU weakness
-    // For more information https://softwareengineering.stackexchange.com/questions/451038/when-should-i-be-worried-of-time-of-check-time-of-use-vulnerabilities-during-dat
-    if (!isOrganizationAdmin) {
-      return res.status(403).json({ error: 'Forbidden' });
-    }
-
-    const organizationPost = await knex('OrganizationPost')
-      .insert({
-        organization_id: req.body.organization_id,
-        content: req.body.content,
-        original_author: req.jwt.person_id
-      })
-      .returning('*');
-    return res.status(200).json(organizationPost[0]);
+    const insertedOrganization = await organizationPostModel.insertOrganizationPost(organization);
+    return res.status(200).json(insertedOrganization);
   } catch (error) {
     console.log('Error while creating Organization Post: ' + error);
     return res.status(500).json({ error: 'Internal server error' });
@@ -64,21 +50,10 @@ async function createOrganizationPost (req, res) {
  * Required field(s): none.
  */
 async function deleteOrganizationPost (req, res) {
-  const organizationPostIdToDelete = req.params.id;
-
   try {
-    const isOrganizationAdmin = await knex('OrganizationPost')
-      .join('OrganizationAdministrator', 'OrganizationPost.organization_id', 'OrganizationAdministrator.id_organization')
-      .where('OrganizationPost.id', organizationPostIdToDelete)
-      .where('OrganizationAdministrator.id_person', req.jwt.person_id)
-      .select('*')
-      .first();
-
-    // Unexploitable TOC/TOU
+    const isOrganizationAdmin = await organizationPostModel.isPersonPostAdministrator(req.params.id, req.jwt.person_id);
     if (isOrganizationAdmin) {
-      await knex('OrganizationPost')
-        .where('id', organizationPostIdToDelete)
-        .del();
+      await organizationPostModel.deleteOrganizationPost(req.params.id);
       return res.status(200).json({ success: true });
     } else {
       return res.status(401).json({ error: 'Forbidden' });

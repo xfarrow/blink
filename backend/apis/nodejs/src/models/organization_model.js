@@ -18,15 +18,15 @@ const knex = require('../utils/knex_config');
  * @param {*} name
  * @param {*} location
  * @param {*} description
- * @param {*} is_hiring
+ * @param {*} isHiring
  * @returns
  */
-function organization (name, location, description, is_hiring) {
+function organization (name, location, description, isHiring) {
   const organization = {
     name,
     location,
     description,
-    is_hiring
+    isHiring
   };
   return organization;
 }
@@ -99,7 +99,7 @@ async function updateOrganizationIfAdministrator (organization, organizationId, 
   // //   name: req.body.name,
   // //   location: req.body.location,
   // //   description: req.body.description,
-  // //   is_hiring: req.body.is_hiring
+  // //   is_hiring: req.body.isHiring
   // // });
 
   const numberOfUpdatedRows = await knex('Organization')
