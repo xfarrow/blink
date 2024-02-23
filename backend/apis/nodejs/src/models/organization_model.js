@@ -142,6 +142,6 @@ module.exports = {
   organization,
   insertOrganization,
   updateOrganizationIfAdministrator,
-  updateOrganizationIfAdministrator,
+  deleteOrganizationIfAdmin,
   deleteOrganizationIfAdmin
 };

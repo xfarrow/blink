@@ -36,7 +36,7 @@ async function createOrganizationPost (req, res) {
     const insertedOrganization = await organizationPostModel.insertOrganizationPost(organization);
     return res.status(200).json(insertedOrganization);
   } catch (error) {
-    console.log('Error while creating Organization Post: ' + error);
+    console.log(`Error while creating Organization Post: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -59,7 +59,7 @@ async function deleteOrganizationPost (req, res) {
       return res.status(401).json({ error: 'Forbidden' });
     }
   } catch (error) {
-    console.log(error);
+    console.log(`Error while deleting Organization Post: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

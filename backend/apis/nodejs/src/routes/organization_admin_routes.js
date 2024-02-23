@@ -11,7 +11,6 @@
     IN THE SOFTWARE.
 */
 
-const knex = require('../utils/knex_config');
 const organization_admin_model = require('../models/organization_admin_model');
 
 /**
