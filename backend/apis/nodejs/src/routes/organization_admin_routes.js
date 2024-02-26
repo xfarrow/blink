@@ -28,13 +28,11 @@ async function addOrganizationAdmin (req, res) {
   }
 
   try {
-    const isPersonAdmin = await organization_admin_model.isPersonAdmin(req.jwt.person_id, req.body.organization_id);
-    // TOC/TOU
-    if (!isPersonAdmin) {
-      return res.status(401).json({ error: 'Forbidden' });
+    const success = await organization_admin_model.addOrganizationAdministrator(req.body.person_id, req.body.organization_id, req.jwt.person_id);
+    if(success){
+      return res.status(200).json({ success: true });
     }
-    await organization_admin_model.addOrganizationAdministrator(req.body.person_id, req.body.organization_id);
-    return res.status(200).json({ success: true });
+    return res.status(403).json({ error: 'Forbidden' });
   } catch (error) {
     console.error(`Error in function ${addOrganizationAdmin.name}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });

@@ -26,20 +26,28 @@ async function isPersonAdmin (personId, organizationId) {
     .where('id_organization', organizationId)
     .select('*')
     .first();
-  return isPersonAdmin;
+  return !!isPersonAdmin;
 }
 
 /**
- * Add the specified Person as the Organization administrator
- * @param {*} personId
+ * Add the specified Person as the Organization administrator, if thr requester is already
+ * an administrator
+ * @param {*} personId Id of the person to add as administrator
  * @param {*} organizationId
+ * @param {*} requester Id of the person requesting the addition
  */
-async function addOrganizationAdministrator (personId, organizationId) {
-  await knex('OrganizationAdministrator')
+async function addOrganizationAdministrator (personId, organizationId, requester) {
+
+  const isPersonAdmin = await organization_admin_model.isPersonAdmin(requester, organizationId);
+  if(isPersonAdmin){
+    await knex('OrganizationAdministrator')
     .insert({
       id_person: personId,
       id_organization: organizationId
     });
+    return true;
+  }
+  return false;
 }
 
 /**

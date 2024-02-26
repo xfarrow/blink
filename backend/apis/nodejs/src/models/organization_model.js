@@ -34,7 +34,7 @@ function organization (name, location, description, isHiring) {
 /**
  * Gets an Organization by its identifier
  * @param {*} id
- * @returns
+ * @returns the Organization
  */
 async function getOrganizationById (id) {
   const organization = await knex('Organization')
@@ -66,13 +66,13 @@ async function insertOrganization (organization, organizationAdministratorId) {
 
 /**
  * Updates an Organization specified by the OrganizationId, if and
- * only if the specified personId is one of its Administrator
+ * only if the specified requester is one of its Administrator
  * @param {*} organization
  * @param {*} organizationId
- * @param {*} personId
+ * @param {*} requester
  * @returns true if the row was updated, false otherwise
  */
-async function updateOrganizationIfAdministrator (organization, organizationId, personId) {
+async function updateOrganization (organization, organizationId, requester) {
   // // const isOrganizationAdmin = await knex('OrganizationAdministrator')
   // // .where('id_person', req.jwt.person_id)
   // // .where('id_organization', req.params.id)
@@ -107,7 +107,7 @@ async function updateOrganizationIfAdministrator (organization, organizationId, 
     .whereExists(function () {
       this.select('*')
         .from('OrganizationAdministrator')
-        .where('id_person', personId)
+        .where('id_person', requester)
         .where('id_organization', organizationId);
     })
     .update(organization);
@@ -118,16 +118,16 @@ async function updateOrganizationIfAdministrator (organization, organizationId, 
  * Deletes an Organization if the specified PersonId is
  * one of its administrators
  * @param {*} organizationId Id of the Organization to delete
- * @param {*} personId PersonId of the supposedly administrator
+ * @param {*} requester PersonId of the supposedly administrator
  * @returns true if the Organization was successfully deleted, false otherwise
  */
-async function deleteOrganizationIfAdmin (organizationId, personId) {
+async function deleteOrganization (organizationId, requester) {
   const numberOfDeletedRows = await knex('Organization')
     .where({ id: organizationId })
     .whereExists(function () {
       this.select('*')
         .from('OrganizationAdministrator')
-        .where('id_person', personId)
+        .where('id_person', requester)
         .where('id_organization', organizationId);
     })
     .del();
@@ -141,7 +141,6 @@ module.exports = {
   getOrganizationById,
   organization,
   insertOrganization,
-  updateOrganizationIfAdministrator,
-  deleteOrganizationIfAdmin,
-  deleteOrganizationIfAdmin
+  updateOrganization,
+  deleteOrganization
 };

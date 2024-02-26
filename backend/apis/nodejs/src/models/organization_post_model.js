@@ -44,7 +44,7 @@ async function insertOrganizationPost (organization) {
   // Non-exploitable TOC/TOU weakness
   // For more information https://softwareengineering.stackexchange.com/questions/451038/when-should-i-be-worried-of-time-of-check-time-of-use-vulnerabilities-during-dat
   if (!isOrganizationAdmin) {
-    return res.status(403).json({ error: 'Forbidden' });
+    return false;
   }
 
   const organizationPost = await knex('OrganizationPost')
@@ -75,13 +75,18 @@ async function isPersonPostAdministrator (postId, personId) {
 }
 
 /**
- * Deletes the specified OrganizationPost
- * @param {*} organizationPostId
+ * Deletes the specified OrganizationPost if the requester is one
+ * of the Administrators of the Organization the Post belongs to
+ * @param {*} postId Id of the Post to delete
+ * @param {*} requester Id of the Person requesting the deletion
  */
-async function deleteOrganizationPost (organizationPostId) {
-  await knex('OrganizationPost')
-    .where('id', organizationPostId)
-    .del();
+async function deleteOrganizationPost (postId, requester) {
+  if(await isPersonPostAdministrator(postId, requester)){
+    return await knex('OrganizationPost')
+    .where('id', postId)
+    .del() == 1;
+  }
+  return false;
 }
 
 module.exports = {

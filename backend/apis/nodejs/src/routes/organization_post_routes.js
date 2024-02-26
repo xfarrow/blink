@@ -51,13 +51,13 @@ async function createOrganizationPost (req, res) {
  */
 async function deleteOrganizationPost (req, res) {
   try {
-    const isOrganizationAdmin = await organizationPostModel.isPersonPostAdministrator(req.params.id, req.jwt.person_id);
-    if (isOrganizationAdmin) {
-      await organizationPostModel.deleteOrganizationPost(req.params.id);
-      return res.status(200).json({ success: true });
-    } else {
+      const success = await organizationPostModel.deleteOrganizationPost(req.params.id, req.jwt.person_id);
+
+      if(success){
+        return res.status(200).json({ success: true });
+      }
       return res.status(401).json({ error: 'Forbidden' });
-    }
+      
   } catch (error) {
     console.error(`Error in function ${deleteOrganizationPost.name}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });

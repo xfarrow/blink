@@ -68,7 +68,7 @@ async function updateOrganization (req, res) {
   }
 
   try {
-    const isUpdateSuccessful = organization_model.updateOrganizationIfAdministrator(updateOrganization, req.params.id, req.jwt.person_id);
+    const isUpdateSuccessful = organization_model.updateOrganization(updateOrganization, req.params.id, req.jwt.person_id);
     if (isUpdateSuccessful) {
       return res.status(200).json({ success: 'true' });
     } else {
@@ -88,12 +88,11 @@ async function updateOrganization (req, res) {
  */
 async function deleteOrganization (req, res) {
   try {
-    const isDeleteSuccessful = organization_model.deleteOrganizationIfAdmin(req.params.id, req.jwt.person_id);
+    const isDeleteSuccessful = organization_model.deleteOrganization(req.params.id, req.jwt.person_id);
     if (isDeleteSuccessful) {
-      return res.status(403).json({ error: 'Forbidden' });
-    } else {
       return res.status(200).json({ success: true });
     }
+    return res.status(403).json({ error: 'Forbidden' });
   } catch (error) {
     console.error(`Error in function ${deleteOrganization.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
