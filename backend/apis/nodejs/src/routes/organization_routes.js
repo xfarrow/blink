@@ -33,7 +33,7 @@ async function createOrganization (req, res) {
     await organization_model.insertOrganization(organization, req.jwt.person_id);
     return res.status(200).json({ Organization: organization });
   } catch (error) {
-    console.error('Error creating Organization:', error);
+    console.error(`Error in function ${createOrganization.name}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -75,7 +75,7 @@ async function updateOrganization (req, res) {
       return res.status(404).json({ error: 'Organization either not found or insufficient permissions' });
     }
   } catch (error) {
-    console.log(error);
+    console.error(`Error in function ${updateOrganization.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -95,7 +95,7 @@ async function deleteOrganization (req, res) {
       return res.status(200).json({ success: true });
     }
   } catch (error) {
-    console.error(error);
+    console.error(`Error in function ${deleteOrganization.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -118,7 +118,7 @@ async function getOrganization (req, res) {
       return res.status(404).json({ error: 'Not found' });
     }
   } catch (error) {
-    console.error('Error retrieving an organization: ' + error);
+    console.error(`Error in function ${getOrganization.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

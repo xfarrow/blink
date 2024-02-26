@@ -36,7 +36,7 @@ async function addOrganizationAdmin (req, res) {
     await organization_admin_model.addOrganizationAdministrator(req.body.person_id, req.body.organization_id);
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Error while adding organization admin: ' + error);
+    console.error(`Error in function ${addOrganizationAdmin.name}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -60,7 +60,7 @@ async function removeOrganizationAdmin (req, res) {
     await organization_admin_model.removeOrganizationAdmin(req.jwt.person_id, req.body.organization_id);
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
+    console.error(`Error in function ${removeOrganizationAdmin.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

@@ -62,7 +62,7 @@ async function registerPerson (req, res) {
     await person_model.registerPerson(personToInsert, activationLink);
     return res.status(200).json({ activationLink });
   } catch (error) {
-    console.error('Error registering person:', error);
+    console.error(`Error in function ${console.trace()}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -92,7 +92,7 @@ async function login (req, res) {
       res.status(401).json({ error: 'Unauthorized' });
     }
   } catch (error) {
-    console.error('Error logging in: ', error);
+    console.error(`Error in function ${login.name}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -118,7 +118,7 @@ async function getPerson (req, res) {
     }
     return res.status(404).json({ error: 'Not found' });
   } catch (error) {
-    console.log('Error while getting person: ' + error);
+    console.error(`Error in function ${getPerson.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -140,7 +140,7 @@ async function getMyself (req, res) {
     }
     return res.status(404).json({ error: 'Not found' });
   } catch (error) {
-    console.log('Error while getting myself: ' + error);
+    console.error(`Error in function ${getMyself.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -204,7 +204,7 @@ async function updatePerson (req, res) {
     await person_model.updatePerson(updatePerson, req.params.id);
     return res.status(200).json({ success: 'true' });
   } catch (error) {
-    console.log('Error while updating a Person: ' + error);
+    console.error(`Error in function ${updatePerson.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -224,7 +224,7 @@ async function deletePerson (req, res) {
     await person_model.deletePerson(req.jwt.person_id);
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.log('Error deleting a Person: ' + error);
+    console.error(`Error in function ${deletePerson.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
