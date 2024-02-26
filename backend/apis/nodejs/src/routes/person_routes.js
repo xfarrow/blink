@@ -13,7 +13,7 @@
 
 const validator = require('../utils/validation');
 const knex = require('../utils/knex_config');
-const jwt_utils = require('../utils/jwt_utils');
+const jwt_utils = require('../utils/middleware_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const person_model = require('../models/person_model');

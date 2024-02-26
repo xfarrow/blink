@@ -11,7 +11,10 @@
     IN THE SOFTWARE.
 */
 
-// Importing modules
+/*
+===== BEGIN IMPORTING MODULES
+*/
+
 // TODO: clean up
 require('dotenv').config();
 const express = require('express');
@@ -21,9 +24,16 @@ const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
 const organizationPostRoutes = require('./routes/organization_post_routes.js');
-const jwt_utils = require('./utils/jwt_utils.js');
+const jwt_utils = require('./utils/middleware_utils.js');
 
-// Application configuration
+/*
+===== END IMPORTING MODULES
+*/
+
+/*
+===== BEGIN APPLICATION CONFIGURATION
+*/
+
 const app = express();
 app.use(express.json()); // Middleware which parses JSON for POST requests
 app.use(cors()); // Enable CORS for all routes
@@ -32,6 +42,14 @@ app.use(rateLimit({
   max: process.env.LIMITER_MAXIMUM_PER_WINDOW,
   message: { error: 'Too many requests from this IP, please try again later' }
 })); // Apply the rate limiter middleware to all routes
+
+/*
+===== END APPLICATION CONFIGURATION
+*/
+
+/*
+===== BEGIN ROUTE HANDLING =====
+*/
 
 const publicRoutes = express.Router();
 publicRoutes.post('/register', personRoutes.registerPerson);
@@ -52,14 +70,19 @@ protectedRoutes.delete('/organization/:id', organizationRoutes.deleteOrganizatio
 protectedRoutes.post('/organization/post', organizationPostRoutes.createOrganizationPost);
 protectedRoutes.delete('/organization/post/:id', organizationPostRoutes.deleteOrganizationPost);
 
-// Mounting routes
 app.use('/api', publicRoutes); // Routes not requiring token
 app.use('/api', protectedRoutes); // Routes requiring token
 
-// Start the server. Default port is 3000
+/*
+===== END ROUTE HANDLING =====
+*/
+
+// Start the server
+// Default port is 3000
 const port = process.env.API_SERVER_PORT || 3000;
 app.listen(port, () => {
   console.log(`Blink API server is running on port ${port}`);
 });
 
+// Export the app for testing purposes
 module.exports = app;
