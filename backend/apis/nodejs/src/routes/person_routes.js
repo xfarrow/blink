@@ -88,7 +88,7 @@ async function login (req, res) {
       const token = jwtUtils.generateToken(person.id);
       return res.status(200).json({ token });
     } else {
-      return res.status(401).json({ error: 'Unauthorized' });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
   } catch (error) {
     console.error(`Error in function ${login.name}: ${error}`);
