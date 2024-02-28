@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const organization_admin_model = require('../models/organization_admin_model');
+const organizationAdminModel = require('../models/organization_admin_model');
 
 /**
  * POST Method
@@ -28,7 +28,7 @@ async function addOrganizationAdmin (req, res) {
   }
 
   try {
-    const success = await organization_admin_model.addOrganizationAdministrator(req.body.person_id, req.body.organization_id, req.jwt.person_id);
+    const success = await organizationAdminModel.addOrganizationAdministrator(req.body.person_id, req.body.organization_id, req.jwt.person_id);
     if(success){
       return res.status(200).json({ success: true });
     }
@@ -55,7 +55,7 @@ async function removeOrganizationAdmin (req, res) {
   }
 
   try {
-    await organization_admin_model.removeOrganizationAdmin(req.jwt.person_id, req.body.organization_id);
+    await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.body.organization_id);
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error(`Error in function ${removeOrganizationAdmin.name}: ${error}`);

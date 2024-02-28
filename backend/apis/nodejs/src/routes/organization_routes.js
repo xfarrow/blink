@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const organization_model = require('../models/organization_model');
+const organizationModel = require('../models/organization_model');
 
 /**
  * POST Request
@@ -29,8 +29,8 @@ async function createOrganization (req, res) {
   }
 
   try {
-    const organization = organization_model.organization(req.body.name, req.body.location, req.body.description, req.body.is_hiring);
-    await organization_model.insertOrganization(organization, req.jwt.person_id);
+    const organization = organizationModel.createOrganization(req.body.name, req.body.location, req.body.description, req.body.is_hiring);
+    await organizationModel.insertOrganization(organization, req.jwt.person_id);
     return res.status(200).json({ Organization: organization });
   } catch (error) {
     console.error(`Error in function ${createOrganization.name}: ${error}`);
@@ -68,7 +68,7 @@ async function updateOrganization (req, res) {
   }
 
   try {
-    const isUpdateSuccessful = organization_model.updateOrganization(updateOrganization, req.params.id, req.jwt.person_id);
+    const isUpdateSuccessful = organizationModel.updateOrganization(updateOrganization, req.params.id, req.jwt.person_id);
     if (isUpdateSuccessful) {
       return res.status(200).json({ success: 'true' });
     } else {
@@ -88,7 +88,7 @@ async function updateOrganization (req, res) {
  */
 async function deleteOrganization (req, res) {
   try {
-    const isDeleteSuccessful = organization_model.deleteOrganization(req.params.id, req.jwt.person_id);
+    const isDeleteSuccessful = organizationModel.deleteOrganization(req.params.id, req.jwt.person_id);
     if (isDeleteSuccessful) {
       return res.status(200).json({ success: true });
     }
@@ -110,7 +110,7 @@ async function deleteOrganization (req, res) {
  */
 async function getOrganization (req, res) {
   try {
-    const organization = await organization_model.getOrganizationById(req.params.id);
+    const organization = await organizationModel.getOrganizationById(req.params.id);
     if (organization) {
       return res.status(200).json(organization);
     } else {

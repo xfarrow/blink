@@ -19,7 +19,7 @@ const knex = require('../utils/knex_config');
  * @param {*} content
  * @param {*} originalAuthor
  */
-function organizationPost (organizationId, content, originalAuthor) {
+function createOrganizationPost (organizationId, content, originalAuthor) {
   const organizationPost = {
     organization_id: organizationId,
     content,
@@ -90,7 +90,7 @@ async function deleteOrganizationPost (postId, requester) {
 }
 
 module.exports = {
-  organizationPost,
+  createOrganizationPost,
   insertOrganizationPost,
   isPersonPostAdministrator,
   deleteOrganizationPost

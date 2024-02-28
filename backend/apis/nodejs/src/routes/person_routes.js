@@ -12,11 +12,10 @@
 */
 
 const validator = require('../utils/validation');
-const knex = require('../utils/knex_config');
-const jwt_utils = require('../utils/middleware_utils');
+const jwtUtils = require('../utils/middleware_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const person_model = require('../models/person_model');
+const personModel = require('../models/person_model');
 
 /**
  * POST Request
@@ -47,11 +46,11 @@ async function registerPerson (req, res) {
 
   try {
     // Check whether e-mail exists already (enforced by database constraints)
-    const existingUser = await person_model.getPersonByEmail(req.body.email);
+    const existingUser = await personModel.getPersonByEmail(req.body.email);
     if (existingUser) {
       return res.status(409).json({ error: 'E-mail already in use' });
     }
-    const personToInsert = person_model.person(
+    const personToInsert = personModel.createPerson(
       req.body.email,
       await hashPasswordPromise,
       req.body.display_name,
@@ -59,7 +58,7 @@ async function registerPerson (req, res) {
       req.body.available,
       true,
       req.body.place_of_living);
-    await person_model.registerPerson(personToInsert, activationLink);
+    await personModel.registerPerson(personToInsert, activationLink);
     return res.status(200).json({ activationLink });
   } catch (error) {
     console.error(`Error in function ${console.trace()}: ${error}`);
@@ -84,9 +83,9 @@ async function login (req, res) {
   }
 
   try {
-    const person = await person_model.getPersonByEmailAndPassword(req.body.email, req.body.password);
+    const person = await personModel.getPersonByEmailAndPassword(req.body.email, req.body.password);
     if (person) {
-      const token = jwt_utils.generateToken(person.id);
+      const token = jwtUtils.generateToken(person.id);
       res.status(200).json({ token });
     } else {
       res.status(401).json({ error: 'Unauthorized' });
@@ -108,7 +107,7 @@ async function login (req, res) {
  */
 async function getPerson (req, res) {
   try {
-    const person = await person_model.getPersonById(req.params.id);
+    const person = await personModel.getPersonById(req.params.id);
     if (person) {
       // I am retrieving either myself or an enabled user
       if (person.id == req.jwt.person_id || person.enabled) {
@@ -133,7 +132,7 @@ async function getPerson (req, res) {
  */
 async function getMyself (req, res) {
   try {
-    const person = await person_model.getPersonById(req.jwt.person_id);
+    const person = await personModel.getPersonById(req.jwt.person_id);
     if (person) {
       delete person.password;
       return res.status(200).send(person);
@@ -184,10 +183,7 @@ async function updatePerson (req, res) {
 
   // If we are tying to change password, the old password must be provided
   if (req.body.old_password && req.body.new_password) {
-    const user = await knex('Person')
-      .select('password')
-      .where({ id: req.jwt.person_id })
-      .first();
+    const user = await personModel.getPersonById(req.jwt.person_id);
     const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
     if (passwordMatches) {
       updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
@@ -201,7 +197,7 @@ async function updatePerson (req, res) {
   }
 
   try {
-    await person_model.updatePerson(updatePerson, req.params.id);
+    await personModel.updatePerson(updatePerson, req.params.id);
     return res.status(200).json({ success: 'true' });
   } catch (error) {
     console.error(`Error in function ${updatePerson.name}: ${error}`);
@@ -221,7 +217,7 @@ async function updatePerson (req, res) {
 async function deletePerson (req, res) {
   // TODO: Delete Organization if this user was its only administrator
   try {
-    await person_model.deletePerson(req.jwt.person_id);
+    await personModel.deletePerson(req.jwt.person_id);
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error(`Error in function ${deletePerson.name}: ${error}`);

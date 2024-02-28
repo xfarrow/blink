@@ -27,7 +27,7 @@ async function createOrganizationPost (req, res) {
     return res.status(400).json({ error: 'Invalid request' });
   }
 
-  const organization = organizationPostModel.organizationPost(
+  const organization = organizationPostModel.createOrganizationPost(
     req.body.organization_id,
     req.body.content,
     req.jwt.person_id);

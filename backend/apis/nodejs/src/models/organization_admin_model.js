@@ -20,7 +20,7 @@ const knex = require('../utils/knex_config');
  * @param {*} organizationId
  * @returns true if administrator, false otherwise
  */
-async function isPersonAdmin (personId, organizationId) {
+async function isPersonOrganizationAdministrator (personId, organizationId) {
   const isPersonAdmin = await knex('OrganizationAdministrator')
     .where('id_person', personId)
     .where('id_organization', organizationId)
@@ -84,7 +84,7 @@ async function removeOrganizationAdmin (personId, organizationId) {
 }
 
 module.exports = {
-  isPersonAdmin,
+  isPersonOrganizationAdministrator,
   addOrganizationAdministrator,
   removeOrganizationAdmin
 };

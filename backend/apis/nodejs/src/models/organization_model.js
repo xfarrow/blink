@@ -21,12 +21,12 @@ const knex = require('../utils/knex_config');
  * @param {*} isHiring
  * @returns
  */
-function organization (name, location, description, isHiring) {
+function createOrganization (name, location, description, isHiring) {
   const organization = {
-    name,
-    location,
-    description,
-    isHiring
+    name: name,
+    location: location,
+    description: description,
+    is_hiring: isHiring
   };
   return organization;
 }
@@ -139,7 +139,7 @@ async function deleteOrganization (organizationId, requester) {
 // module available for use in another module.
 module.exports = {
   getOrganizationById,
-  organization,
+  createOrganization,
   insertOrganization,
   updateOrganization,
   deleteOrganization
