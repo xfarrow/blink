@@ -29,32 +29,38 @@
     </div>
 
     <script>
-      function login() {
+      async function login() {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
         if(!email || !password){
-            return;
+          alert('Please fill in all fields');
+          return;
         }
+        const response = await fetch("http://localhost:3000/api/login", {
+          method: "POST",
+          body: JSON.stringify({ 
+            email: email, 
+            password: password }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8"
+          }
+        });
 
-        const options = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password }),
-          };
-
-          fetch('http://localhost:3000/blinkapi/login', options)
-            .then(response => {})
-            .then(data => {
-              document.cookie = `token=${data.token};`;
-            })
-            .catch(err => {
-              alert("An error has occurred :-( please try again later")
-              console.error(err);
-            });
+        const data = await response.json();
+        if(response.status != 200){
+          if(response.status == 401){
+            alert('Login has failed');
+          }
+          else{
+            alert('Internal server error');
+          }
         }
+        else{
+          alert("Login was successful. Token will be stored in a cookie");
+          document.cookie = `token=${data.token};`;
+        }
+      }
     </script>
 
   </body>
