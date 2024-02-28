@@ -86,13 +86,13 @@ async function login (req, res) {
     const person = await personModel.getPersonByEmailAndPassword(req.body.email, req.body.password);
     if (person) {
       const token = jwtUtils.generateToken(person.id);
-      res.status(200).json({ token });
+      return res.status(200).json({ token });
     } else {
-      res.status(401).json({ error: 'Unauthorized' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
   } catch (error) {
     console.error(`Error in function ${login.name}: ${error}`);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
 
