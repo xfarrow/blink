@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume</title>
+    <title>Page Title</title>
     <link rel="stylesheet" href="../css/profile.css">
 </head>
-<body>
+<body style="display: none;">
     <div class="container">
         <header>
             <img src="../content/profile-picture-example.jpg" alt="Profile Picture" class="profile-picture">
@@ -77,16 +77,18 @@
             }
 
             const data = await response.json();
-                if(response.ok){
-                    populateFields(data.display_name, data.email);
-                }
-                else{
-                    alert(response.error);
-                }
+            if(response.ok){
+                populateFields(data.display_name, data.email);
+                document.body.style.display = "block"; // Show page
+            }
+            else{
+                alert(data.error);
+            }
         }
 
         function populateFields(displayName, email){
             document.getElementById('displayName').textContent = displayName;
+            document.title = `${displayName} - Blink`
             document.getElementById('email').textContent = email;
         }
 
