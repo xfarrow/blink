@@ -73,35 +73,6 @@ async function insertOrganization (organization, organizationAdministratorId) {
  * @returns true if the row was updated, false otherwise
  */
 async function updateOrganization (organization, organizationId, requester) {
-  // // const isOrganizationAdmin = await knex('OrganizationAdministrator')
-  // // .where('id_person', req.jwt.person_id)
-  // // .where('id_organization', req.params.id)
-  // // .select('*')
-  // // .first();
-
-  // // // This introduces a Time of check Time of use weakeness
-  // // // which could'have been fixed by either
-  // // // 1) Using "whereExists", thanks to the "it's easier to ask for
-  // // // forgiveness than for permission" padarigm. Or,
-  // // // 2) Using a serializable transaction.
-  // // //
-  // // // The undersigned chose not to follow these approaches because
-  // // // this does not introduces any serious vulnerability. In this
-  // // // way it seems more readable.
-
-  // // if(!isOrganizationAdmin){
-  // //   return res.status(403).json({error : "Forbidden"});
-  // // }
-
-  // // await knex('Organization')
-  // // .where('id', req.params.id)
-  // // .update({
-  // //   name: req.body.name,
-  // //   location: req.body.location,
-  // //   description: req.body.description,
-  // //   is_hiring: req.body.isHiring
-  // // });
-
   const numberOfUpdatedRows = await knex('Organization')
     .where('id', organizationId)
     .whereExists(function () {
