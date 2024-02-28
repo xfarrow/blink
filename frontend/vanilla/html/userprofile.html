@@ -10,12 +10,12 @@
     <div class="container">
         <header>
             <img src="../content/profile-picture-example.jpg" alt="Profile Picture" class="profile-picture">
-            <h1>John Doe</h1>
-            <p>Web Developer</p>
+            <h1 id="displayName">Name Surname</h1>
+            <p id="profession">Web Developer</p>
         </header>
         <section>
             <h2>About Me</h2>
-            <p>I am a passionate web developer with experience in HTML, CSS, and JavaScript. I enjoy creating responsive and user-friendly websites.</p>
+            <p id="aboutMe">I am a passionate web developer with experience in HTML, CSS, and JavaScript. I enjoy creating responsive and user-friendly websites.</p>
         </section>
         <section>
             <h2>Experience</h2>
@@ -37,9 +37,61 @@
             </div>
         </section>
         <footer>
-            <p>Email: john.doe@example.com | Phone: 123-456-7890</p>
+            <p id="email">Email: john.doe@example.com</p>
         </footer>
     </div>
+
+    <script src="../js/constants.js"></script>
+    <script src="../js/utils.js"></script>
+
+    <script>
+        window.addEventListener("load", async function() {
+            await loadProfile();
+        });
+
+        async function loadProfile (){
+            
+            const idToDisplay = new URLSearchParams(window.location.search).get('id');
+            let response;
+
+            // Retrieving the logged in user's profile
+            if(idToDisplay === 'myself'){
+                const token = getCookie('token');
+                // Check whether the token exists
+                if(!token){
+                    window.location.href = 'login.html';
+                }
+                response = await fetch(`${API_URL}/person/myself`, {
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                        "authorization": token
+                    }
+                });
+            }
+            else {
+                response = await fetch(`${API_URL}/person/${idToDisplay}`, {
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                    }
+                });
+            }
+
+            const data = await response.json();
+                if(response.ok){
+                    populateFields(data.display_name, data.email);
+                }
+                else{
+                    alert(response.error);
+                }
+        }
+
+        function populateFields(displayName, email){
+            document.getElementById('displayName').textContent = displayName;
+            document.getElementById('email').textContent = email;
+        }
+
+    </script>
+
 </body>
 </html>
 
