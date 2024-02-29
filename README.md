@@ -1,4 +1,6 @@
 # Blink
+⚠️ <ins>_**This is an alpha-version piece of software. It is not intended to be used neither by the general public nor by testers**_</ins> ⚠️
+
 Empowering Connections, Fostering Growth
 
 ## What is it?
