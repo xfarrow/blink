@@ -145,17 +145,14 @@ async function getMyself (req, res) {
  * PUT request
  *
  * Updates a Person's details. If some details are
- * not present, they shall be ignored.
+ * not present, they shall be ignored. An user can
+ * only update themselves
  *
  * Required field(s): none. Both old_password and
  * new_password if updating the password.
  *
  */
 async function updatePerson (req, res) {
-  if (req.jwt.person_id != req.params.id) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
-
   const updatePerson = {};
 
   if (req.body.display_name) {
@@ -179,7 +176,13 @@ async function updatePerson (req, res) {
   }
 
   // If we are tying to change password, the old password must be provided
-  if (req.body.old_password && req.body.new_password) {
+  if (req.body.old_password || req.body.new_password) {
+    if(!req.body.old_password){
+      return res.status(401).json({ error: 'The old password must be specified' });
+    }
+    if(!req.body.new_password){
+      return res.status(401).json({ error: 'The new password must be specified' });
+    }
     const user = await personModel.getPersonById(req.jwt.person_id);
     const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
     if (passwordMatches) {
@@ -194,7 +197,7 @@ async function updatePerson (req, res) {
   }
 
   try {
-    await personModel.updatePerson(updatePerson, req.params.id);
+    await personModel.updatePerson(updatePerson, req.jwt.person_id);
     return res.status(200).json({ success: 'true' });
   } catch (error) {
     console.error(`Error in function ${updatePerson.name}: ${error}`);

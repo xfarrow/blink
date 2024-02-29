@@ -60,7 +60,7 @@ publicRoutes.get('/organization/:id', organizationRoutes.getOrganization);
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.get('/person/myself', personRoutes.getMyself);
-protectedRoutes.put('/person/:id', personRoutes.updatePerson);
+protectedRoutes.put('/person/', personRoutes.updatePerson);
 protectedRoutes.delete('/person/delete', personRoutes.deletePerson);
 protectedRoutes.post('/organization/admin', organizationAdminRoutes.addOrganizationAdmin);
 protectedRoutes.delete('/organization/removeadmin', organizationAdminRoutes.removeOrganizationAdmin);

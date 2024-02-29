@@ -8,6 +8,7 @@
 </head>
 <body style="display: none;">
     <div class="container">
+        <div class="edit-badge" style="display: none;" id="editBadge" onclick="editProfile()">Edit</div>
         <header>
             <img src="../content/profile-picture-example.jpg" alt="Profile Picture" class="profile-picture">
             <h1 id="displayName">Name Surname</h1>
@@ -56,6 +57,7 @@
 
             // Retrieving the logged in user's profile
             if(!idToDisplay || idToDisplay === 'myself'){
+                document.getElementById('editBadge').style.display = 'block'; // show edit button
                 const token = getCookie('token');
                 // Check whether the token exists
                 if(!token){
@@ -79,17 +81,21 @@
             const data = await response.json();
             if(response.ok){
                 populateFields(data.display_name, data.email);
-                document.body.style.display = "block"; // Show page
+                document.body.style.display = 'block'; // Show page
             }
             else{
                 alert(data.error);
             }
         }
 
-        function populateFields(displayName, email){
+        function populateFields (displayName, email) {
             document.getElementById('displayName').textContent = displayName;
             document.title = `${displayName} - Blink`
             document.getElementById('email').textContent = email;
+        }
+
+        function editProfile () {
+            alert('Editing');
         }
 
     </script>
