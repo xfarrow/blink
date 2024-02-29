@@ -6,15 +6,15 @@
     <title>Title</title>
     <link rel="stylesheet" href="../css/organization.css">
 </head>
-<body>
+<body style="display: none;">
     <div class="container">
-        <div class="hiring-badge">Now Hiring</div>
+        <div class="hiring-badge" style="display: none;" id="isHiringBadge">Now Hiring</div>
         <div class="logo-div">
             <img class="logo" src="../content/blink-logo-small.jpg" alt="Company Logo">
         </div>
-        <h1>Blink</h1>
+        <h1 id="organizationName">Blink</h1>
         <div class="organization-details">
-            <p><b>Location: </b><label id="address">Naples, Italy</label></p>
+            <p><b>Location: </b><label id="location">Naples, Italy</label></p>
             <p><b>Email: </b><label id="email">contacts@blink-corporation.com</label></p>
             <p><b>Hiring: </b><label id="isHiring">Yes</label></p>
         </div>
@@ -30,8 +30,42 @@
             loadOrganization();
         });
 
-        function loadOrganization (){
+        async function loadOrganization (){
             const idToDisplay = new URLSearchParams(window.location.search).get('id');
+            if(!idToDisplay){
+                alert("Invalid URL.");
+                return;
+            }
+            const response = await fetch(`${API_URL}/organization/${idToDisplay}`, {
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                    }
+            });
+            const data = await response.json();
+            if(response.ok) {
+                populateFields(data.name, data.location, data.description, data.is_hiring);
+                document.body.style.display = "block"; // Show page
+            }
+            else {
+                alert(data.error);
+            }
+        }
+
+        function populateFields (name, location, description, isHiring) {
+            document.getElementById('organizationName').textContent = name;
+            document.getElementById('location').textContent = location;
+            document.getElementById('description').textContent = description;
+            if(isHiring === true) {
+                document.getElementById('isHiring').textContent = 'Yes';
+                document.getElementById('isHiringBadge').style.display = 'block';
+            }
+            else if (isHiring === false) {
+                document.getElementById('isHiring').textContent = 'No';
+            }
+            else {
+                document.getElementById('isHiring').textContent = 'Not specified';
+            }
+
         }
 
     </script>

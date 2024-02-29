@@ -108,12 +108,9 @@ async function login (req, res) {
 async function getPerson (req, res) {
   try {
     const person = await personModel.getPersonById(req.params.id);
-    if (person) {
-      // I am retrieving either myself or an enabled user
-      if (person.id == req.jwt.person_id || person.enabled) {
-        delete person.password; // remove password field for security reasons
-        return res.status(200).send(person);
-      }
+    if (person && person.enabled) {
+      delete person.password; // remove password field for security reasons
+      return res.status(200).send(person);
     }
     return res.status(404).json({ error: 'Not found' });
   } catch (error) {

@@ -24,7 +24,7 @@ const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
 const organizationPostRoutes = require('./routes/organization_post_routes.js');
-const jwt_utils = require('./utils/middleware_utils.js');
+const jwtUtils = require('./utils/middleware_utils.js');
 
 /*
 ===== END IMPORTING MODULES
@@ -54,17 +54,17 @@ app.use(rateLimit({
 const publicRoutes = express.Router();
 publicRoutes.post('/register', personRoutes.registerPerson);
 publicRoutes.post('/login', personRoutes.login);
+publicRoutes.get('/person/:id/details', personRoutes.getPerson);
+publicRoutes.get('/organization/:id', organizationRoutes.getOrganization);
 
 const protectedRoutes = express.Router();
-protectedRoutes.use(jwt_utils.verifyToken);
+protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.get('/person/myself', personRoutes.getMyself);
-protectedRoutes.get('/person/:id', personRoutes.getPerson);
 protectedRoutes.put('/person/:id', personRoutes.updatePerson);
 protectedRoutes.delete('/person/delete', personRoutes.deletePerson);
 protectedRoutes.post('/organization/admin', organizationAdminRoutes.addOrganizationAdmin);
 protectedRoutes.delete('/organization/removeadmin', organizationAdminRoutes.removeOrganizationAdmin);
 protectedRoutes.post('/organization', organizationRoutes.createOrganization);
-protectedRoutes.get('/organization/:id', organizationRoutes.getOrganization);
 protectedRoutes.put('/organization/:id', organizationRoutes.updateOrganization);
 protectedRoutes.delete('/organization/:id', organizationRoutes.deleteOrganization);
 protectedRoutes.post('/organization/post', organizationPostRoutes.createOrganizationPost);

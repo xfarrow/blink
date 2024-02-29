@@ -46,7 +46,7 @@
 
     <script>
         window.addEventListener("load", async function() {
-            await loadProfile();
+            loadProfile();
         });
 
         async function loadProfile (){
@@ -55,7 +55,7 @@
             let response;
 
             // Retrieving the logged in user's profile
-            if(idToDisplay === 'myself'){
+            if(!idToDisplay || idToDisplay === 'myself'){
                 const token = getCookie('token');
                 // Check whether the token exists
                 if(!token){
@@ -69,8 +69,7 @@
                 });
             }
             else {
-                // To implement
-                response = await fetch(`${API_URL}/person/${idToDisplay}`, {
+                response = await fetch(`${API_URL}/person/${idToDisplay}/details`, {
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
                     }
