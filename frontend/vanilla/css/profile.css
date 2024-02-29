@@ -54,9 +54,9 @@ footer {
 }
 
 .profile-picture {
-    width: 150px; /* Adjust size as needed */
+    width: 150px;
     height: 150px;
-    border-radius: 50%; /* Make it circular */
+    border-radius: 50%;
     margin-bottom: 10px;
 }
 

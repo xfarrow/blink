@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/organization.css">
+</head>
+<body>
+    <div class="container">
+        <div class="hiring-badge">Now Hiring</div>
+        <div class="logo-div">
+            <img class="logo" src="../content/blink-logo-small.jpg" alt="Company Logo">
+        </div>
+        <h1>Blink</h1>
+        <div class="organization-details">
+            <p><b>Location: </b><label id="address">Naples, Italy</label></p>
+            <p><b>Email: </b><label id="email">contacts@blink-corporation.com</label></p>
+            <p><b>Hiring: </b><label id="isHiring">Yes</label></p>
+        </div>
+        <h2>About Us</h2>
+        <p id="description">Blink aims at creating a libre and decentralized LinkedIn alternative</p>
+    </div>
+
+    <script src="../js/constants.js"></script>
+    <script src="../js/utils.js"></script>
+
+    <script>
+        window.addEventListener("load", async function() {
+            loadOrganization();
+        });
+
+        function loadOrganization (){
+            const idToDisplay = new URLSearchParams(window.location.search).get('id');
+        }
+
+    </script>
+
+</body>
+</html>
