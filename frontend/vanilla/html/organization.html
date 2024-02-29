@@ -53,6 +53,7 @@
 
         function populateFields (name, location, description, isHiring) {
             document.getElementById('organizationName').textContent = name;
+            document.title = `${name} - Blink`
             document.getElementById('location').textContent = location;
             document.getElementById('description').textContent = description;
             if(isHiring === true) {
