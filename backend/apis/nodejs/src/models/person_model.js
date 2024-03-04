@@ -128,10 +128,17 @@ async function deletePerson (personId) {
     .del();
 }
 
-async function enablePerson (personId) {
-  await knex('Person')
+async function confirmActivation (personId) {
+  await knex.transaction(async (tr) => {
+    await knex('Person')
     .where('id', personId)
     .update({enabled: true});
+
+  await tr('ActivationLink')
+    .where('person_id', personId)
+    .del();
+  });
+
 }
 
 // Exporting a function
@@ -145,5 +152,5 @@ module.exports = {
   registerPerson,
   updatePerson,
   deletePerson,
-  enablePerson
+  confirmActivation
 };

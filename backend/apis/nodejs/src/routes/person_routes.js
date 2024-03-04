@@ -243,16 +243,16 @@ async function deletePerson (req, res) {
  * 
  * Required field(s): identifier
  */
-async function enablePersonByActivationLink(req, res){
+async function confirmActivation(req, res){
   try {
     const personId = await activationModel.getPersonIdByIdentifier(req.query.q);
     if(!personId){
       return res.status(401).json({error: 'Activation Link either not valid or expired'});
     }
-    await personModel.enablePerson(personId);
+    await personModel.confirmActivation(personId);
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(`Error in function ${enablePersonByActivationLink.name}: ${error}`);
+    console.error(`Error in function ${confirmActivation.name}: ${error}`);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -267,5 +267,5 @@ module.exports = {
   getMyself,
   updatePerson,
   deletePerson,
-  enablePersonByActivationLink
+  confirmActivation
 };
