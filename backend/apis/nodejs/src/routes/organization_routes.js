@@ -31,7 +31,7 @@ async function createOrganization (req, res) {
   try {
     const organization = organizationModel.createOrganization(req.body.name, req.body.location, req.body.description, req.body.is_hiring);
     await organizationModel.insertOrganization(organization, req.jwt.person_id);
-    return res.status(200).json({ Organization: organization });
+    return res.status(200).json(organization);
   } catch (error) {
     console.error(`Error in function ${createOrganization.name}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });

@@ -18,22 +18,23 @@ const bcrypt = require('bcrypt');
  * Creates Person object by the specified fields
  * @param {*} email
  * @param {*} password
- * @param {*} display_name
- * @param {*} date_of_birth
+ * @param {*} displayName
+ * @param {*} dateOfBirth
  * @param {*} available
  * @param {*} enabled
- * @param {*} place_of_living
+ * @param {*} placeOfLiving
  * @returns
  */
-function createPerson (email, password, display_name, date_of_birth, available, enabled, place_of_living) {
+function createPerson (email, password, displayName, dateOfBirth, available, enabled, placeOfLiving, aboutMe) {
   const person = {
     email: email.toLowerCase(),
     password,
-    display_name,
-    date_of_birth,
+    display_name: displayName,
+    date_of_birth: dateOfBirth,
     available,
     enabled,
-    place_of_living
+    place_of_living: placeOfLiving,
+    about_me: aboutMe
   };
   return person;
 }
@@ -72,15 +73,7 @@ async function registerPerson (person, activationLink) {
   // and in the "ActivationLink" one, or in neither
   await knex.transaction(async (tr) => {
     const personIdResult = await tr('Person')
-      .insert({
-        email: person.email.toLowerCase(),
-        password: person.password,
-        display_name: person.display_name,
-        date_of_birth: person.date_of_birth,
-        available: person.available,
-        enabled: person.enabled,
-        place_of_living: person.place_of_living
-      })
+      .insert(person)
       .returning('id');
     await tr('ActivationLink')
       .insert({

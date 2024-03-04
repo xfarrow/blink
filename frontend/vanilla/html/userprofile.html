@@ -12,11 +12,11 @@
         <header>
             <img src="../content/profile-picture-example.jpg" alt="Profile Picture" class="profile-picture">
             <h1 id="displayName">Name Surname</h1>
-            <p id="profession">Web Developer</p>
+            <p id="profession">Title</p>
         </header>
         <section>
             <h2>About Me</h2>
-            <p id="aboutMe">I am a passionate web developer with experience in HTML, CSS, and JavaScript. I enjoy creating responsive and user-friendly websites.</p>
+            <p id="aboutMe">About me</p>
         </section>
         <section>
             <h2>Experience</h2>
@@ -80,11 +80,10 @@
 
             const data = await response.json();
             if (response.ok){
-                populateFields(data.display_name, data.email);
+                populateFields(data.display_name, data.email, data.about_me);
                 document.body.style.display = 'block'; // Show page
             }
             else if (response.status == 401){
-                console.error(data.error);
                 window.location.href = 'login.html';
             }
             else{
@@ -92,10 +91,11 @@
             }
         }
 
-        function populateFields (displayName, email) {
+        function populateFields (displayName, email, aboutMe) {
             document.getElementById('displayName').textContent = displayName;
             document.title = `${displayName} - Blink`
             document.getElementById('email').textContent = email;
+            document.getElementById('aboutMe').textContent = aboutMe;
         }
 
         function editProfile () {

@@ -56,12 +56,13 @@ async function registerPerson (req, res) {
       req.body.display_name,
       req.body.date_of_birth,
       req.body.available,
-      true,
-      req.body.place_of_living);
+      false,
+      req.body.place_of_living,
+      req.body.about_me);
     await personModel.registerPerson(personToInsert, activationLink);
     return res.status(200).json({ activationLink });
   } catch (error) {
-    console.error(`Error in function ${console.trace()}: ${error}`);
+    console.error(`Error in function ${registerPerson.name}: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
@@ -173,6 +174,10 @@ async function updatePerson (req, res) {
 
   if (req.body.place_of_living) {
     updatePerson.place_of_living = req.body.place_of_living;
+  }
+
+  if(req.body.about_me) {
+    updatePerson.about_me = req.body.about_me;
   }
 
   // If we are tying to change password, the old password must be provided

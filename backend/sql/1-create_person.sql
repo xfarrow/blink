@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS public."Person"
     date_of_birth date,
     available boolean,
     enabled boolean NOT NULL DEFAULT false,
-    place_of_living character varying(128)
+    place_of_living character varying(128),
+    about_me character varying(4096)
 )
 
 TABLESPACE pg_default;

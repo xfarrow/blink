@@ -78,12 +78,16 @@ app.use('/api', protectedRoutes); // Routes requiring token
 ===== END ROUTE HANDLING =====
 */
 
-// Start the server
-// Default port is 3000
-const port = process.env.API_SERVER_PORT || 3000;
-app.listen(port, () => {
-  console.log(`Blink API server is running on port ${port}`);
-});
+// Do not start the server in testing environment
+// It will be started by the test suite
+if (process.argv[2] != 'testing') {
+  // Start the server
+  // Default port is 3000
+  const port = process.env.API_SERVER_PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Blink API server is running on port ${port}`);
+  });
+}
 
 // Export the app for testing purposes
 module.exports = app;
