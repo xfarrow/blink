@@ -79,12 +79,16 @@
             }
 
             const data = await response.json();
-            if(response.ok){
+            if (response.ok){
                 populateFields(data.display_name, data.email);
                 document.body.style.display = 'block'; // Show page
             }
+            else if (response.status == 401){
+                console.error(data.error);
+                window.location.href = 'login.html';
+            }
             else{
-                alert(data.error);
+                alert(`Unable to load profile. Error: ${data.error}`);
             }
         }
 
