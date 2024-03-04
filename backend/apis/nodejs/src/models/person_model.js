@@ -25,7 +25,7 @@ const bcrypt = require('bcrypt');
  * @param {*} placeOfLiving
  * @returns
  */
-function createPerson (email, password, displayName, dateOfBirth, available, enabled, placeOfLiving, aboutMe) {
+function createPerson (email, password, displayName, dateOfBirth, available, enabled, placeOfLiving, aboutMe, qualification) {
   const person = {
     email: email.toLowerCase(),
     password,
@@ -34,7 +34,8 @@ function createPerson (email, password, displayName, dateOfBirth, available, ena
     available,
     enabled,
     place_of_living: placeOfLiving,
-    about_me: aboutMe
+    about_me: aboutMe,
+    qualification
   };
   return person;
 }

@@ -58,7 +58,8 @@ async function registerPerson (req, res) {
       req.body.available,
       false,
       req.body.place_of_living,
-      req.body.about_me);
+      req.body.about_me,
+      req.body.qualification);
     await personModel.registerPerson(personToInsert, activationLink);
     return res.status(200).json({ activationLink });
   } catch (error) {
@@ -178,6 +179,10 @@ async function updatePerson (req, res) {
 
   if(req.body.about_me) {
     updatePerson.about_me = req.body.about_me;
+  }
+
+  if(req.body.qualification) {
+    updatePerson.qualification = req.body.qualification;
   }
 
   // If we are tying to change password, the old password must be provided

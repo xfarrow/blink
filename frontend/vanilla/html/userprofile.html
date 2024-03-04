@@ -12,7 +12,7 @@
         <header>
             <img src="../content/profile-picture-example.jpg" alt="Profile Picture" class="profile-picture">
             <h1 id="displayName">Name Surname</h1>
-            <p id="profession">Title</p>
+            <p id="qualification">Title</p>
         </header>
         <section>
             <h2>About Me</h2>
@@ -80,7 +80,7 @@
 
             const data = await response.json();
             if (response.ok){
-                populateFields(data.display_name, data.email, data.about_me);
+                populateFields(data.display_name, data.email, data.about_me, data.qualification);
                 document.body.style.display = 'block'; // Show page
             }
             else if (response.status == 401){
@@ -91,11 +91,12 @@
             }
         }
 
-        function populateFields (displayName, email, aboutMe) {
+        function populateFields (displayName, email, aboutMe, qualification) {
             document.getElementById('displayName').textContent = displayName;
             document.title = `${displayName} - Blink`
             document.getElementById('email').textContent = email;
             document.getElementById('aboutMe').textContent = aboutMe;
+            document.getElementById('qualification').textContent = qualification;
         }
 
         function editProfile () {
