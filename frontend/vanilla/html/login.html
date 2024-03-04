@@ -1,65 +1,71 @@
 <!DOCTYPE html>
-<html lang="en" >
-  <head>
-    <meta charset="UTF-8">
-    <title>Log in - Blink</title>
-    <link rel="stylesheet" href="../css/login-register.css">
-  </head>
-  <body>
-    <!-- partial:index.partial.html -->
-    <div id="login-form-wrap">
-      <h2>Login</h2>
-      <form id="login-form" method="POST">
+<html lang="en">
 
-        <p>
-          <input type="email" id="email" name="email" placeholder="Email Address" required><i class="validation"><span></span><span></span></i>
-        </p>
+<head>
+  <meta charset="UTF-8">
+  <title>Log in - Blink</title>
+  <link rel="stylesheet" href="../css/login-register.css">
+</head>
 
-        <p>
-        <input type="password" id="password" name="password" placeholder="Password" required><i class="validation"><span></span><span></span></i>
-        </p>
+<body>
+  <!-- partial:index.partial.html -->
+  <div id="login-form-wrap">
+    <h2>Login</h2>
+    <form id="login-form" method="POST">
 
+      <p>
+        <input type="email" id="email" name="email" placeholder="Email Address" required><i
+          class="validation"><span></span><span></span></i>
+      </p>
+
+      <p>
+        <input type="password" id="password" name="password" placeholder="Password" required><i
+          class="validation"><span></span><span></span></i>
+      </p>
+
+      <p>
+        <button type="button" onclick="login()">Login</button>
+      </p>
+    </form>
+    <div id="create-account-wrap">
+      <p>Not a member? <a href="./register.html">Create Account</a>
         <p>
-          <button type="button" onclick="login()">Login</button>
-        </p>
-      </form>
-      <div id="create-account-wrap">
-        <p>Not a member? <a href="./register.html">Create Account</a><p>
-      </div>
     </div>
+  </div>
 
-    <script src="../js/constants.js"></script>
-    <script>
-      async function login() {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+  <script src="../js/constants.js"></script>
+  <script>
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-        if(!email || !password){
-          alert('Please fill in all fields');
-          return;
-        }
-        const response = await fetch(`${API_URL}/login`, {
-          method: "POST",
-          body: JSON.stringify({ 
-            email: email, 
-            password: password }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8"
-          }
-        });
-
-        const data = await response.json();
-
-        if(response.ok){
-          console.log(`Login was successful. Token is ${data.token}`);
-          document.cookie = `token=${data.token};`;
-          window.location.href = 'userprofile.html?id=myself';
-        }
-        else{
-          alert(data.error);
-        }
+      if (!email || !password) {
+        alert('Please fill in all fields');
+        return;
       }
-    </script>
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          password: password
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      });
 
-  </body>
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(`Login was successful. Token is ${data.token}`);
+        document.cookie = `token=${data.token};`;
+        window.location.href = 'userprofile.html?id=myself';
+      } else {
+        alert(data.error);
+      }
+    }
+  </script>
+
+</body>
+
 </html>

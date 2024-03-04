@@ -19,7 +19,7 @@ const knex = require('../utils/knex_config');
  * @param {*} content
  * @param {*} originalAuthor
  */
-function createOrganizationPost (organizationId, content, originalAuthor) {
+function createOrganizationPost(organizationId, content, originalAuthor) {
   const organizationPost = {
     organization_id: organizationId,
     content,
@@ -34,7 +34,7 @@ function createOrganizationPost (organizationId, content, originalAuthor) {
  * @param {*} organization
  * @returns the inserted OrganizationPost
  */
-async function insertOrganizationPost (organization) {
+async function insertOrganizationPost(organization) {
   const isOrganizationAdmin = await knex('OrganizationAdministrator')
     .where('id_person', organization.original_author)
     .where('id_organization', organization.organization_id)
@@ -65,7 +65,7 @@ async function insertOrganizationPost (organization) {
  * @param {*} personId
  * @returns true or false
  */
-async function isPersonPostAdministrator (postId, personId) {
+async function isPersonPostAdministrator(postId, personId) {
   return await knex('OrganizationPost')
     .join('OrganizationAdministrator', 'OrganizationPost.organization_id', 'OrganizationAdministrator.id_organization')
     .where('OrganizationPost.id', postId)
@@ -80,11 +80,11 @@ async function isPersonPostAdministrator (postId, personId) {
  * @param {*} postId Id of the Post to delete
  * @param {*} requester Id of the Person requesting the deletion
  */
-async function deleteOrganizationPost (postId, requester) {
-  if(await isPersonPostAdministrator(postId, requester)){
+async function deleteOrganizationPost(postId, requester) {
+  if (await isPersonPostAdministrator(postId, requester)) {
     return await knex('OrganizationPost')
-    .where('id', postId)
-    .del() == 1;
+      .where('id', postId)
+      .del() == 1;
   }
   return false;
 }

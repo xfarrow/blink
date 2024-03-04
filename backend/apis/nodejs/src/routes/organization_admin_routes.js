@@ -23,45 +23,59 @@ const jwtUtils = require('../utils/middleware_utils');
  *
  * Required field(s): organization_id, person_id
  */
-async function addOrganizationAdmin (req, res) {
+async function addOrganizationAdmin(req, res) {
   // Ensure that the required fields are present before proceeding
   if (!req.body.organization_id || !req.body.person_id) {
-    return res.status(400).json({ error: 'Invalid request' });
+    return res.status(400).json({
+      error: 'Invalid request'
+    });
   }
 
   try {
     const success = await organizationAdminModel.addOrganizationAdministrator(req.body.person_id, req.body.organization_id, req.jwt.person_id);
-    if(success){
-      return res.status(200).json({ success: true });
+    if (success) {
+      return res.status(200).json({
+        success: true
+      });
     }
-    return res.status(403).json({ error: 'Forbidden' });
+    return res.status(403).json({
+      error: 'Forbidden'
+    });
   } catch (error) {
     console.error(`Error in function ${addOrganizationAdmin.name}: ${error}`);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
 /**
-   * DELETE Request
-   *
-   * Deletes a Person from the list of Administrators of an Organization.
-   * The logged user can only remove themselves. If no more Administrators
-   * are left, the Organization is removed.
-   *
-   * Required field(s): organization_id
-   */
-async function removeOrganizationAdmin (req, res) {
+ * DELETE Request
+ *
+ * Deletes a Person from the list of Administrators of an Organization.
+ * The logged user can only remove themselves. If no more Administrators
+ * are left, the Organization is removed.
+ *
+ * Required field(s): organization_id
+ */
+async function removeOrganizationAdmin(req, res) {
   // Ensure that the required fields are present before proceeding
   if (!req.body.organization_id) {
-    return res.status(400).json({ error: 'Invalid request' });
+    return res.status(400).json({
+      error: 'Invalid request'
+    });
   }
 
   try {
     await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.body.organization_id);
-    return res.status(200).json({ success: true });
+    return res.status(200).json({
+      success: true
+    });
   } catch (error) {
     console.error(`Error in function ${removeOrganizationAdmin.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 

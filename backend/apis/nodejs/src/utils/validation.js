@@ -16,7 +16,7 @@
  * @param {*} email email to validate
  * @returns true or false
  */
-function validateEmail (email) {
+function validateEmail(email) {
   const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
   return regex.test(email);
 }
@@ -27,7 +27,7 @@ function validateEmail (email) {
  * @param {*} dateString the date to validate
  * @returns true or false
  */
-function isPostgresDateFormatValid (dateString) {
+function isPostgresDateFormatValid(dateString) {
   const regex = /^\d{4}-\d{2}-\d{2}$/;
   return regex.test(dateString);
 }

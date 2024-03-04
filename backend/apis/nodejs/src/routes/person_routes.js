@@ -28,17 +28,23 @@ const express = require('express');
  *
  * @returns The activationlink identifier
  */
-async function registerPerson (req, res) {
+async function registerPerson(req, res) {
   // Does this server allow users to register?
   if (process.env.ALLOW_USER_REGISTRATION === 'false') {
-    return res.status(403).json({ error: 'Users cannot register on this server' });
+    return res.status(403).json({
+      error: 'Users cannot register on this server'
+    });
   }
   // Ensure that the required fields are present before proceeding
   if (!req.body.display_name || !req.body.email || !req.body.password) {
-    return res.status(400).json({ error: 'Some or all required fields are missing' });
+    return res.status(400).json({
+      error: 'Some or all required fields are missing'
+    });
   }
   if (!validator.validateEmail(req.body.email)) {
-    return res.status(400).json({ error: 'The email is not in a valid format' });
+    return res.status(400).json({
+      error: 'The email is not in a valid format'
+    });
   }
 
   // Generate activation link token
@@ -50,7 +56,9 @@ async function registerPerson (req, res) {
     // Check whether e-mail exists already (enforced by database constraints)
     const existingUser = await personModel.getPersonByEmail(req.body.email);
     if (existingUser) {
-      return res.status(409).json({ error: 'E-mail already in use' });
+      return res.status(409).json({
+        error: 'E-mail already in use'
+      });
     }
     const personToInsert = personModel.createPerson(
       req.body.email,
@@ -63,10 +71,14 @@ async function registerPerson (req, res) {
       req.body.about_me,
       req.body.qualification);
     await personModel.registerPerson(personToInsert, activationLink);
-    return res.status(200).json({ activationLink });
+    return res.status(200).json({
+      activationLink
+    });
   } catch (error) {
     console.error(`Error in function ${registerPerson.name}: ${error}`);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -80,23 +92,31 @@ async function registerPerson (req, res) {
  *
  * @returns The token
  */
-async function login (req, res) {
+async function login(req, res) {
   // Ensure that the required fields are present before proceeding
   if (!req.body.email || !req.body.password) {
-    return res.status(400).json({ error: 'Invalid request' });
+    return res.status(400).json({
+      error: 'Invalid request'
+    });
   }
 
   try {
     const person = await personModel.getPersonByEmailAndPassword(req.body.email, req.body.password);
     if (person) {
       const token = jwtUtils.generateToken(person.id);
-      return res.status(200).json({ token });
+      return res.status(200).json({
+        token
+      });
     } else {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({
+        error: 'Invalid credentials'
+      });
     }
   } catch (error) {
     console.error(`Error in function ${login.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -109,17 +129,21 @@ async function login (req, res) {
  *
  * @returns The Person
  */
-async function getPerson (req, res) {
+async function getPerson(req, res) {
   try {
     const person = await personModel.getPersonById(req.params.id);
     if (person && person.enabled) {
       delete person.password; // remove password field for security reasons
       return res.status(200).send(person);
     }
-    return res.status(404).json({ error: 'Not found' });
+    return res.status(404).json({
+      error: 'Not found'
+    });
   } catch (error) {
     console.error(`Error in function ${getPerson.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -131,17 +155,21 @@ async function getPerson (req, res) {
  *
  * @returns Person's details
  */
-async function getMyself (req, res) {
+async function getMyself(req, res) {
   try {
     const person = await personModel.getPersonById(req.jwt.person_id);
     if (person) {
       delete person.password;
       return res.status(200).send(person);
     }
-    return res.status(404).json({ error: 'Not found' });
+    return res.status(404).json({
+      error: 'Not found'
+    });
   } catch (error) {
     console.error(`Error in function ${getMyself.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -156,7 +184,7 @@ async function getMyself (req, res) {
  * new_password if updating the password.
  *
  */
-async function updatePerson (req, res) {
+async function updatePerson(req, res) {
   const updatePerson = {};
 
   if (req.body.display_name) {
@@ -167,7 +195,9 @@ async function updatePerson (req, res) {
     if (validator.isPostgresDateFormatValid(req.body.date_of_birth)) {
       updatePerson.date_of_birth = req.body.date_of_birth;
     } else {
-      return res.status(400).json({ error: 'Date of birth format not valid. Please specify a YYYY-MM-DD date' });
+      return res.status(400).json({
+        error: 'Date of birth format not valid. Please specify a YYYY-MM-DD date'
+      });
     }
   }
 
@@ -179,41 +209,53 @@ async function updatePerson (req, res) {
     updatePerson.place_of_living = req.body.place_of_living;
   }
 
-  if(req.body.about_me) {
+  if (req.body.about_me) {
     updatePerson.about_me = req.body.about_me;
   }
 
-  if(req.body.qualification) {
+  if (req.body.qualification) {
     updatePerson.qualification = req.body.qualification;
   }
 
   // If we are tying to change password, the old password must be provided
   if (req.body.old_password || req.body.new_password) {
-    if(!req.body.old_password){
-      return res.status(401).json({ error: 'The old password must be specified' });
+    if (!req.body.old_password) {
+      return res.status(401).json({
+        error: 'The old password must be specified'
+      });
     }
-    if(!req.body.new_password){
-      return res.status(401).json({ error: 'The new password must be specified' });
+    if (!req.body.new_password) {
+      return res.status(401).json({
+        error: 'The new password must be specified'
+      });
     }
     const user = await personModel.getPersonById(req.jwt.person_id);
     const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
     if (passwordMatches) {
       updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
     } else {
-      return res.status(401).json({ error: 'Password verification failed' });
+      return res.status(401).json({
+        error: 'Password verification failed'
+      });
     }
   }
 
   if (Object.keys(updatePerson).length === 0) {
-    return res.status(400).json({ error: 'Bad request. No data to update' });
+    return res.status(400).json({
+      error: 'Bad request. No data to update'
+    });
   }
 
   try {
     await personModel.updatePerson(updatePerson, req.jwt.person_id);
-    return res.status(200).json({ success: 'true' });
+    return res.status(200).json({
+      success: 'true'
+    });
   } catch (error) {
     console.error(`Error in function ${updatePerson.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -226,14 +268,18 @@ async function updatePerson (req, res) {
  * Required field(s): none
  *
  */
-async function deletePerson (req, res) {
+async function deletePerson(req, res) {
   // TODO: Delete Organization if this user was its only administrator
   try {
     await personModel.deletePerson(req.jwt.person_id);
-    return res.status(200).json({ success: true });
+    return res.status(200).json({
+      success: true
+    });
   } catch (error) {
     console.error(`Error in function ${deletePerson.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -245,17 +291,23 @@ async function deletePerson (req, res) {
  * 
  * Required field(s): identifier
  */
-async function confirmActivation(req, res){
+async function confirmActivation(req, res) {
   try {
     const personId = await activationModel.getPersonIdByIdentifier(req.query.q);
-    if(!personId){
-      return res.status(401).json({error: 'Activation Link either not valid or expired'});
+    if (!personId) {
+      return res.status(401).json({
+        error: 'Activation Link either not valid or expired'
+      });
     }
     await personModel.confirmActivation(personId);
-    return res.status(200).json({ success: true });
+    return res.status(200).json({
+      success: true
+    });
   } catch (error) {
     console.error(`Error in function ${confirmActivation.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 

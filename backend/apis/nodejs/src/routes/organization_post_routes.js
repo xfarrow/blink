@@ -16,17 +16,19 @@ const express = require('express');
 const jwtUtils = require('../utils/middleware_utils');
 
 /**
-   * POST Request
-   *
-   * Creates a Post belonging to an organization
-   *
-   * Required field(s): organization_id, content
-   * @returns the inserted Post
-   */
-async function createOrganizationPost (req, res) {
+ * POST Request
+ *
+ * Creates a Post belonging to an organization
+ *
+ * Required field(s): organization_id, content
+ * @returns the inserted Post
+ */
+async function createOrganizationPost(req, res) {
   // Ensure that the required fields are present before proceeding
   if (!req.body.organization_id || !req.body.content) {
-    return res.status(400).json({ error: 'Invalid request' });
+    return res.status(400).json({
+      error: 'Invalid request'
+    });
   }
 
   const organization = organizationPostModel.createOrganizationPost(
@@ -39,7 +41,9 @@ async function createOrganizationPost (req, res) {
     return res.status(200).json(insertedOrganization);
   } catch (error) {
     console.error(`Error in function ${createOrganizationPost.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -51,18 +55,24 @@ async function createOrganizationPost (req, res) {
  *
  * Required field(s): none.
  */
-async function deleteOrganizationPost (req, res) {
+async function deleteOrganizationPost(req, res) {
   try {
-      const success = await organizationPostModel.deleteOrganizationPost(req.params.id, req.jwt.person_id);
+    const success = await organizationPostModel.deleteOrganizationPost(req.params.id, req.jwt.person_id);
 
-      if(success){
-        return res.status(200).json({ success: true });
-      }
-      return res.status(401).json({ error: 'Forbidden' });
-      
+    if (success) {
+      return res.status(200).json({
+        success: true
+      });
+    }
+    return res.status(401).json({
+      error: 'Forbidden'
+    });
+
   } catch (error) {
     console.error(`Error in function ${deleteOrganizationPost.name}: ${error}`);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 

@@ -24,10 +24,12 @@ const jwtUtils = require('../utils/middleware_utils');
  *
  * @returns the inserted organization
  */
-async function createOrganization (req, res) {
+async function createOrganization(req, res) {
   // Ensure that the required fields are present before proceeding
   if (!req.body.name) {
-    return res.status(400).json({ error: 'Invalid request' });
+    return res.status(400).json({
+      error: 'Invalid request'
+    });
   }
 
   try {
@@ -36,7 +38,9 @@ async function createOrganization (req, res) {
     return res.status(200).json(insertedOrganization);
   } catch (error) {
     console.error(`Error in function ${createOrganization.name}: ${error}`);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -46,7 +50,7 @@ async function createOrganization (req, res) {
  *
  * Required field(s): none.
  */
-async function updateOrganization (req, res) {
+async function updateOrganization(req, res) {
   const updateOrganization = {};
 
   if (req.body.name) {
@@ -66,19 +70,27 @@ async function updateOrganization (req, res) {
   }
 
   if (Object.keys(updateOrganization).length === 0) {
-    return res.status(400).json({ error: 'Bad request. No data to update' });
+    return res.status(400).json({
+      error: 'Bad request. No data to update'
+    });
   }
 
   try {
     const isUpdateSuccessful = organizationModel.updateOrganization(updateOrganization, req.params.id, req.jwt.person_id);
     if (isUpdateSuccessful) {
-      return res.status(200).json({ success: 'true' });
+      return res.status(200).json({
+        success: 'true'
+      });
     } else {
-      return res.status(404).json({ error: 'Organization either not found or insufficient permissions' });
+      return res.status(404).json({
+        error: 'Organization either not found or insufficient permissions'
+      });
     }
   } catch (error) {
     console.error(`Error in function ${updateOrganization.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -88,16 +100,22 @@ async function updateOrganization (req, res) {
  * Deletes the specified organization if the logged user is
  * one of its administrator
  */
-async function deleteOrganization (req, res) {
+async function deleteOrganization(req, res) {
   try {
     const isDeleteSuccessful = await organizationModel.deleteOrganization(req.params.id, req.jwt.person_id);
     if (isDeleteSuccessful) {
-      return res.status(200).json({ success: true });
+      return res.status(200).json({
+        success: true
+      });
     }
-    return res.status(403).json({ error: 'Forbidden' });
+    return res.status(403).json({
+      error: 'Forbidden'
+    });
   } catch (error) {
     console.error(`Error in function ${deleteOrganization.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 
@@ -110,17 +128,21 @@ async function deleteOrganization (req, res) {
  *
  * @returns the organization.
  */
-async function getOrganization (req, res) {
+async function getOrganization(req, res) {
   try {
     const organization = await organizationModel.getOrganizationById(req.params.id);
     if (organization) {
       return res.status(200).json(organization);
     } else {
-      return res.status(404).json({ error: 'Not found' });
+      return res.status(404).json({
+        error: 'Not found'
+      });
     }
   } catch (error) {
     console.error(`Error in function ${getOrganization.name}: ${error}`);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
   }
 }
 

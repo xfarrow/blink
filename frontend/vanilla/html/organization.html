@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" href="../css/organization.css">
 </head>
+
 <body style="display: none;">
     <div class="container">
         <div class="hiring-badge" style="display: none;" id="isHiringBadge">Now Hiring</div>
@@ -26,50 +28,47 @@
     <script src="../js/utils.js"></script>
 
     <script>
-        window.addEventListener("load", async function() {
+        window.addEventListener("load", async function () {
             loadOrganization();
         });
 
-        async function loadOrganization (){
+        async function loadOrganization() {
             const idToDisplay = new URLSearchParams(window.location.search).get('id');
-            if(!idToDisplay){
+            if (!idToDisplay) {
                 alert("Invalid URL.");
                 return;
             }
             const response = await fetch(`${API_URL}/organization/${idToDisplay}`, {
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8",
-                    }
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                }
             });
             const data = await response.json();
-            if(response.ok) {
+            if (response.ok) {
                 populateFields(data.name, data.location, data.description, data.is_hiring);
                 document.body.style.display = "block"; // Show page
-            }
-            else {
+            } else {
                 alert(data.error);
             }
         }
 
-        function populateFields (name, location, description, isHiring) {
+        function populateFields(name, location, description, isHiring) {
             document.getElementById('organizationName').textContent = name;
             document.title = `${name} - Blink`
             document.getElementById('location').textContent = location;
             document.getElementById('description').textContent = description;
-            if(isHiring === true) {
+            if (isHiring === true) {
                 document.getElementById('isHiring').textContent = 'Yes';
                 document.getElementById('isHiringBadge').style.display = 'block';
-            }
-            else if (isHiring === false) {
+            } else if (isHiring === false) {
                 document.getElementById('isHiring').textContent = 'No';
-            }
-            else {
+            } else {
                 document.getElementById('isHiring').textContent = 'Not specified';
             }
 
         }
-
     </script>
 
 </body>
+
 </html>

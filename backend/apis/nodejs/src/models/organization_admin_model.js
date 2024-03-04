@@ -20,7 +20,7 @@ const knex = require('../utils/knex_config');
  * @param {*} organizationId
  * @returns true if administrator, false otherwise
  */
-async function isPersonOrganizationAdministrator (personId, organizationId) {
+async function isPersonOrganizationAdministrator(personId, organizationId) {
   const isPersonAdmin = await knex('OrganizationAdministrator')
     .where('id_person', personId)
     .where('id_organization', organizationId)
@@ -36,15 +36,15 @@ async function isPersonOrganizationAdministrator (personId, organizationId) {
  * @param {*} organizationId
  * @param {*} requester Id of the person requesting the addition
  */
-async function addOrganizationAdministrator (personId, organizationId, requester) {
+async function addOrganizationAdministrator(personId, organizationId, requester) {
 
   const isPersonAdmin = await organization_admin_model.isPersonAdmin(requester, organizationId);
-  if(isPersonAdmin){
+  if (isPersonAdmin) {
     await knex('OrganizationAdministrator')
-    .insert({
-      id_person: personId,
-      id_organization: organizationId
-    });
+      .insert({
+        id_person: personId,
+        id_organization: organizationId
+      });
     return true;
   }
   return false;
@@ -56,7 +56,7 @@ async function addOrganizationAdministrator (personId, organizationId, requester
  * @param {*} personId
  * @param {*} organizationId
  */
-async function removeOrganizationAdmin (personId, organizationId) {
+async function removeOrganizationAdmin(personId, organizationId) {
   const transaction = await knex.transaction();
 
   // We lock the table to ensure that we won't have concurrency issues
@@ -71,7 +71,9 @@ async function removeOrganizationAdmin (personId, organizationId) {
 
   // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix. (database schema)
   const remainingAdministrators = await transaction('OrganizationAdministrator')
-    .where({ id_organization: organizationId });
+    .where({
+      id_organization: organizationId
+    });
 
   if (remainingAdministrators.length === 0) {
     // If no more users, delete the organization

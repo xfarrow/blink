@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Title</title>
     <link rel="stylesheet" href="../css/profile.css">
 </head>
+
 <body style="display: none;">
     <div class="container">
         <div class="edit-badge" style="display: none;" id="editBadge" onclick="editProfile()">Edit</div>
@@ -46,21 +48,21 @@
     <script src="../js/utils.js"></script>
 
     <script>
-        window.addEventListener("load", async function() {
+        window.addEventListener("load", async function () {
             loadProfile();
         });
 
-        async function loadProfile (){
-            
+        async function loadProfile() {
+
             const idToDisplay = new URLSearchParams(window.location.search).get('id');
             let response;
 
             // Retrieving the logged in user's profile
-            if(!idToDisplay || idToDisplay === 'myself'){
+            if (!idToDisplay || idToDisplay === 'myself') {
                 document.getElementById('editBadge').style.display = 'block'; // show edit button
                 const token = getCookie('token');
                 // Check whether the token exists
-                if(!token){
+                if (!token) {
                     window.location.href = 'login.html';
                 }
                 response = await fetch(`${API_URL}/person/myself`, {
@@ -69,8 +71,7 @@
                         "authorization": token
                     }
                 });
-            }
-            else {
+            } else {
                 response = await fetch(`${API_URL}/person/${idToDisplay}/details`, {
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
@@ -79,19 +80,17 @@
             }
 
             const data = await response.json();
-            if (response.ok){
+            if (response.ok) {
                 populateFields(data.display_name, data.email, data.about_me, data.qualification);
                 document.body.style.display = 'block'; // Show page
-            }
-            else if (response.status == 401){
+            } else if (response.status == 401) {
                 window.location.href = 'login.html';
-            }
-            else{
+            } else {
                 alert(`Unable to load profile. Error: ${data.error}`);
             }
         }
 
-        function populateFields (displayName, email, aboutMe, qualification) {
+        function populateFields(displayName, email, aboutMe, qualification) {
             document.getElementById('displayName').textContent = displayName;
             document.title = `${displayName} - Blink`
             document.getElementById('email').textContent = email;
@@ -99,12 +98,11 @@
             document.getElementById('qualification').textContent = qualification;
         }
 
-        function editProfile () {
+        function editProfile() {
             alert('Editing');
         }
-
     </script>
 
 </body>
-</html>
 
+</html>

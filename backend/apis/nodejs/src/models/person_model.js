@@ -25,7 +25,7 @@ const bcrypt = require('bcrypt');
  * @param {*} placeOfLiving
  * @returns
  */
-function createPerson (email, password, displayName, dateOfBirth, available, enabled, placeOfLiving, aboutMe, qualification) {
+function createPerson(email, password, displayName, dateOfBirth, available, enabled, placeOfLiving, aboutMe, qualification) {
   const person = {
     email: email.toLowerCase(),
     password,
@@ -45,7 +45,7 @@ function createPerson (email, password, displayName, dateOfBirth, available, ena
  * @param {*} email email to look the Person for
  * @returns the Person object
  */
-async function getPersonByEmail (email) {
+async function getPersonByEmail(email) {
   return await knex('Person')
     .where('email', email.toLowerCase())
     .first();
@@ -56,10 +56,12 @@ async function getPersonByEmail (email) {
  * @param {*} id - The id to look the person for
  * @returns
  */
-async function getPersonById (id) {
+async function getPersonById(id) {
   return await knex('Person')
     .select('*')
-    .where({ id })
+    .where({
+      id
+    })
     .first();
 }
 
@@ -69,7 +71,7 @@ async function getPersonById (id) {
  * @param {*} person A Person object
  * @param {*} activationLink the activationLink identifier
  */
-async function registerPerson (person, activationLink) {
+async function registerPerson(person, activationLink) {
   // We need to insert either both in the "Person" table
   // and in the "ActivationLink" one, or in neither
   await knex.transaction(async (tr) => {
@@ -91,7 +93,7 @@ async function registerPerson (person, activationLink) {
  * @param {*} password
  * @returns
  */
-async function getPersonByEmailAndPassword (email, password) {
+async function getPersonByEmailAndPassword(email, password) {
   const person = await knex('Person')
     .where('email', email.toLowerCase())
     .where('enabled', true)
@@ -112,7 +114,7 @@ async function getPersonByEmailAndPassword (email, password) {
  * @param {*} person The Person to update
  * @param {*} person_id The database id of the Person to update
  */
-async function updatePerson (person, person_id) {
+async function updatePerson(person, person_id) {
   await knex('Person')
     .where('id', person_id)
     .update(person);
@@ -122,21 +124,25 @@ async function updatePerson (person, person_id) {
  * Deletes a Person specified by its database id.
  * @param {*} person_id
  */
-async function deletePerson (personId) {
+async function deletePerson(personId) {
   await knex('Person')
-    .where({ id: personId })
+    .where({
+      id: personId
+    })
     .del();
 }
 
-async function confirmActivation (personId) {
+async function confirmActivation(personId) {
   await knex.transaction(async (tr) => {
     await knex('Person')
-    .where('id', personId)
-    .update({enabled: true});
+      .where('id', personId)
+      .update({
+        enabled: true
+      });
 
-  await tr('ActivationLink')
-    .where('person_id', personId)
-    .del();
+    await tr('ActivationLink')
+      .where('person_id', personId)
+      .del();
   });
 
 }
