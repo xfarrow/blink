@@ -16,12 +16,13 @@ const knex = require('../utils/knex_config');
 /**
  * Get a Person's ID by its activation identifier
  * @param {*} identifier 
- * @returns 
+ * @returns The Person's ID associated with the identifier if present,
+ * null otherwise
  */
 async function getPersonIdByIdentifier (identifier){
     const tuple = await knex('ActivationLink')
-    .where('identifier', identifier)
-    .first();
+        .where('identifier', identifier)
+        .first();
     if(tuple){
         return tuple.person_id;
     }

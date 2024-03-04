@@ -228,13 +228,14 @@ async function deletePerson (req, res) {
 /**
  * POST Request
  * 
- * Enable a Person object by its activation identifier
+ * Set 'enabled = true' for the Person associated
+ * with the identifier.
  * 
  * Required field(s): identifier
  */
 async function enablePersonByActivationLink(req, res){
   try {
-    const personId = await activationModel.getPersonIdByIdentifier(req.body.identifier);
+    const personId = await activationModel.getPersonIdByIdentifier(req.query.q);
     if(!personId){
       return res.status(401).json({error: 'Activation Link either not valid or expired'});
     }
