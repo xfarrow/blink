@@ -56,6 +56,7 @@ publicRoutes.post('/register', personRoutes.registerPerson);
 publicRoutes.post('/login', personRoutes.login);
 publicRoutes.get('/person/:id/details', personRoutes.getPerson);
 publicRoutes.get('/organization/:id', organizationRoutes.getOrganization);
+publicRoutes.post('/person/activation', personRoutes.enablePersonByActivationLink);
 
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);

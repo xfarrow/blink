@@ -16,7 +16,7 @@ const jwtUtils = require('../utils/middleware_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const personModel = require('../models/person_model');
-
+const activationModel = require('../models/activation_model');
 /**
  * POST Request
  *
@@ -225,6 +225,27 @@ async function deletePerson (req, res) {
   }
 }
 
+/**
+ * POST Request
+ * 
+ * Enable a Person object by its activation identifier
+ * 
+ * Required field(s): identifier
+ */
+async function enablePersonByActivationLink(req, res){
+  try {
+    const personId = await activationModel.getPersonIdByIdentifier(req.body.identifier);
+    if(!personId){
+      return res.status(401).json({error: 'Activation Link either not valid or expired'});
+    }
+    await personModel.enablePerson(personId);
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(`Error in function ${enablePersonByActivationLink.name}: ${error}`);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 // Exporting a function
 // means making a JavaScript function defined in one
 // module available for use in another module.
@@ -234,5 +255,6 @@ module.exports = {
   getPerson,
   getMyself,
   updatePerson,
-  deletePerson
+  deletePerson,
+  enablePersonByActivationLink
 };

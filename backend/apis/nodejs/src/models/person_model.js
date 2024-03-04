@@ -128,10 +128,16 @@ async function updatePerson (person, person_id) {
  * Deletes a Person specified by its database id.
  * @param {*} person_id
  */
-async function deletePerson (person_id) {
+async function deletePerson (personId) {
   await knex('Person')
-    .where({ id: person_id })
+    .where({ id: personId })
     .del();
+}
+
+async function enablePerson (personId) {
+  await knex('Person')
+    .where('id', personId)
+    .update({enabled: true});
 }
 
 // Exporting a function
@@ -144,5 +150,6 @@ module.exports = {
   getPersonByEmailAndPassword,
   registerPerson,
   updatePerson,
-  deletePerson
+  deletePerson,
+  enablePerson
 };
