@@ -45,11 +45,13 @@ async function getOrganizationById (id) {
 }
 
 /**
- * Insert an Organization and its relative Administrator
+ * Insert an Organization and its relative Administrator.
  * @param {*} organization
+ * 
+ * @returns The inserted Organization
  */
 async function insertOrganization (organization, organizationAdministratorId) {
-  await knex.transaction(async (trx) => {
+  return await knex.transaction(async (trx) => {
     // We have to insert either both in Organization and in OrganizationAdministrator
     // or in neither
     const organizationResult = await trx('Organization')
@@ -61,6 +63,8 @@ async function insertOrganization (organization, organizationAdministratorId) {
         id_person: organizationAdministratorId,
         id_organization: organizationResult[0].id
       });
+
+    return organizationResult[0];
   });
 }
 
