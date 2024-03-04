@@ -18,3 +18,6 @@ This software is free, embodying both the principles of 'free' as in 'free beer'
 * Show your support by starring us on GitHub 🌟
 * Improve the code 💻
 * Contribute financially to our efforts on [Ko-Fi](https://www.ko-fi.com/xfarrow). However, we kindly request this only if you have already contributed to more critical [humanitarian causes](https://donare.info/en/welcome).
+
+## Contacts
+Reach us on <a rel="me" href="https://mastodon.social/@blinknetwork">Mastodon</a>
