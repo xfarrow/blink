@@ -12,6 +12,8 @@
 */
 
 const organizationPostModel = require('../models/organization_post_model');
+const express = require('express');
+const jwtUtils = require('../utils/middleware_utils');
 
 /**
    * POST Request
@@ -64,10 +66,14 @@ async function deleteOrganizationPost (req, res) {
   }
 }
 
+const protectedRoutes = express.Router();
+protectedRoutes.use(jwtUtils.verifyToken);
+protectedRoutes.post('/organization/post', createOrganizationPost);
+protectedRoutes.delete('/organization/post/:id', deleteOrganizationPost);
+
 // Exporting a function
 // means making a JavaScript function defined in one
 // module available for use in another module.
 module.exports = {
-  createOrganizationPost,
-  deleteOrganizationPost
+  protectedRoutes
 };

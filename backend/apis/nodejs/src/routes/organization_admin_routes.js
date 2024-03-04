@@ -12,6 +12,8 @@
 */
 
 const organizationAdminModel = require('../models/organization_admin_model');
+const express = require('express');
+const jwtUtils = require('../utils/middleware_utils');
 
 /**
  * POST Method
@@ -63,7 +65,11 @@ async function removeOrganizationAdmin (req, res) {
   }
 }
 
+const protectedRoutes = express.Router();
+protectedRoutes.use(jwtUtils.verifyToken);
+protectedRoutes.post('/organization/admin', addOrganizationAdmin);
+protectedRoutes.delete('/organization/admin', removeOrganizationAdmin);
+
 module.exports = {
-  addOrganizationAdmin,
-  removeOrganizationAdmin
+  protectedRoutes
 };

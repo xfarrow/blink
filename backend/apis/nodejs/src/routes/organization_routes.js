@@ -12,6 +12,8 @@
 */
 
 const organizationModel = require('../models/organization_model');
+const express = require('express');
+const jwtUtils = require('../utils/middleware_utils');
 
 /**
  * POST Request
@@ -88,7 +90,7 @@ async function updateOrganization (req, res) {
  */
 async function deleteOrganization (req, res) {
   try {
-    const isDeleteSuccessful = organizationModel.deleteOrganization(req.params.id, req.jwt.person_id);
+    const isDeleteSuccessful = await organizationModel.deleteOrganization(req.params.id, req.jwt.person_id);
     if (isDeleteSuccessful) {
       return res.status(200).json({ success: true });
     }
@@ -122,9 +124,16 @@ async function getOrganization (req, res) {
   }
 }
 
+const publicRoutes = express.Router();
+publicRoutes.get('/organization/:id', getOrganization);
+
+const protectedRoutes = express.Router();
+protectedRoutes.use(jwtUtils.verifyToken);
+protectedRoutes.post('/organization', createOrganization);
+protectedRoutes.put('/organization/:id', updateOrganization);
+protectedRoutes.delete('/organization/:id', deleteOrganization);
+
 module.exports = {
-  createOrganization,
-  getOrganization,
-  updateOrganization,
-  deleteOrganization
+  publicRoutes,
+  protectedRoutes
 };

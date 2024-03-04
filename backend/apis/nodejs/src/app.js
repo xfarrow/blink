@@ -15,7 +15,6 @@
 ===== BEGIN IMPORTING MODULES
 */
 
-// TODO: clean up
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -24,7 +23,6 @@ const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
 const organizationPostRoutes = require('./routes/organization_post_routes.js');
-const jwtUtils = require('./utils/middleware_utils.js');
 
 /*
 ===== END IMPORTING MODULES
@@ -51,28 +49,12 @@ app.use(rateLimit({
 ===== BEGIN ROUTE HANDLING =====
 */
 
-const publicRoutes = express.Router();
-publicRoutes.post('/register', personRoutes.registerPerson);
-publicRoutes.post('/login', personRoutes.login);
-publicRoutes.get('/person/:id/details', personRoutes.getPerson);
-publicRoutes.get('/organization/:id', organizationRoutes.getOrganization);
-publicRoutes.get('/person/activation', personRoutes.confirmActivation);
-
-const protectedRoutes = express.Router();
-protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.get('/person/myself', personRoutes.getMyself);
-protectedRoutes.put('/person/', personRoutes.updatePerson);
-protectedRoutes.delete('/person/delete', personRoutes.deletePerson);
-protectedRoutes.post('/organization/admin', organizationAdminRoutes.addOrganizationAdmin);
-protectedRoutes.delete('/organization/removeadmin', organizationAdminRoutes.removeOrganizationAdmin);
-protectedRoutes.post('/organization', organizationRoutes.createOrganization);
-protectedRoutes.put('/organization/:id', organizationRoutes.updateOrganization);
-protectedRoutes.delete('/organization/:id', organizationRoutes.deleteOrganization);
-protectedRoutes.post('/organization/post', organizationPostRoutes.createOrganizationPost);
-protectedRoutes.delete('/organization/post/:id', organizationPostRoutes.deleteOrganizationPost);
-
-app.use('/api', publicRoutes); // Routes not requiring token
-app.use('/api', protectedRoutes); // Routes requiring token
+app.use('/api', personRoutes.publicRoutes);
+app.use('/api', organizationRoutes.publicRoutes);
+app.use('/api', personRoutes.protectedRoutes);
+app.use('/api', organizationRoutes.protectedRoutes);
+app.use('/api', organizationAdminRoutes.protectedRoutes);
+app.use('/api', organizationPostRoutes.protectedRoutes);
 
 /*
 ===== END ROUTE HANDLING =====

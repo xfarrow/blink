@@ -17,6 +17,8 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const personModel = require('../models/person_model');
 const activationModel = require('../models/activation_model');
+const express = require('express');
+
 /**
  * POST Request
  *
@@ -257,15 +259,22 @@ async function confirmActivation(req, res){
   }
 }
 
+const publicRoutes = express.Router(); // Routes not requiring token
+publicRoutes.post('/register', registerPerson);
+publicRoutes.post('/login', login);
+publicRoutes.get('/person/:id/details', getPerson);
+publicRoutes.get('/person/activation', confirmActivation);
+
+const protectedRoutes = express.Router(); // Routes requiring token
+protectedRoutes.use(jwtUtils.verifyToken);
+protectedRoutes.get('/person/myself', getMyself);
+protectedRoutes.put('/person/', updatePerson);
+protectedRoutes.delete('/person/delete', deletePerson);
+
 // Exporting a function
 // means making a JavaScript function defined in one
 // module available for use in another module.
 module.exports = {
-  registerPerson,
-  login,
-  getPerson,
-  getMyself,
-  updatePerson,
-  deletePerson,
-  confirmActivation
+  publicRoutes,
+  protectedRoutes
 };
