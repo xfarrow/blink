@@ -38,8 +38,9 @@ async function isPersonOrganizationAdministrator(personId, organizationId) {
  */
 async function addOrganizationAdministrator(personId, organizationId, requester) {
 
-  const isPersonAdmin = await organization_admin_model.isPersonAdmin(requester, organizationId);
-  if (isPersonAdmin) {
+  const isRequesterAdmin = await isPersonOrganizationAdministrator(requester, organizationId);
+  const isPersonAdmin = await isPersonOrganizationAdministrator(personId, organizationId);
+  if (isRequesterAdmin && !isPersonAdmin) {
     await knex('OrganizationAdministrator')
       .insert({
         id_person: personId,

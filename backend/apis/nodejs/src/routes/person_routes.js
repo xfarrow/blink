@@ -92,7 +92,7 @@ async function registerPerson(req, res) {
  *
  * @returns The token
  */
-async function login(req, res) {
+async function createTokenByEmailAndPassword(req, res) {
   // Ensure that the required fields are present before proceeding
   if (!req.body.email || !req.body.password) {
     return res.status(400).json({
@@ -113,7 +113,7 @@ async function login(req, res) {
       });
     }
   } catch (error) {
-    console.error(`Error in function ${login.name}: ${error}`);
+    console.error(`Error in function ${createTokenByEmailAndPassword.name}: ${error}`);
     return res.status(500).json({
       error: 'Internal server error'
     });
@@ -312,16 +312,16 @@ async function confirmActivation(req, res) {
 }
 
 const publicRoutes = express.Router(); // Routes not requiring token
-publicRoutes.post('/register', registerPerson);
-publicRoutes.post('/login', login);
-publicRoutes.get('/person/:id/details', getPerson);
-publicRoutes.get('/person/activation', confirmActivation);
+publicRoutes.post('/persons', registerPerson);
+publicRoutes.post('/persons/me/token', createTokenByEmailAndPassword);
+publicRoutes.get('/persons/:id/details', getPerson);
+publicRoutes.get('/persons/me/activation', confirmActivation);
 
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.get('/person/myself', getMyself);
-protectedRoutes.put('/person', updatePerson);
-protectedRoutes.delete('/person', deletePerson);
+protectedRoutes.get('/persons/me', getMyself);
+protectedRoutes.put('/persons/me', updatePerson);
+protectedRoutes.delete('/persons/me', deletePerson);
 
 // Exporting a function
 // means making a JavaScript function defined in one

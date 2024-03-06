@@ -58,21 +58,21 @@
             let response;
 
             // Retrieving the logged in user's profile
-            if (!idToDisplay || idToDisplay === 'myself') {
+            if (!idToDisplay || idToDisplay === 'me') {
                 document.getElementById('editBadge').style.display = 'block'; // show edit button
                 const token = getCookie('token');
                 // Check whether the token exists
                 if (!token) {
                     window.location.href = 'login.html';
                 }
-                response = await fetch(`${API_URL}/person/myself`, {
+                response = await fetch(`${API_URL}/persons/me`, {
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
                         "authorization": token
                     }
                 });
             } else {
-                response = await fetch(`${API_URL}/person/${idToDisplay}/details`, {
+                response = await fetch(`${API_URL}/persons/${idToDisplay}/details`, {
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
                     }

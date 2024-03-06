@@ -25,20 +25,25 @@ const jwtUtils = require('../utils/middleware_utils');
  */
 async function createOrganizationPost(req, res) {
   // Ensure that the required fields are present before proceeding
-  if (!req.body.organization_id || !req.body.content) {
+  if (!req.params.idOrganization || !req.body.content) {
     return res.status(400).json({
       error: 'Invalid request'
     });
   }
 
-  const organization = organizationPostModel.createOrganizationPost(
-    req.body.organization_id,
+  const organizationPost = organizationPostModel.createOrganizationPost(
+    req.params.idOrganization,
     req.body.content,
     req.jwt.person_id);
 
   try {
-    const insertedOrganization = await organizationPostModel.insertOrganizationPost(organization);
-    return res.status(200).json(insertedOrganization);
+    const insertedOrganization = await organizationPostModel.insertOrganizationPost(organizationPost);
+    if(!!insertedOrganization){
+      return res.status(200).json(insertedOrganization);
+    }
+    return res.status(401).json({
+      error: 'Forbidden'
+    });
   } catch (error) {
     console.error(`Error in function ${createOrganizationPost.name}: ${error}`);
     return res.status(500).json({
@@ -78,8 +83,8 @@ async function deleteOrganizationPost(req, res) {
 
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organization/post', createOrganizationPost);
-protectedRoutes.delete('/organization/post/:id', deleteOrganizationPost);
+protectedRoutes.post('/organizations/:idOrganization/posts', createOrganizationPost);
+protectedRoutes.delete('/organizations/posts/:id', deleteOrganizationPost);
 
 // Exporting a function
 // means making a JavaScript function defined in one

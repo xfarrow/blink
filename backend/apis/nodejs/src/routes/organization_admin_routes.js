@@ -25,14 +25,14 @@ const jwtUtils = require('../utils/middleware_utils');
  */
 async function addOrganizationAdmin(req, res) {
   // Ensure that the required fields are present before proceeding
-  if (!req.body.organization_id || !req.body.person_id) {
+  if (!req.params.id || !req.body.person_id) {
     return res.status(400).json({
       error: 'Invalid request'
     });
   }
 
   try {
-    const success = await organizationAdminModel.addOrganizationAdministrator(req.body.person_id, req.body.organization_id, req.jwt.person_id);
+    const success = await organizationAdminModel.addOrganizationAdministrator(req.body.person_id, req.params.id, req.jwt.person_id);
     if (success) {
       return res.status(200).json({
         success: true
@@ -60,14 +60,14 @@ async function addOrganizationAdmin(req, res) {
  */
 async function removeOrganizationAdmin(req, res) {
   // Ensure that the required fields are present before proceeding
-  if (!req.body.organization_id) {
+  if (!req.params.organizationId) {
     return res.status(400).json({
       error: 'Invalid request'
     });
   }
 
   try {
-    await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.body.organization_id);
+    await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.params.organizationId);
     return res.status(200).json({
       success: true
     });
@@ -81,8 +81,8 @@ async function removeOrganizationAdmin(req, res) {
 
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organization/admin', addOrganizationAdmin);
-protectedRoutes.delete('/organization/admin', removeOrganizationAdmin);
+protectedRoutes.post('/organizations/:id/admins', addOrganizationAdmin);
+protectedRoutes.delete('/organizations/:organizationId/admins/me', removeOrganizationAdmin);
 
 module.exports = {
   protectedRoutes

@@ -147,13 +147,13 @@ async function getOrganization(req, res) {
 }
 
 const publicRoutes = express.Router();
-publicRoutes.get('/organization/:id', getOrganization);
+publicRoutes.get('/organizations/:id', getOrganization);
 
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organization', createOrganization);
-protectedRoutes.put('/organization/:id', updateOrganization);
-protectedRoutes.delete('/organization/:id', deleteOrganization);
+protectedRoutes.post('/organizations', createOrganization);
+protectedRoutes.put('/organizations/:id', updateOrganization);
+protectedRoutes.delete('/organizations/:id', deleteOrganization);
 
 module.exports = {
   publicRoutes,
