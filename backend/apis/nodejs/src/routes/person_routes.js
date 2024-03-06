@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const validator = require('../utils/validation');
+const validator = require('../utils/person_validator');
 const jwtUtils = require('../utils/middleware_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -29,21 +29,17 @@ const express = require('express');
  * @returns The activationlink identifier
  */
 async function registerPerson(req, res) {
+
+  const errors = validator.validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   // Does this server allow users to register?
   if (process.env.ALLOW_USER_REGISTRATION === 'false') {
     return res.status(403).json({
       error: 'Users cannot register on this server'
-    });
-  }
-  // Ensure that the required fields are present before proceeding
-  if (!req.body.display_name || !req.body.email || !req.body.password) {
-    return res.status(400).json({
-      error: 'Some or all required fields are missing'
-    });
-  }
-  if (!validator.validateEmail(req.body.email)) {
-    return res.status(400).json({
-      error: 'The email is not in a valid format'
     });
   }
 
@@ -93,12 +89,6 @@ async function registerPerson(req, res) {
  * @returns The token
  */
 async function createTokenByEmailAndPassword(req, res) {
-  // Ensure that the required fields are present before proceeding
-  if (!req.body.email || !req.body.password) {
-    return res.status(400).json({
-      error: 'Invalid request'
-    });
-  }
 
   try {
     const person = await personModel.getPersonByEmailAndPassword(req.body.email, req.body.password);
@@ -312,8 +302,8 @@ async function confirmActivation(req, res) {
 }
 
 const publicRoutes = express.Router(); // Routes not requiring token
-publicRoutes.post('/persons', registerPerson);
-publicRoutes.post('/persons/me/token', createTokenByEmailAndPassword);
+publicRoutes.post('/persons', validator.registerValidator, registerPerson);
+publicRoutes.post('/persons/me/token', validator.getTokenValidator, createTokenByEmailAndPassword);
 publicRoutes.get('/persons/:id/details', getPerson);
 publicRoutes.get('/persons/me/activation', confirmActivation);
 
