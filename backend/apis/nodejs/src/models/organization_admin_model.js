@@ -40,6 +40,7 @@ async function addOrganizationAdministrator(personId, organizationId, requester)
 
   const isRequesterAdmin = await isPersonOrganizationAdministrator(requester, organizationId);
   const isPersonAdmin = await isPersonOrganizationAdministrator(personId, organizationId);
+  // TOCTOU 
   if (isRequesterAdmin && !isPersonAdmin) {
     await knex('OrganizationAdministrator')
       .insert({
