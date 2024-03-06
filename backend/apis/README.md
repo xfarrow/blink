@@ -17,4 +17,4 @@ You can test the APIs in two ways:
 ## For Developers
 The current implementation of the Blink APIs is written in NodeJS. Feel free to develop them in any other
 programming language (you can paste the folder here) but make sure to make them compatible with one another
-and please follow the API design [best practices](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design)
+and please follow the API design's [best practices](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design).
