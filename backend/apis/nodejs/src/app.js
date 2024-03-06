@@ -12,29 +12,31 @@
 */
 
 /*
-===== BEGIN IMPORTING MODULES
+===== BEGIN IMPORTING MODULES =====
 */
 
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet')
 const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
 const organizationPostRoutes = require('./routes/organization_post_routes.js');
 
 /*
-===== END IMPORTING MODULES
+===== END IMPORTING MODULES =====
 */
 
 /*
-===== BEGIN APPLICATION CONFIGURATION
+===== BEGIN APPLICATION CONFIGURATION =====
 */
 
 const app = express();
 app.use(express.json()); // Middleware which parses JSON for POST requests
 app.use(cors()); // Enable CORS for all routes
+app.use(helmet()); // Some security settings
 app.use(rateLimit({
   windowMs: process.env.LIMITER_WINDOW,
   max: process.env.LIMITER_MAXIMUM_PER_WINDOW,
@@ -44,7 +46,7 @@ app.use(rateLimit({
 })); // Apply the rate limiter middleware to all routes
 
 /*
-===== END APPLICATION CONFIGURATION
+===== END APPLICATION CONFIGURATION =====
 */
 
 /*
