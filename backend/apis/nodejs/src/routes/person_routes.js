@@ -320,8 +320,8 @@ publicRoutes.get('/person/activation', confirmActivation);
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.get('/person/myself', getMyself);
-protectedRoutes.put('/person/', updatePerson);
-protectedRoutes.delete('/person/delete', deletePerson);
+protectedRoutes.put('/person', updatePerson);
+protectedRoutes.delete('/person', deletePerson);
 
 // Exporting a function
 // means making a JavaScript function defined in one
