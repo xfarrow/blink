@@ -25,7 +25,7 @@ const registerValidator = [
   }),
   check('password').isLength({
     min: 5
-  }).trim().escape().withMessage('Password must be at leat 5 characters long'),
+  }).trim().escape().withMessage('Password must be at least 5 characters'),
   check('date_of_birth').optional().isDate().withMessage('Invalid date format. Date must be YYYY-MM-DD'),
   check('available').optional().isBoolean(),
   check('place_of_living').isLength({
