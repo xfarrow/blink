@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const validator = require('../utils/person_validator');
+const validator = require('../utils/validators/person_validator');
 const jwtUtils = require('../utils/middleware_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -33,7 +33,9 @@ async function registerPerson(req, res) {
   const errors = validator.validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({
+      errors: errors.array()
+    });
   }
 
   // Does this server allow users to register?

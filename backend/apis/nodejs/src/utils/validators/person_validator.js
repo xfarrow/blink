@@ -14,7 +14,7 @@
 const {
   check,
   validationResult
-} = require("express-validator");
+} = require("express-validator"); // This is the destructuring part. It specifies which properties of the imported object (express-validator) you want to extract.
 
 const registerValidator = [
   check('display_name').trim().notEmpty().escape().isLength({
