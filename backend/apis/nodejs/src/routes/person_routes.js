@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const validator = require('../utils/validators/person_validator');
+const personValidator = require('../utils/validators/person_validator');
 const jwtUtils = require('../utils/middleware_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -29,28 +29,27 @@ const express = require('express');
  * @returns The activationlink identifier
  */
 async function registerPerson(req, res) {
-
-  const errors = validator.validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array()
-    });
-  }
-
-  // Does this server allow users to register?
-  if (process.env.ALLOW_USER_REGISTRATION === 'false') {
-    return res.status(403).json({
-      error: 'Users cannot register on this server'
-    });
-  }
-
-  // Generate activation link token
-  const activationLink = crypto.randomBytes(16).toString('hex');
-  // Hash provided password
-  const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
-
   try {
+    const errors = personValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
+
+    // Does this server allow users to register?
+    if (process.env.ALLOW_USER_REGISTRATION === 'false') {
+      return res.status(403).json({
+        error: 'Users cannot register on this server'
+      });
+    }
+
+    // Generate activation link token
+    const activationLink = crypto.randomBytes(16).toString('hex');
+    // Hash provided password
+    const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
+
+
     // Check whether e-mail exists already (enforced by database constraints)
     const existingUser = await personModel.getPersonByEmail(req.body.email);
     if (existingUser) {
@@ -91,15 +90,13 @@ async function registerPerson(req, res) {
  * @returns The token
  */
 async function createTokenByEmailAndPassword(req, res) {
-
-  const errors = validator.validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array()
-    });
-  }
-
   try {
+    const errors = personValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
     const person = await personModel.getPersonByEmailAndPassword(req.body.email, req.body.password);
     if (person) {
       const token = jwtUtils.generateToken(person.id);
@@ -184,70 +181,69 @@ async function getMyself(req, res) {
  *
  */
 async function updatePerson(req, res) {
-
-  const errors = validator.validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array()
-    });
-  }
-
-  const updatePerson = {};
-
-  if (req.body.display_name != undefined) {
-    updatePerson.display_name = req.body.display_name;
-  }
-
-  if (req.body.date_of_birth != undefined) {
-    updatePerson.date_of_birth = req.body.date_of_birth;
-  }
-
-  if (req.body.available != undefined) {
-    updatePerson.available = req.body.available;
-  }
-
-  if (req.body.place_of_living != undefined) {
-    updatePerson.place_of_living = req.body.place_of_living;
-  }
-
-  if (req.body.about_me != undefined) {
-    updatePerson.about_me = req.body.about_me;
-  }
-
-  if (req.body.qualification != undefined) {
-    updatePerson.qualification = req.body.qualification;
-  }
-
-  // If we are tying to change password, the old password must be provided
-  if (req.body.old_password != undefined || req.body.new_password != undefined) {
-    if (req.body.old_password == undefined) {
-      return res.status(401).json({
-        error: 'The old password must be specified'
-      });
-    }
-    if (req.body.new_password == undefined) {
-      return res.status(401).json({
-        error: 'The new password must be specified'
-      });
-    }
-    const user = await personModel.getPersonById(req.jwt.person_id);
-    const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
-    if (passwordMatches) {
-      updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
-    } else {
-      return res.status(401).json({
-        error: 'Password verification failed'
-      });
-    }
-  }
-
-  if (Object.keys(updatePerson).length === 0) {
-    return res.status(400).json({
-      error: 'Bad request. No data to update'
-    });
-  }
-
   try {
+    const errors = personValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
+
+    const updatePerson = {};
+
+    if (req.body.display_name != undefined) {
+      updatePerson.display_name = req.body.display_name;
+    }
+
+    if (req.body.date_of_birth != undefined) {
+      updatePerson.date_of_birth = req.body.date_of_birth;
+    }
+
+    if (req.body.available != undefined) {
+      updatePerson.available = req.body.available;
+    }
+
+    if (req.body.place_of_living != undefined) {
+      updatePerson.place_of_living = req.body.place_of_living;
+    }
+
+    if (req.body.about_me != undefined) {
+      updatePerson.about_me = req.body.about_me;
+    }
+
+    if (req.body.qualification != undefined) {
+      updatePerson.qualification = req.body.qualification;
+    }
+
+    // If we are tying to change password, the old password must be provided
+    if (req.body.old_password != undefined || req.body.new_password != undefined) {
+      if (req.body.old_password == undefined) {
+        return res.status(401).json({
+          error: 'The old password must be specified'
+        });
+      }
+      if (req.body.new_password == undefined) {
+        return res.status(401).json({
+          error: 'The new password must be specified'
+        });
+      }
+      const user = await personModel.getPersonById(req.jwt.person_id);
+      const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
+      if (passwordMatches) {
+        updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
+      } else {
+        return res.status(401).json({
+          error: 'Password verification failed'
+        });
+      }
+    }
+
+    if (Object.keys(updatePerson).length === 0) {
+      return res.status(400).json({
+        error: 'Bad request. No data to update'
+      });
+    }
+
     await personModel.updatePerson(updatePerson, req.jwt.person_id);
     return res.status(200).json({
       success: 'true'
@@ -293,13 +289,13 @@ async function deletePerson(req, res) {
  * Required field(s): q (identifier)
  */
 async function confirmActivation(req, res) {
-  const errors = validator.validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array()
-    });
-  }
   try {
+    const errors = personValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
     const personId = await activationModel.getPersonIdByIdentifier(req.query.q);
     if (!personId) {
       return res.status(401).json({
@@ -319,15 +315,15 @@ async function confirmActivation(req, res) {
 }
 
 const publicRoutes = express.Router(); // Routes not requiring token
-publicRoutes.post('/persons', validator.registerValidator, registerPerson);
-publicRoutes.post('/persons/me/token', validator.getTokenValidator, createTokenByEmailAndPassword);
+publicRoutes.post('/persons', personValidator.registerValidator, registerPerson);
+publicRoutes.post('/persons/me/token', personValidator.getTokenValidator, createTokenByEmailAndPassword);
 publicRoutes.get('/persons/:id/details', getPerson);
-publicRoutes.get('/persons/me/activation', validator.confirmActivationValidator, confirmActivation);
+publicRoutes.get('/persons/me/activation', personValidator.confirmActivationValidator, confirmActivation);
 
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.get('/persons/me', getMyself);
-protectedRoutes.patch('/persons/me', validator.updatePersonValidator, updatePerson);
+protectedRoutes.patch('/persons/me', personValidator.updatePersonValidator, updatePerson);
 protectedRoutes.delete('/persons/me', deletePerson);
 
 // Exporting a function
