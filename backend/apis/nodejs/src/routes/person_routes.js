@@ -92,6 +92,13 @@ async function registerPerson(req, res) {
  */
 async function createTokenByEmailAndPassword(req, res) {
 
+  const errors = validator.validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array()
+    });
+  }
+
   try {
     const person = await personModel.getPersonByEmailAndPassword(req.body.email, req.body.password);
     if (person) {
@@ -177,6 +184,14 @@ async function getMyself(req, res) {
  *
  */
 async function updatePerson(req, res) {
+
+  const errors = validator.validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array()
+    });
+  }
+
   const updatePerson = {};
 
   if (req.body.display_name != undefined) {
@@ -275,9 +290,15 @@ async function deletePerson(req, res) {
  * Set 'enabled = true' for the Person associated
  * with the identifier.
  * 
- * Required field(s): identifier
+ * Required field(s): q (identifier)
  */
 async function confirmActivation(req, res) {
+  const errors = validator.validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array()
+    });
+  }
   try {
     const personId = await activationModel.getPersonIdByIdentifier(req.query.q);
     if (!personId) {
@@ -301,12 +322,12 @@ const publicRoutes = express.Router(); // Routes not requiring token
 publicRoutes.post('/persons', validator.registerValidator, registerPerson);
 publicRoutes.post('/persons/me/token', validator.getTokenValidator, createTokenByEmailAndPassword);
 publicRoutes.get('/persons/:id/details', getPerson);
-publicRoutes.get('/persons/me/activation', confirmActivation);
+publicRoutes.get('/persons/me/activation', validator.confirmActivationValidator, confirmActivation);
 
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.get('/persons/me', getMyself);
-protectedRoutes.patch('/persons/me', updatePerson);
+protectedRoutes.patch('/persons/me', validator.updatePersonValidator, updatePerson);
 protectedRoutes.delete('/persons/me', deletePerson);
 
 // Exporting a function

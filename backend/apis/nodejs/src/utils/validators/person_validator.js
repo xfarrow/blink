@@ -44,8 +44,35 @@ const getTokenValidator = [
   check('password').notEmpty().trim().escape()
 ];
 
+const updatePersonValidator = [
+  check('display_name').trim().escape().isLength({
+    max: 128
+  }),
+  check('date_of_birth').optional().isDate().withMessage('Invalid date format. Date must be YYYY-MM-DD'),
+  check('available').optional().isBoolean(),
+  check('place_of_living').isLength({
+    max: 128
+  }).escape(),
+  check('about_me').isLength({
+    max: 4096
+  }).escape(),
+  check('qualification').isLength({
+    max: 64
+  }).escape(),
+  check('old_password').trim().escape(),
+  check('new_password').isLength({
+    min: 5
+  }).trim().escape().withMessage('Password must be at least 5 characters'),
+];
+
+const confirmActivationValidator = [
+  check('q').trim().escape()
+]
+
 module.exports = {
   registerValidator,
   getTokenValidator,
-  validationResult
+  validationResult,
+  updatePersonValidator,
+  confirmActivationValidator
 };
