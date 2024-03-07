@@ -166,57 +166,51 @@ async function getMyself(req, res) {
 }
 
 /**
- * PUT request
+ * PATCH request
  *
  * Updates a Person's details. If some details are
  * not present, they shall be ignored. An user can
  * only update themselves
  *
- * Required field(s): none. Both old_password and
+ * Required field(s): At least one. Both old_password and
  * new_password if updating the password.
  *
  */
 async function updatePerson(req, res) {
   const updatePerson = {};
 
-  if (req.body.display_name) {
+  if (req.body.display_name != undefined) {
     updatePerson.display_name = req.body.display_name;
   }
 
-  if (req.body.date_of_birth) {
-    if (validator.isPostgresDateFormatValid(req.body.date_of_birth)) {
-      updatePerson.date_of_birth = req.body.date_of_birth;
-    } else {
-      return res.status(400).json({
-        error: 'Date of birth format not valid. Please specify a YYYY-MM-DD date'
-      });
-    }
+  if (req.body.date_of_birth != undefined) {
+    updatePerson.date_of_birth = req.body.date_of_birth;
   }
 
-  if (req.body.available) {
+  if (req.body.available != undefined) {
     updatePerson.available = req.body.available;
   }
 
-  if (req.body.place_of_living) {
+  if (req.body.place_of_living != undefined) {
     updatePerson.place_of_living = req.body.place_of_living;
   }
 
-  if (req.body.about_me) {
+  if (req.body.about_me != undefined) {
     updatePerson.about_me = req.body.about_me;
   }
 
-  if (req.body.qualification) {
+  if (req.body.qualification != undefined) {
     updatePerson.qualification = req.body.qualification;
   }
 
   // If we are tying to change password, the old password must be provided
-  if (req.body.old_password || req.body.new_password) {
-    if (!req.body.old_password) {
+  if (req.body.old_password != undefined || req.body.new_password != undefined) {
+    if (req.body.old_password == undefined) {
       return res.status(401).json({
         error: 'The old password must be specified'
       });
     }
-    if (!req.body.new_password) {
+    if (req.body.new_password == undefined) {
       return res.status(401).json({
         error: 'The new password must be specified'
       });
@@ -312,7 +306,7 @@ publicRoutes.get('/persons/me/activation', confirmActivation);
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.get('/persons/me', getMyself);
-protectedRoutes.put('/persons/me', updatePerson);
+protectedRoutes.patch('/persons/me', updatePerson);
 protectedRoutes.delete('/persons/me', deletePerson);
 
 // Exporting a function
