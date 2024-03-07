@@ -18,6 +18,7 @@ const crypto = require('crypto');
 const personModel = require('../models/person_model');
 const activationModel = require('../models/activation_model');
 const express = require('express');
+const mailUtils = require('../utils/mail_utils');
 
 /**
  * POST Request
@@ -44,12 +45,6 @@ async function registerPerson(req, res) {
       });
     }
 
-    // Generate activation link token
-    const activationLink = crypto.randomBytes(16).toString('hex');
-    // Hash provided password
-    const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
-
-
     // Check whether e-mail exists already (enforced by database constraints)
     const existingUser = await personModel.getPersonByEmail(req.body.email);
     if (existingUser) {
@@ -57,17 +52,34 @@ async function registerPerson(req, res) {
         error: 'E-mail already in use'
       });
     }
+
+    let activationLink = '';
+    let isEnabled = true;
+    if (process.env.NEEDS_EMAIL_VERIFICATION === 'true') {
+      // Generate activation link token
+      activationLink = crypto.randomBytes(16).toString('hex');
+      isEnabled = false;
+    }
+
+    // Hash provided password
+    const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
+    
     const personToInsert = personModel.createPerson(
       req.body.email,
       await hashPasswordPromise,
       req.body.display_name,
       req.body.date_of_birth,
       req.body.available,
-      false,
+      isEnabled,
       req.body.place_of_living,
       req.body.about_me,
       req.body.qualification);
     await personModel.registerPerson(personToInsert, activationLink);
+    if (process.env.NEEDS_EMAIL_VERIFICATION === 'true') {
+      // TODO generalize
+      mailUtils.sendConfirmationLink(req.body.email, 'http://localhost:3000/api/persons/me/activation?q=' + activationLink);
+    }
+
     return res.status(200).json({
       activationLink
     });
