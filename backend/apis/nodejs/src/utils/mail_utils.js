@@ -21,12 +21,10 @@ function sendConfirmationLink(destinationEmail, confirmationLink) {
 }
 
 function sendMail(mailOptions) {
-    // Send mail with defined transport object
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            return console.error(error);
+            console.error(error);
         }
-        console.log('Message sent: %s', info.messageId);
     });
 }
 
