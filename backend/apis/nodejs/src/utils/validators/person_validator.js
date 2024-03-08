@@ -66,7 +66,7 @@ const updatePersonValidator = [
 ];
 
 const confirmActivationValidator = [
-  check('q').trim().escape()
+  check('code').trim().escape()
 ]
 
 module.exports = {

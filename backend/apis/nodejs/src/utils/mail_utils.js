@@ -9,7 +9,8 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-function sendConfirmationLink(destinationEmail, confirmationLink) {
+function sendConfirmationLink(destinationEmail, code) {
+    const confirmationLink = `${process.env.FRONT_END_URL}/activate-account.html?q=${code}`
     let mailOptions = {
         from: `"Blink" ${process.env.SMTP_USERNAME}`,
         to: destinationEmail,

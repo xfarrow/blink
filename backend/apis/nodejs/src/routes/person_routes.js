@@ -76,8 +76,7 @@ async function registerPerson(req, res) {
       req.body.qualification);
     await personModel.registerPerson(personToInsert, activationLink);
     if (process.env.NEEDS_EMAIL_VERIFICATION === 'true') {
-      // TODO generalize
-      mailUtils.sendConfirmationLink(req.body.email, 'http://localhost:3000/api/persons/me/activation?q=' + activationLink);
+      mailUtils.sendConfirmationLink(req.body.email, activationLink);
     }
 
     return res.status(200).json({
@@ -308,7 +307,7 @@ async function confirmActivation(req, res) {
         errors: errors.array()
       });
     }
-    const personId = await activationModel.getPersonIdByIdentifier(req.query.q);
+    const personId = await activationModel.getPersonIdByIdentifier(req.body.code);
     if (!personId) {
       return res.status(401).json({
         error: 'Activation Link either not valid or expired'
@@ -330,7 +329,7 @@ const publicRoutes = express.Router(); // Routes not requiring token
 publicRoutes.post('/persons', personValidator.registerValidator, registerPerson);
 publicRoutes.post('/persons/me/token', personValidator.getTokenValidator, createTokenByEmailAndPassword);
 publicRoutes.get('/persons/:id/details', getPerson);
-publicRoutes.get('/persons/me/activation', personValidator.confirmActivationValidator, confirmActivation);
+publicRoutes.post('/persons/me/activation', personValidator.confirmActivationValidator, confirmActivation);
 
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
