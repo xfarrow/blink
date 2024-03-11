@@ -9,19 +9,21 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-function sendConfirmationLink(destinationEmail, code) {
+function sendConfirmationLink(destinationAddress, code) {
     const confirmationLink = `${process.env.FRONT_END_URL}/activate-account.html?q=${code}`
-    let mailOptions = {
-        from: `"Blink" ${process.env.SMTP_USERNAME}`,
-        to: destinationEmail,
-        subject: 'Verify your Blink Account',
-        // text: 'This is plain HTML',
-        html: getConfirmationLinkHtmlPage(confirmationLink)
-    };
-    sendMail(mailOptions);
+    sendMail(destinationAddress, 'Verify your Blink Account', null, getConfirmationLinkHtmlPage(confirmationLink));
 }
 
-function sendMail(mailOptions) {
+function sendMail(destinationAddress, subject, text, html) {
+
+    let mailOptions = {
+        from: `"Blink" ${process.env.SMTP_USERNAME}`,
+        to: destinationAddress,
+        subject: subject,
+        text: text, // plain text
+        html: html
+    };
+
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error(error);
