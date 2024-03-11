@@ -53,11 +53,10 @@ async function registerPerson(req, res) {
       });
     }
 
-    let activationLink = '';
+    let activationCode = null;
     let isEnabled = true;
     if (process.env.NEEDS_EMAIL_VERIFICATION === 'true') {
-      // Generate activation link token
-      activationLink = crypto.randomBytes(16).toString('hex');
+      activationCode = crypto.randomBytes(16).toString('hex');
       isEnabled = false;
     }
 
@@ -74,14 +73,16 @@ async function registerPerson(req, res) {
       req.body.place_of_living,
       req.body.about_me,
       req.body.qualification);
-    await personModel.registerPerson(personToInsert, activationLink);
+    const insertedPerson = await personModel.registerPerson(personToInsert, activationCode);
+    delete insertedPerson.password;
+
     if (process.env.NEEDS_EMAIL_VERIFICATION === 'true') {
-      mailUtils.sendConfirmationLink(req.body.email, activationLink);
+      mailUtils.sendConfirmationLink(req.body.email, activationCode);
     }
 
-    return res.status(200).json({
-      activationLink
-    });
+    res.set('Location', `/api/persons/${insertedPerson.id}/details`);
+    return res.status(201).json(insertedPerson);
+
   } catch (error) {
     console.error(`Error in function ${registerPerson.name}: ${error}`);
     res.status(500).json({
@@ -128,6 +129,8 @@ async function createTokenByEmailAndPassword(req, res) {
 }
 
 /**
+ * GET Request
+ * 
  * Obtain a Person's details if the
  * Person to retrieve is either myself or an
  * enabled Person.
@@ -256,9 +259,7 @@ async function updatePerson(req, res) {
     }
 
     await personModel.updatePerson(updatePerson, req.jwt.person_id);
-    return res.status(200).json({
-      success: 'true'
-    });
+    return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${updatePerson.name}: ${error}`);
     return res.status(500).json({
@@ -268,7 +269,7 @@ async function updatePerson(req, res) {
 }
 
 /**
- * GET Request
+ * DELETE Request
  *
  * Deletes a Person. An user can only delete
  * themselves.
@@ -280,9 +281,7 @@ async function deletePerson(req, res) {
   // TODO: Delete Organization if this user was its only administrator
   try {
     await personModel.deletePerson(req.jwt.person_id);
-    return res.status(200).json({
-      success: true
-    });
+    return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${deletePerson.name}: ${error}`);
     return res.status(500).json({
@@ -314,9 +313,7 @@ async function confirmActivation(req, res) {
       });
     }
     await personModel.confirmActivation(personId);
-    return res.status(200).json({
-      success: true
-    });
+    return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${confirmActivation.name}: ${error}`);
     return res.status(500).json({

@@ -67,12 +67,12 @@ const updatePersonValidator = [
 
 const confirmActivationValidator = [
   check('code').trim().escape()
-]
+];
 
 module.exports = {
   registerValidator,
   getTokenValidator,
   validationResult,
   updatePersonValidator,
-  confirmActivationValidator
+  confirmActivationValidator,
 };

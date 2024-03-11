@@ -69,20 +69,25 @@ async function getPersonById(id) {
  * Registers a Person by inserting in the database, in a transaction,
  * both in the "Person" and in the "ActivationLink" tables.
  * @param {*} person A Person object
- * @param {*} activationLink the activationLink identifier
+ * @param {*} activationLink the activationLink identifier, if null, it won't be inserted
+ * 
+ * @returns The inserted person.
  */
 async function registerPerson(person, activationLink) {
   // We need to insert either both in the "Person" table
   // and in the "ActivationLink" one, or in neither
-  await knex.transaction(async (tr) => {
-    const personIdResult = await tr('Person')
+  return await knex.transaction(async (tr) => {
+    const insertedPerson = await tr('Person')
       .insert(person)
-      .returning('id');
-    await tr('ActivationLink')
+      .returning('*');
+    if(activationLink != null){
+      await tr('ActivationLink')
       .insert({
-        person_id: personIdResult[0].id,
+        person_id: insertedPerson[0].id,
         identifier: activationLink
       });
+    }
+    return insertedPerson[0];
   });
 }
 
