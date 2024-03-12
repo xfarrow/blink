@@ -14,6 +14,7 @@
 const organizationModel = require('../models/organization_model');
 const express = require('express');
 const jwtUtils = require('../utils/middleware_utils');
+const organizationValidator = require('../utils/validators/organization_validator');
 
 /**
  * POST Request
@@ -25,17 +26,18 @@ const jwtUtils = require('../utils/middleware_utils');
  * @returns the inserted organization
  */
 async function createOrganization(req, res) {
-  // Ensure that the required fields are present before proceeding
-  if (!req.body.name) {
-    return res.status(400).json({
-      error: 'Invalid request'
-    });
-  }
 
   try {
+    const errors = organizationValidator.createOrganizationValidator(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
     const organization = organizationModel.createOrganization(req.body.name, req.body.location, req.body.description, req.body.is_hiring);
     const insertedOrganization = await organizationModel.insertOrganization(organization, req.jwt.person_id);
-    return res.status(200).json(insertedOrganization);
+    res.set('Location', `/api/organizations/${insertedOrganization.id}`);
+    return res.status(201).json(insertedOrganization);
   } catch (error) {
     console.error(`Error in function ${createOrganization.name}: ${error}`);
     res.status(500).json({
@@ -45,27 +47,34 @@ async function createOrganization(req, res) {
 }
 
 /**
- * PUT Request
+ * PATCH Request
  * Updates an Organization's details
  *
  * Required field(s): none.
  */
 async function updateOrganization(req, res) {
+  const errors = organizationValidator.createOrganizationValidator(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array()
+    });
+  }
+
   const updateOrganization = {};
 
-  if (req.body.name) {
+  if (req.body.name != undefined) {
     updateOrganization.name = req.body.name;
   }
 
-  if (req.body.location) {
+  if (req.body.location != undefined) {
     updateOrganization.location = req.body.location;
   }
 
-  if (req.body.description) {
+  if (req.body.description != undefined) {
     updateOrganization.description = req.body.description;
   }
 
-  if (req.body.is_hiring) {
+  if (req.body.is_hiring != undefined) {
     updateOrganization.is_hiring = req.body.is_hiring;
   }
 
@@ -78,9 +87,7 @@ async function updateOrganization(req, res) {
   try {
     const isUpdateSuccessful = organizationModel.updateOrganization(updateOrganization, req.params.id, req.jwt.person_id);
     if (isUpdateSuccessful) {
-      return res.status(200).json({
-        success: 'true'
-      });
+      return res.status(204).send();
     } else {
       return res.status(404).json({
         error: 'Organization either not found or insufficient permissions'
@@ -102,11 +109,15 @@ async function updateOrganization(req, res) {
  */
 async function deleteOrganization(req, res) {
   try {
+    const errors = organizationValidator.createOrganizationValidator(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
     const isDeleteSuccessful = await organizationModel.deleteOrganization(req.params.id, req.jwt.person_id);
     if (isDeleteSuccessful) {
-      return res.status(200).json({
-        success: true
-      });
+      return res.status(204).send();
     }
     return res.status(403).json({
       error: 'Forbidden'
@@ -130,6 +141,12 @@ async function deleteOrganization(req, res) {
  */
 async function getOrganization(req, res) {
   try {
+    const errors = organizationValidator.createOrganizationValidator(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
     const organization = await organizationModel.getOrganizationById(req.params.id);
     if (organization) {
       return res.status(200).json(organization);
@@ -147,13 +164,13 @@ async function getOrganization(req, res) {
 }
 
 const publicRoutes = express.Router();
-publicRoutes.get('/organizations/:id', getOrganization);
+publicRoutes.get('/organizations/:id', organizationValidator.deleteOrGetOrganizationValidator, getOrganization);
 
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organizations', createOrganization);
-protectedRoutes.put('/organizations/:id', updateOrganization);
-protectedRoutes.delete('/organizations/:id', deleteOrganization);
+protectedRoutes.post('/organizations', organizationValidator.createOrganizationValidator, createOrganization);
+protectedRoutes.patch('/organizations/:id', organizationValidator.updateOrganizationValidator, updateOrganization);
+protectedRoutes.delete('/organizations/:id', organizationValidator.deleteOrGetOrganizationValidator, deleteOrganization);
 
 module.exports = {
   publicRoutes,
