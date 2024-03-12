@@ -62,19 +62,19 @@ async function updateOrganization(req, res) {
 
   const updateOrganization = {};
 
-  if (req.body.name != undefined) {
+  if (req.body.name !== undefined) {
     updateOrganization.name = req.body.name;
   }
 
-  if (req.body.location != undefined) {
+  if (req.body.location !== undefined) {
     updateOrganization.location = req.body.location;
   }
 
-  if (req.body.description != undefined) {
+  if (req.body.description !== undefined) {
     updateOrganization.description = req.body.description;
   }
 
-  if (req.body.is_hiring != undefined) {
+  if (req.body.is_hiring !== undefined) {
     updateOrganization.is_hiring = req.body.is_hiring;
   }
 
