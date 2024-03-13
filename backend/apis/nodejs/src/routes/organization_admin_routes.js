@@ -64,8 +64,11 @@ async function removeOrganizationAdmin(req, res) {
         errors: errors.array()
       });
     }
-    await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.params.organizationId);
-    return res.status(204).send();
+    const success = await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.params.organizationId);
+    if(success){
+      return res.status(204).send();
+    }
+    return res.status(404).send();
   } catch (error) {
     console.error(`Error in function ${removeOrganizationAdmin.name}: ${error}`);
     return res.status(500).json({

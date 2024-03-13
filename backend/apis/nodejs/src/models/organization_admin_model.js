@@ -66,7 +66,7 @@ async function removeOrganizationAdmin(personId, organizationId) {
   // TODO: Understand whether a lock on the table is really necessary
   await transaction.raw('LOCK TABLE "OrganizationAdministrator" IN SHARE MODE');
 
-  await transaction('OrganizationAdministrator')
+  const deletedAdmins = await transaction('OrganizationAdministrator')
     .where('id_person', personId)
     .where('id_organization', organizationId)
     .del();
@@ -83,8 +83,8 @@ async function removeOrganizationAdmin(personId, organizationId) {
       .where('id', organizationId)
       .del();
   }
-
   await transaction.commit();
+  return deletedAdmins === 1;
 }
 
 module.exports = {
