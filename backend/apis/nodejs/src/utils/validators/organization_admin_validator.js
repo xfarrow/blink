@@ -17,7 +17,7 @@ const {
 } = require("express-validator");
 
 const addOrganizationAdminValidator = [
-    check('id').trim().notEmpty().escape(),
+    check('person_id').trim().notEmpty().escape(),
     check('organizationId').trim().notEmpty().escape()
 ];
 

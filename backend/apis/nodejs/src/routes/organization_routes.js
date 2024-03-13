@@ -28,7 +28,7 @@ const organizationValidator = require('../utils/validators/organization_validato
 async function createOrganization(req, res) {
 
   try {
-    const errors = organizationValidator.createOrganizationValidator(req);
+    const errors = organizationValidator.validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -53,7 +53,7 @@ async function createOrganization(req, res) {
  * Required field(s): none.
  */
 async function updateOrganization(req, res) {
-  const errors = organizationValidator.createOrganizationValidator(req);
+  const errors = organizationValidator.validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
       errors: errors.array()
@@ -109,7 +109,7 @@ async function updateOrganization(req, res) {
  */
 async function deleteOrganization(req, res) {
   try {
-    const errors = organizationValidator.createOrganizationValidator(req);
+    const errors = organizationValidator.validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()
@@ -141,7 +141,7 @@ async function deleteOrganization(req, res) {
  */
 async function getOrganization(req, res) {
   try {
-    const errors = organizationValidator.createOrganizationValidator(req);
+    const errors = organizationValidator.validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array()

@@ -71,7 +71,7 @@ async function removeOrganizationAdmin(personId, organizationId) {
     .where('id_organization', organizationId)
     .del();
 
-  // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix. (database schema)
+  // TODO: If the user instead deletes their entire profile, the organization will not be deleted. Fix.
   const remainingAdministrators = await transaction('OrganizationAdministrator')
     .where({
       id_organization: organizationId

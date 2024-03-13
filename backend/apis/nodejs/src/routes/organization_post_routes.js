@@ -11,6 +11,19 @@
     IN THE SOFTWARE.
 */
 
+/******************************************************************************
+ *                                 ⚠ WARNING ⚠                                
+ * 
+ * 
+ * Posts are now scheduled to be developed at a later stage in the development
+ * process, with the possibility that it may not be developed at all.
+ * I am unsure whether it is a good thing or it'll only be used to
+ * flood timelines with low-effort content, like other competing platforms.
+ * 
+ * 
+ * 
+ ******************************************************************************/
+
 const organizationPostModel = require('../models/organization_post_model');
 const express = require('express');
 const jwtUtils = require('../utils/middleware_utils');
