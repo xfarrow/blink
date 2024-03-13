@@ -14,6 +14,7 @@
 const organizationAdminModel = require('../models/organization_admin_model');
 const express = require('express');
 const jwtUtils = require('../utils/middleware_utils');
+const organizationAdminValidator = require('../utils/validators/organization_admin_validator');
 
 /**
  * POST Method
@@ -24,19 +25,16 @@ const jwtUtils = require('../utils/middleware_utils');
  * Required field(s): organization_id, person_id
  */
 async function addOrganizationAdmin(req, res) {
-  // Ensure that the required fields are present before proceeding
-  if (!req.params.id || !req.body.person_id) {
-    return res.status(400).json({
-      error: 'Invalid request'
-    });
-  }
-
   try {
-    const success = await organizationAdminModel.addOrganizationAdministrator(req.body.person_id, req.params.id, req.jwt.person_id);
-    if (success) {
-      return res.status(200).json({
-        success: true
+    const errors = organizationAdminValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
       });
+    }
+    const success = await organizationAdminModel.addOrganizationAdministrator(req.body.person_id, req.params.organizationId, req.jwt.person_id);
+    if (success) {
+      return res.status(204).send();
     }
     return res.status(403).json({
       error: 'Forbidden'
@@ -59,18 +57,15 @@ async function addOrganizationAdmin(req, res) {
  * Required field(s): organization_id
  */
 async function removeOrganizationAdmin(req, res) {
-  // Ensure that the required fields are present before proceeding
-  if (!req.params.organizationId) {
-    return res.status(400).json({
-      error: 'Invalid request'
-    });
-  }
-
   try {
+    const errors = organizationAdminValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
     await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.params.organizationId);
-    return res.status(200).json({
-      success: true
-    });
+    return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${removeOrganizationAdmin.name}: ${error}`);
     return res.status(500).json({
@@ -81,8 +76,8 @@ async function removeOrganizationAdmin(req, res) {
 
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organizations/:id/admins', addOrganizationAdmin);
-protectedRoutes.delete('/organizations/:organizationId/admins/me', removeOrganizationAdmin);
+protectedRoutes.post('/organizations/:organizationId/admins', organizationAdminValidator.addOrganizationAdminValidator, addOrganizationAdmin);
+protectedRoutes.delete('/organizations/:organizationId/admins/me', organizationAdminValidator.removeOrganizationAdminValidator, removeOrganizationAdmin);
 
 module.exports = {
   protectedRoutes
