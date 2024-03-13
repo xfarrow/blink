@@ -1,7 +1,7 @@
 # Blink
 
 > [!CAUTION]
-> **This is an alpha-version piece of software. It is not intended to be used neither by the general public nor by testers. Issues shall be ignored and no support will be provided until a beta version is available.** Thanks for your patience.
+> **This is an alpha-version piece of software. It is not intended to be used neither by the general public nor by testers. Due to its incompleteness, issues shall be mostly ignored and no support will be provided until a beta version will be available.** Thanks for your patience.
 
 ## What is it?
 Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world.
