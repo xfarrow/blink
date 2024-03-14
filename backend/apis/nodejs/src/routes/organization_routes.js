@@ -13,7 +13,7 @@
 
 const organizationModel = require('../models/organization_model');
 const express = require('express');
-const jwtUtils = require('../utils/middleware_utils');
+const jwtUtils = require('../utils/jwt_utils');
 const organizationValidator = require('../utils/validators/organization_validator');
 
 /**

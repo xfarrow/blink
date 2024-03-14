@@ -26,7 +26,7 @@
 
 const organizationPostModel = require('../models/organization_post_model');
 const express = require('express');
-const jwtUtils = require('../utils/middleware_utils');
+const jwtUtils = require('../utils/jwt_utils');
 
 /**
  * POST Request

@@ -12,7 +12,7 @@
 */
 
 const personValidator = require('../utils/validators/person_validator');
-const jwtUtils = require('../utils/middleware_utils');
+const jwtUtils = require('../utils/jwt_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const personModel = require('../models/person_model');
