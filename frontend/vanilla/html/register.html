@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <title>Sign Up to Blink</title>
   <link rel="stylesheet" href="../css/login-register.css">
-  <script src=""></script>
 </head>
 
 <body>
@@ -77,7 +76,7 @@
               }
               window.location.href = '/login.html';
             } else {
-              alert(data.error);
+              callbackErrors(data.errors, alert);
             }
           });
         })

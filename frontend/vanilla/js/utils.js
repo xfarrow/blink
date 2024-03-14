@@ -9,3 +9,7 @@ function getCookie(name) {
     }
     return null;
 }
+
+function callbackErrors(errors, func) {
+    errors.forEach(error => func(error.msg));
+}

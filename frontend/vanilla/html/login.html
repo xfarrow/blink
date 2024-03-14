@@ -61,7 +61,7 @@
         document.cookie = `token=${data.token};`;
         window.location.href = 'userprofile.html?id=me';
       } else {
-        alert(data.error);
+        callbackErrors(data.errors, alert);
       }
     }
   </script>
