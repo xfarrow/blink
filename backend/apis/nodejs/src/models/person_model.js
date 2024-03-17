@@ -45,7 +45,7 @@ function createPerson(email, password, displayName, dateOfBirth, available, enab
  * @param {*} email email to look the Person for
  * @returns the Person object
  */
-async function getPersonByEmail(email) {
+async function findByEmail(email) {
   return await knex('Person')
     .where('email', email.toLowerCase())
     .first();
@@ -56,7 +56,7 @@ async function getPersonByEmail(email) {
  * @param {*} id - The id to look the person for
  * @returns
  */
-async function getPersonById(id) {
+async function findById(id) {
   return await knex('Person')
     .select('*')
     .where({
@@ -73,7 +73,7 @@ async function getPersonById(id) {
  * 
  * @returns The inserted person.
  */
-async function registerPerson(person, activationLink) {
+async function insert(person, activationLink) {
   // We need to insert either both in the "Person" table
   // and in the "ActivationLink" one, or in neither
   return await knex.transaction(async (tr) => {
@@ -98,7 +98,7 @@ async function registerPerson(person, activationLink) {
  * @param {*} password
  * @returns
  */
-async function getPersonByEmailAndPassword(email, password) {
+async function authenticate(email, password) {
   const person = await knex('Person')
     .where('email', email.toLowerCase())
     .where('enabled', true)
@@ -119,7 +119,7 @@ async function getPersonByEmailAndPassword(email, password) {
  * @param {*} person The Person to update
  * @param {*} person_id The database id of the Person to update
  */
-async function updatePerson(person, person_id) {
+async function update(person, person_id) {
   await knex('Person')
     .where('id', person_id)
     .update(person);
@@ -129,7 +129,7 @@ async function updatePerson(person, person_id) {
  * Deletes a Person specified by its database id.
  * @param {*} person_id
  */
-async function deletePerson(personId) {
+async function remove(personId) {
   await knex('Person')
     .where({
       id: personId
@@ -157,11 +157,11 @@ async function confirmActivation(personId) {
 // module available for use in another module.
 module.exports = {
   createPerson,
-  getPersonByEmail,
-  getPersonById,
-  getPersonByEmailAndPassword,
-  registerPerson,
-  updatePerson,
-  deletePerson,
+  findByEmail,
+  findById,
+  authenticate,
+  insert,
+  update,
+  remove,
   confirmActivation
 };

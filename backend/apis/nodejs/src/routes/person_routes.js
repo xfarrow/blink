@@ -15,7 +15,7 @@ const personValidator = require('../utils/validators/person_validator');
 const jwtUtils = require('../utils/jwt_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const personModel = require('../models/person_model');
+const Person = require('../models/person_model');
 const activationModel = require('../models/activation_model');
 const express = require('express');
 const mailUtils = require('../utils/mail_utils');
@@ -46,7 +46,7 @@ async function registerPerson(req, res) {
     }
 
     // Check whether e-mail exists already (enforced by database constraints)
-    const existingUser = await personModel.getPersonByEmail(req.body.email);
+    const existingUser = await Person.findByEmail(req.body.email);
     if (existingUser) {
       return res.status(409).json({
         error: 'E-mail already in use'
@@ -63,7 +63,7 @@ async function registerPerson(req, res) {
     // Hash provided password
     const hashPasswordPromise = bcrypt.hash(req.body.password, 10);
     
-    const personToInsert = personModel.createPerson(
+    const personToInsert = Person.createPerson(
       req.body.email,
       await hashPasswordPromise,
       req.body.display_name,
@@ -73,7 +73,7 @@ async function registerPerson(req, res) {
       req.body.place_of_living,
       req.body.about_me,
       req.body.qualification);
-    const insertedPerson = await personModel.registerPerson(personToInsert, activationCode);
+    const insertedPerson = await Person.insert(personToInsert, activationCode);
     delete insertedPerson.password;
 
     if (process.env.NEEDS_EMAIL_VERIFICATION === 'true') {
@@ -101,7 +101,7 @@ async function registerPerson(req, res) {
  *
  * @returns The token
  */
-async function createTokenByEmailAndPassword(req, res) {
+async function createToken(req, res) {
   try {
     const errors = personValidator.validationResult(req);
     if (!errors.isEmpty()) {
@@ -109,7 +109,7 @@ async function createTokenByEmailAndPassword(req, res) {
         errors: errors.array()
       });
     }
-    const person = await personModel.getPersonByEmailAndPassword(req.body.email, req.body.password);
+    const person = await Person.authenticate(req.body.email, req.body.password);
     if (person) {
       const token = jwtUtils.generateToken(person.id);
       return res.status(200).json({
@@ -121,7 +121,7 @@ async function createTokenByEmailAndPassword(req, res) {
       });
     }
   } catch (error) {
-    console.error(`Error in function ${createTokenByEmailAndPassword.name}: ${error}`);
+    console.error(`Error in function ${createToken.name}: ${error}`);
     return res.status(500).json({
       error: 'Internal server error'
     });
@@ -141,7 +141,7 @@ async function createTokenByEmailAndPassword(req, res) {
  */
 async function getPerson(req, res) {
   try {
-    const person = await personModel.getPersonById(req.params.id);
+    const person = await Person.findById(req.params.id);
     if (person && person.enabled) {
       delete person.password; // remove password field for security reasons
       return res.status(200).send(person);
@@ -167,7 +167,7 @@ async function getPerson(req, res) {
  */
 async function getMyself(req, res) {
   try {
-    const person = await personModel.getPersonById(req.jwt.person_id);
+    const person = await Person.findById(req.jwt.person_id);
     if (person) {
       delete person.password;
       return res.status(200).send(person);
@@ -241,7 +241,7 @@ async function updatePerson(req, res) {
           error: 'The new password must be specified'
         });
       }
-      const user = await personModel.getPersonById(req.jwt.person_id);
+      const user = await Person.getPersonById(req.jwt.person_id);
       const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
       if (passwordMatches) {
         updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
@@ -258,7 +258,7 @@ async function updatePerson(req, res) {
       });
     }
 
-    await personModel.updatePerson(updatePerson, req.jwt.person_id);
+    await Person.update(updatePerson, req.jwt.person_id);
     return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${updatePerson.name}: ${error}`);
@@ -280,7 +280,7 @@ async function updatePerson(req, res) {
 async function deletePerson(req, res) {
   // TODO: Delete Organization if this user was its only administrator
   try {
-    await personModel.deletePerson(req.jwt.person_id);
+    await Person.remove(req.jwt.person_id);
     return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${deletePerson.name}: ${error}`);
@@ -312,7 +312,7 @@ async function confirmActivation(req, res) {
         error: 'Activation Link either not valid or expired'
       });
     }
-    await personModel.confirmActivation(personId);
+    await Person.confirmActivation(personId);
     return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${confirmActivation.name}: ${error}`);
@@ -324,7 +324,7 @@ async function confirmActivation(req, res) {
 
 const publicRoutes = express.Router(); // Routes not requiring token
 publicRoutes.post('/persons', personValidator.registerValidator, registerPerson);
-publicRoutes.post('/persons/me/token', personValidator.getTokenValidator, createTokenByEmailAndPassword);
+publicRoutes.post('/persons/me/token', personValidator.getTokenValidator, createToken);
 publicRoutes.get('/persons/:id/details', getPerson);
 publicRoutes.post('/persons/me/activation', personValidator.confirmActivationValidator, confirmActivation);
 
