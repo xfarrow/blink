@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const organizationModel = require('../models/organization_model');
+const Organization = require('../models/organization_model');
 const express = require('express');
 const jwtUtils = require('../utils/jwt_utils');
 const organizationValidator = require('../utils/validators/organization_validator');
@@ -34,8 +34,8 @@ async function createOrganization(req, res) {
         errors: errors.array()
       });
     }
-    const organization = organizationModel.createOrganization(req.body.name, req.body.location, req.body.description, req.body.is_hiring);
-    const insertedOrganization = await organizationModel.insertOrganization(organization, req.jwt.person_id);
+    const organization = Organization.createOrganization(req.body.name, req.body.location, req.body.description, req.body.is_hiring);
+    const insertedOrganization = await Organization.insert(organization, req.jwt.person_id);
     res.set('Location', `/api/organizations/${insertedOrganization.id}`);
     return res.status(201).json(insertedOrganization);
   } catch (error) {
@@ -85,7 +85,7 @@ async function updateOrganization(req, res) {
   }
 
   try {
-    const isUpdateSuccessful = organizationModel.updateOrganization(updateOrganization, req.params.id, req.jwt.person_id);
+    const isUpdateSuccessful = Organization.update(updateOrganization, req.params.id, req.jwt.person_id);
     if (isUpdateSuccessful) {
       return res.status(204).send();
     } else {
@@ -115,7 +115,7 @@ async function deleteOrganization(req, res) {
         errors: errors.array()
       });
     }
-    const isDeleteSuccessful = await organizationModel.deleteOrganization(req.params.id, req.jwt.person_id);
+    const isDeleteSuccessful = await Organization.remove(req.params.id, req.jwt.person_id);
     if (isDeleteSuccessful) {
       return res.status(204).send();
     }
@@ -147,7 +147,7 @@ async function getOrganization(req, res) {
         errors: errors.array()
       });
     }
-    const organization = await organizationModel.getOrganizationById(req.params.id);
+    const organization = await Organization.findById(req.params.id);
     if (organization) {
       return res.status(200).json(organization);
     } else {

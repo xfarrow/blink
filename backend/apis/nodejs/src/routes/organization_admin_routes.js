@@ -11,7 +11,7 @@
     IN THE SOFTWARE.
 */
 
-const organizationAdminModel = require('../models/organization_admin_model');
+const organizationAdmin = require('../models/organization_admin_model');
 const express = require('express');
 const jwtUtils = require('../utils/jwt_utils');
 const organizationAdminValidator = require('../utils/validators/organization_admin_validator');
@@ -32,7 +32,7 @@ async function addOrganizationAdmin(req, res) {
         errors: errors.array()
       });
     }
-    const success = await organizationAdminModel.addOrganizationAdministrator(req.body.person_id, req.params.organizationId, req.jwt.person_id);
+    const success = await organizationAdmin.insert(req.body.person_id, req.params.organizationId, req.jwt.person_id);
     if (success) {
       return res.status(204).send();
     }
@@ -64,7 +64,7 @@ async function removeOrganizationAdmin(req, res) {
         errors: errors.array()
       });
     }
-    const success = await organizationAdminModel.removeOrganizationAdmin(req.jwt.person_id, req.params.organizationId);
+    const success = await organizationAdmin.remove(req.jwt.person_id, req.params.organizationId);
     if(success){
       return res.status(204).send();
     }

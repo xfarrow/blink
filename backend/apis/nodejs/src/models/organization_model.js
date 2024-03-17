@@ -36,7 +36,7 @@ function createOrganization(name, location, description, isHiring) {
  * @param {*} id
  * @returns the Organization
  */
-async function getOrganizationById(id) {
+async function findById(id) {
   const organization = await knex('Organization')
     .where('id', id)
     .select('*')
@@ -50,7 +50,7 @@ async function getOrganizationById(id) {
  * 
  * @returns The inserted Organization
  */
-async function insertOrganization(organization, organizationAdministratorId) {
+async function insert(organization, organizationAdministratorId) {
   return await knex.transaction(async (trx) => {
     // We have to insert either both in Organization and in OrganizationAdministrator
     // or in neither
@@ -76,7 +76,7 @@ async function insertOrganization(organization, organizationAdministratorId) {
  * @param {*} requester
  * @returns true if the row was updated, false otherwise
  */
-async function updateOrganization(organization, organizationId, requester) {
+async function update(organization, organizationId, requester) {
   const numberOfUpdatedRows = await knex('Organization')
     .where('id', organizationId)
     .whereExists(function () {
@@ -96,7 +96,7 @@ async function updateOrganization(organization, organizationId, requester) {
  * @param {*} requester PersonId of the supposedly administrator
  * @returns true if the Organization was successfully deleted, false otherwise
  */
-async function deleteOrganization(organizationId, requester) {
+async function remove(organizationId, requester) {
   const numberOfDeletedRows = await knex('Organization')
     .where({
       id: organizationId
@@ -115,9 +115,9 @@ async function deleteOrganization(organizationId, requester) {
 // means making a JavaScript function defined in one
 // module available for use in another module.
 module.exports = {
-  getOrganizationById,
+  findById,
   createOrganization,
-  insertOrganization,
-  updateOrganization,
-  deleteOrganization
+  insert,
+  update,
+  deleteOrganization: remove
 };

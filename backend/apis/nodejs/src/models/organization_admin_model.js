@@ -20,7 +20,7 @@ const knex = require('../utils/knex_config');
  * @param {*} organizationId
  * @returns true if administrator, false otherwise
  */
-async function isPersonOrganizationAdministrator(personId, organizationId) {
+async function isAdmin(personId, organizationId) {
   const isPersonAdmin = await knex('OrganizationAdministrator')
     .where('id_person', personId)
     .where('id_organization', organizationId)
@@ -36,10 +36,10 @@ async function isPersonOrganizationAdministrator(personId, organizationId) {
  * @param {*} organizationId
  * @param {*} requester Id of the person requesting the addition
  */
-async function addOrganizationAdministrator(personId, organizationId, requester) {
+async function insert(personId, organizationId, requester) {
 
-  const isRequesterAdmin = await isPersonOrganizationAdministrator(requester, organizationId);
-  const isPersonAdmin = await isPersonOrganizationAdministrator(personId, organizationId);
+  const isRequesterAdmin = await isAdmin(requester, organizationId);
+  const isPersonAdmin = await isAdmin(personId, organizationId); // avoid database exception
   // Unexploitable TOCTOU 
   if (isRequesterAdmin && !isPersonAdmin) {
     await knex('OrganizationAdministrator')
@@ -58,7 +58,7 @@ async function addOrganizationAdministrator(personId, organizationId, requester)
  * @param {*} personId
  * @param {*} organizationId
  */
-async function removeOrganizationAdmin(personId, organizationId) {
+async function remove(personId, organizationId) {
   const transaction = await knex.transaction();
 
   // We lock the table to ensure that we won't have concurrency issues
@@ -88,7 +88,7 @@ async function removeOrganizationAdmin(personId, organizationId) {
 }
 
 module.exports = {
-  isPersonOrganizationAdministrator,
-  addOrganizationAdministrator,
-  removeOrganizationAdmin
+  isOrganizationAdmin: isAdmin,
+  insert,
+  remove
 };
