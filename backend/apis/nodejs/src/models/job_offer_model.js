@@ -31,7 +31,7 @@ async function insert(requester, organizationId, title, description, requirement
                 .returning('*');
 
             // Insert in the JobOfferTag table all the relevant tags.
-            if (tags.length !== 0) {
+            if (tags) {
                 await Promise.all(tags.map(tag =>
                     tr('JobOfferTag').insert({
                         job_offer_id: jobOffer[0].id,

@@ -14,6 +14,9 @@
 const knex = require('../utils/knex_config');
 
 async function findByTags(tags) {
+    if(!tags){
+        return null;
+    }
     tags = tags.map(tag => tag.toLowerCase());
     const result = await knex('Tag')
         .whereIn('tag', tags)
