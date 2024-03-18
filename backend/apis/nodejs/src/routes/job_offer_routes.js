@@ -26,8 +26,6 @@ async function insert(req, res) {
             req.body.salary,
             req.body.salary_frequency,
             req.body.location);
-        
-        console.log(insertedJobOffer);
 
         if (insertedJobOffer) {
             res.set('Location', `/api/joboffers/${insertedJobOffer.id}`);
