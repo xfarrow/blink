@@ -19,13 +19,15 @@ async function insert(req, res) {
     try {
         const insertedJobOffer = await JobOffer.insert(
             req.jwt.person_id,
-            req.body.organization_id,
+            req.params.id, // organization id
             req.body.title,
             req.body.description,
             req.body.requirements,
             req.body.salary,
             req.body.salary_frequency,
-            req.body.location);
+            req.body.salary_currency,
+            req.body.location,
+            req.body.tags);
 
         if (insertedJobOffer) {
             res.set('Location', `/api/joboffers/${insertedJobOffer.id}`);
@@ -45,7 +47,7 @@ async function insert(req, res) {
 
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/joboffers', insert);
+protectedRoutes.post('/organizations/:id/joboffers', insert);
 
 module.exports = {
     protectedRoutes

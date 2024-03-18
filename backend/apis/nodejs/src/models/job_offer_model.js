@@ -14,22 +14,66 @@
 const knex = require('../utils/knex_config');
 const OrganizationAdmin = require('../models/organization_admin_model');
 
-async function insert(requester, organizationId, title, description, requirements, salary, salary_frequency, location) {
+async function insert(requester, organizationId, title, description, requirements, salary, salaryFrequency, salaryCurrency, location, tags) {
     const isAdmin = OrganizationAdmin.isAdmin(requester, organizationId);
     if (isAdmin) {
-        const result = await knex('JobOffer').insert({
-                title,
-                description,
-                requirements,
-                salary,
-                salary_frequency,
-                location,
-                organization_id: organizationId
-            })
-            .returning('*');
-        return result[0];
+        return await knex.transaction(async (tr) => {
+            const jobOffer = await tr('JobOffer').insert({
+                    title,
+                    description,
+                    requirements,
+                    salary,
+                    salary_frequency: salaryFrequency,
+                    location,
+                    organization_id: organizationId,
+                    salary_currency: salaryCurrency
+                })
+                .returning('*');
+
+            // Insert in the JobOfferTag table all the relevant tags.
+            if (tags.length !== 0) {
+                await Promise.all(tags.map(tagId =>
+                    tr('JobOfferTag').insert({
+                        job_offer_id: jobOffer[0].id,
+                        tag_id: tagId
+                    })
+                ));
+            }
+            return jobOffer[0];
+        });
     }
     return null;
+}
+
+// test
+async function filter(title, description, requirements, salary, salaryOperator, salaryFrequency, location, tags) {
+    let query = knex('JobOffer');
+    if (title) {
+        query.where('title', 'ilike', `%${title}%`); //ilike = insensitive like
+    }
+    if (description) {
+        query.where('description', 'ilike', `%${description}%`);
+    }
+    if (requirements) {
+        query.where('requirements', 'ilike', `%${requirements}%`);
+    }
+    if (salary && salaryOperator) {
+        query.where('salary', salaryOperator, salary);
+    }
+    if (salaryFrequency) {
+        query.where({
+            salary_frequency: salaryFrequency
+        });
+    }
+    if (location) {
+        query.where('location', 'ilike', `%${location}%`);
+    }
+    if (tags) {
+        tags.forEach((tag) => {
+            // query = query.where({});
+        });
+    }
+    return await query.select();
 }
 
 module.exports = {
