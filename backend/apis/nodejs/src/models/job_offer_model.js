@@ -47,21 +47,23 @@ async function insert(requester, organizationId, title, description, requirement
 
 async function remove(requester, jobOfferId) {
     const jobOffer = await findById(jobOfferId);
-    
-    if(!jobOffer){
+
+    if (!jobOffer) {
         return false;
     }
 
     const isAdmin = await OrganizationAdmin.isAdmin(requester, jobOffer.organization_id);
-    if (isAdmin) {
-        const deletedRows = await knex('JobOffer')
-            .where({
-                id: jobOfferId
-            }).del();
-        return deletedRows === 1;
-    } else {
+
+    if (!isAdmin) {
         return false;
     }
+
+    const deletedRows = await knex('JobOffer')
+        .where({
+            id: jobOfferId
+        })
+        .del();
+    return deletedRows === 1;
 }
 
 async function findById(jobOfferId) {
