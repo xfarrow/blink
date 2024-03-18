@@ -30,7 +30,7 @@ async function isAdmin(personId, organizationId) {
 }
 
 /**
- * Add the specified Person as the Organization administrator, if thr requester is already
+ * Add the specified Person as the Organization administrator, if the requester is already
  * an administrator
  * @param {*} personId Id of the person to add as administrator
  * @param {*} organizationId
@@ -88,7 +88,7 @@ async function remove(personId, organizationId) {
 }
 
 module.exports = {
-  isOrganizationAdmin: isAdmin,
+  isAdmin,
   insert,
   remove
 };

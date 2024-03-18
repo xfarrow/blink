@@ -24,6 +24,7 @@ const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
 const organizationPostRoutes = require('./routes/organization_post_routes.js');
+const jobOffersRoutes = require('./routes/job_offer_routes.js');
 
 /*
 ===== END IMPORTING MODULES =====
@@ -59,6 +60,7 @@ app.use('/api', personRoutes.protectedRoutes);
 app.use('/api', organizationRoutes.protectedRoutes);
 app.use('/api', organizationAdminRoutes.protectedRoutes);
 app.use('/api', organizationPostRoutes.protectedRoutes);
+app.use('/api', jobOffersRoutes.protectedRoutes);
 
 /*
 ===== END ROUTE HANDLING =====
