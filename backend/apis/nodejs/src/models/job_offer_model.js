@@ -47,6 +47,11 @@ async function insert(requester, organizationId, title, description, requirement
 
 async function remove(requester, jobOfferId) {
     const jobOffer = await findById(jobOfferId);
+    
+    if(!jobOffer){
+        return false;
+    }
+
     const isAdmin = await OrganizationAdmin.isAdmin(requester, jobOffer.organization_id);
     if (isAdmin) {
         const deletedRows = await knex('JobOffer')

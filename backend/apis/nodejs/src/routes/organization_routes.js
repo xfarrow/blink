@@ -34,7 +34,7 @@ async function createOrganization(req, res) {
         errors: errors.array()
       });
     }
-    const organization = Organization.createOrganization(req.body.name, req.body.location, req.body.description, req.body.is_hiring);
+    const organization = Organization.createOrganization(req.body.name, req.body.location, req.body.description);
     const insertedOrganization = await Organization.insert(organization, req.jwt.person_id);
     res.set('Location', `/api/organizations/${insertedOrganization.id}`);
     return res.status(201).json(insertedOrganization);

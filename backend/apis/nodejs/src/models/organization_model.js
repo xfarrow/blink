@@ -21,12 +21,11 @@ const knex = require('../utils/knex_config');
  * @param {*} isHiring
  * @returns
  */
-function createOrganization(name, location, description, isHiring) {
+function createOrganization(name, location, description) {
   const organization = {
     name: name,
     location: location,
-    description: description,
-    is_hiring: isHiring
+    description: description
   };
   return organization;
 }

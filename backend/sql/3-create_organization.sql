@@ -7,8 +7,7 @@ CREATE TABLE IF NOT EXISTS public."Organization"
     id SERIAL PRIMARY KEY,
     name character varying(128) NOT NULL,
     location character varying,
-    description text,
-    is_hiring boolean
+    description text
 )
 
 TABLESPACE pg_default;
