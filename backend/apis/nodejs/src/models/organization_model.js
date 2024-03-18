@@ -119,5 +119,5 @@ module.exports = {
   createOrganization,
   insert,
   update,
-  deleteOrganization: remove
+  remove
 };

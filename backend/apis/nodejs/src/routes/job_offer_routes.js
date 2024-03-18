@@ -14,9 +14,19 @@
 const JobOffer = require('../models/job_offer_model');
 const jwtUtils = require('../utils/jwt_utils');
 const express = require('express');
+const Tag = require('../models/tags_model');
 
+/**
+ * POST Request
+ * 
+ * Creates a new Job Offer
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 async function insert(req, res) {
     try {
+        const tags = await Tag.findByTags(req.body.tags);
         const insertedJobOffer = await JobOffer.insert(
             req.jwt.person_id,
             req.params.id, // organization id
@@ -27,7 +37,7 @@ async function insert(req, res) {
             req.body.salary_frequency,
             req.body.salary_currency,
             req.body.location,
-            req.body.tags);
+            tags);
 
         if (insertedJobOffer) {
             res.set('Location', `/api/joboffers/${insertedJobOffer.id}`);
@@ -45,9 +55,35 @@ async function insert(req, res) {
     }
 }
 
-const protectedRoutes = express.Router(); // Routes requiring token
+/**
+ * DELETE Request
+ * 
+ * Removes a Job Offer
+ * @param {*} req 
+ * @param {*} res 
+ */
+async function remove(req, res) {
+    try {
+        const result = await JobOffer.remove(req.jwt.person_id, req.params.jobOfferId);
+        if (result) {
+            return res.status(204).send();
+        } else {
+            return res.status(403).json({
+                error: 'Forbidden'
+            });
+        }
+    } catch (error) {
+        console.error(`Error in function ${insert.name}: ${error}`);
+        res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+}
+
+const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.post('/organizations/:id/joboffers', insert);
+protectedRoutes.delete('/organizations/joboffers/:jobOfferId', remove);
 
 module.exports = {
     protectedRoutes

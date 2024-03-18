@@ -15,7 +15,7 @@ const knex = require('../utils/knex_config');
 const OrganizationAdmin = require('../models/organization_admin_model');
 
 async function insert(requester, organizationId, title, description, requirements, salary, salaryFrequency, salaryCurrency, location, tags) {
-    const isAdmin = OrganizationAdmin.isAdmin(requester, organizationId);
+    const isAdmin = await OrganizationAdmin.isAdmin(requester, organizationId);
     if (isAdmin) {
         return await knex.transaction(async (tr) => {
             const jobOffer = await tr('JobOffer').insert({
@@ -32,10 +32,10 @@ async function insert(requester, organizationId, title, description, requirement
 
             // Insert in the JobOfferTag table all the relevant tags.
             if (tags.length !== 0) {
-                await Promise.all(tags.map(tagId =>
+                await Promise.all(tags.map(tag =>
                     tr('JobOfferTag').insert({
                         job_offer_id: jobOffer[0].id,
-                        tag_id: tagId
+                        tag_id: tag.id
                     })
                 ));
             }
@@ -43,6 +43,26 @@ async function insert(requester, organizationId, title, description, requirement
         });
     }
     return null;
+}
+
+async function remove(requester, jobOfferId) {
+    const jobOffer = await findById(jobOfferId);
+    const isAdmin = await OrganizationAdmin.isAdmin(requester, jobOffer.organization_id);
+    if (isAdmin) {
+        const deletedRows = await knex('JobOffer')
+            .where({
+                id: jobOfferId
+            }).del();
+        return deletedRows === 1;
+    } else {
+        return false;
+    }
+}
+
+async function findById(jobOfferId) {
+    return await knex('JobOffer').where({
+        id: jobOfferId
+    }).select().first();
 }
 
 // test
@@ -77,5 +97,6 @@ async function filter(title, description, requirements, salary, salaryOperator, 
 }
 
 module.exports = {
-    insert
+    insert,
+    remove
 }
