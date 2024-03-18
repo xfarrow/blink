@@ -38,14 +38,14 @@
                 alert("Invalid URL.");
                 return;
             }
-            const response = await fetch(`${API_URL}/organization/${idToDisplay}`, {
+            const response = await fetch(`${API_URL}/organizations/${idToDisplay}`, {
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
                 }
             });
             const data = await response.json();
             if (response.ok) {
-                populateFields(data.name, data.location, data.description, data.is_hiring);
+                populateFields(data.name, data.location, data.description, isOrganizationHiring(idToDisplay));
                 document.body.style.display = "block"; // Show page
             } else {
                 alert(data.error);
@@ -66,6 +66,16 @@
                 document.getElementById('isHiring').textContent = 'Not specified';
             }
 
+        }
+
+        async function isOrganizationHiring(organizationId) {
+            const response = await fetch(`${API_URL}/organizations/${organizationId}/joboffers`, {
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                }
+            });
+            const data = await response.json();
+            return data.length > 0;
         }
     </script>
 

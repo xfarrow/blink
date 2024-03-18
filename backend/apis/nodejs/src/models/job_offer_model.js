@@ -72,6 +72,14 @@ async function findById(jobOfferId) {
     }).select().first();
 }
 
+async function findByOrganizationId(organizationId){
+    const result = await knex('JobOffer')
+        .where({organization_id: organizationId})
+        .select();
+    console.log(result);
+    return result;
+}
+
 // test
 async function filter(title, description, requirements, salary, salaryOperator, salaryFrequency, location, tags) {
     let query = knex('JobOffer');
@@ -105,5 +113,6 @@ async function filter(title, description, requirements, salary, salaryOperator, 
 
 module.exports = {
     insert,
-    remove
+    remove,
+    findByOrganizationId
 }

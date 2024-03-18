@@ -80,11 +80,33 @@ async function remove(req, res) {
     }
 }
 
+/**
+ * GET Request
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+async function findByOrganizationId(req, res) {
+    try {
+        const result = await JobOffer.findByOrganizationId(req.params.id);
+        return res.status(200).send(result);
+    } catch (error) {
+        console.error(`Error in function ${insert.name}: ${error}`);
+        res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+}
+
+const publicRoutes = express.Router();
+publicRoutes.get('/organizations/:id/joboffers', findByOrganizationId);
+
 const protectedRoutes = express.Router();
 protectedRoutes.use(jwtUtils.verifyToken);
 protectedRoutes.post('/organizations/:id/joboffers', insert);
 protectedRoutes.delete('/organizations/joboffers/:jobOfferId', remove);
 
 module.exports = {
+    publicRoutes,
     protectedRoutes
 }
