@@ -163,8 +163,14 @@ async function getOrganization(req, res) {
   }
 }
 
-async function filterByPrefix(req, res) {
+async function filter(req, res) {
   try {
+    const errors = organizationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array()
+      });
+    }
     const organizations = await Organization.filterByPrefix(req.body.name);
     return res.status(200).json(organizations).send();
   } catch (error) {
@@ -180,7 +186,7 @@ async function filterByPrefix(req, res) {
 // that do not require the authorization, e.g. job offers
 const routes = express.Router();
 routes.get('/:id', organizationValidator.deleteOrGetOrganizationValidator, getOrganization);
-routes.post('/filterByPrefix', filterByPrefix);
+routes.post('/filter', organizationValidator.filterValidator, filter);
 routes.post('/', jwtUtils.verifyToken, organizationValidator.createOrganizationValidator, createOrganization);
 routes.patch('/:id', jwtUtils.verifyToken, organizationValidator.updateOrganizationValidator, updateOrganization);
 routes.delete('/:id', jwtUtils.verifyToken, organizationValidator.deleteOrGetOrganizationValidator, deleteOrganization);

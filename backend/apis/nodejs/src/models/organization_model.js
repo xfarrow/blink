@@ -111,7 +111,7 @@ async function remove(organizationId, requester) {
 }
 
 /**
- * Gets a list of Organizations given their prefix.
+ * Gets a list of Organizations given the prefix of their name.
  * E.g. "Can" --> "Canonical"
  * @param {*} name 
  */

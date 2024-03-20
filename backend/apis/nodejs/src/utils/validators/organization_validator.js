@@ -42,9 +42,17 @@ const deleteOrGetOrganizationValidator = [
     check('id').notEmpty().escape()
 ]
 
+const filterValidator = [
+    check('name').trim().notEmpty().escape().isLength({
+        min: 3, // to avoid database overhead
+        max: 128
+    }).withMessage('The name must be at least 3 characters and cannot exceed 128')
+]
+
 module.exports = {
     validationResult,
     createOrganizationValidator,
     updateOrganizationValidator,
-    deleteOrGetOrganizationValidator
+    deleteOrGetOrganizationValidator,
+    filterValidator
 }
