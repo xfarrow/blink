@@ -65,7 +65,7 @@ async function removeOrganizationAdmin(req, res) {
       });
     }
     const success = await organizationAdmin.remove(req.jwt.person_id, req.params.organizationId);
-    if(success){
+    if (success) {
       return res.status(204).send();
     }
     return res.status(404).send();
@@ -77,11 +77,10 @@ async function removeOrganizationAdmin(req, res) {
   }
 }
 
-const protectedRoutes = express.Router();
-protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organizations/:organizationId/admins', organizationAdminValidator.addOrganizationAdminValidator, addOrganizationAdmin);
-protectedRoutes.delete('/organizations/:organizationId/admins/me', organizationAdminValidator.removeOrganizationAdminValidator, removeOrganizationAdmin);
+const routes = express.Router();
+routes.post('/:organizationId/admins', jwtUtils.verifyToken, organizationAdminValidator.addOrganizationAdminValidator, addOrganizationAdmin);
+routes.delete('/:organizationId/admins/me', jwtUtils.verifyToken, organizationAdminValidator.removeOrganizationAdminValidator, removeOrganizationAdmin);
 
 module.exports = {
-  protectedRoutes
+  routes
 };

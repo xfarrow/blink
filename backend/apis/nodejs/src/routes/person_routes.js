@@ -80,7 +80,7 @@ async function registerPerson(req, res) {
       mailUtils.sendConfirmationLink(req.body.email, activationCode);
     }
 
-    res.set('Location', `/api/persons/${insertedPerson.id}/details`);
+    res.set('Location', `/api/${insertedPerson.id}/details`);
     return res.status(201).json(insertedPerson);
 
   } catch (error) {
@@ -323,16 +323,16 @@ async function confirmActivation(req, res) {
 }
 
 const publicRoutes = express.Router(); // Routes not requiring token
-publicRoutes.post('/persons', personValidator.registerValidator, registerPerson);
-publicRoutes.post('/persons/me/token', personValidator.getTokenValidator, createToken);
-publicRoutes.get('/persons/:id/details', getPerson);
-publicRoutes.post('/persons/me/activation', personValidator.confirmActivationValidator, confirmActivation);
+publicRoutes.post('/', personValidator.registerValidator, registerPerson);
+publicRoutes.post('/me/token', personValidator.getTokenValidator, createToken);
+publicRoutes.get('/:id/details', getPerson);
+publicRoutes.post('/me/activation', personValidator.confirmActivationValidator, confirmActivation);
 
 const protectedRoutes = express.Router(); // Routes requiring token
 protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.get('/persons/me', getMyself);
-protectedRoutes.patch('/persons/me', personValidator.updatePersonValidator, updatePerson);
-protectedRoutes.delete('/persons/me', deletePerson);
+protectedRoutes.get('/me', getMyself);
+protectedRoutes.patch('/me', personValidator.updatePersonValidator, updatePerson);
+protectedRoutes.delete('/me', deletePerson);
 
 // Exporting a function
 // means making a JavaScript function defined in one

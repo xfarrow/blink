@@ -54,14 +54,12 @@ app.use(rateLimit({
 ===== BEGIN ROUTE HANDLING =====
 */
 
-// app.use('/api', personRoutes.publicRoutes);
-// app.use('/api', personRoutes.protectedRoutes);
-app.use('/api', jobOffersRoutes.publicRoutes);
-app.use('/api', jobOffersRoutes.protectedRoutes);
-app.use('/api', organizationRoutes.publicRoutes);
-app.use('/api', organizationRoutes.protectedRoutes);
-// app.use('/api', organizationPostRoutes.protectedRoutes);
-// app.use('/api', organizationAdminRoutes.protectedRoutes);
+app.use('/api/persons', personRoutes.publicRoutes);
+app.use('/api/persons', personRoutes.protectedRoutes);
+app.use('/api/organizations', organizationRoutes.routes);
+app.use('/api/organizations', jobOffersRoutes.routes);
+app.use('/api/organizations', organizationAdminRoutes.routes);
+app.use('/api/organizations', organizationPostRoutes.routes);
 
 /*
 ===== END ROUTE HANDLING =====

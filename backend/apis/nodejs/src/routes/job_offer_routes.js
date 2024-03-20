@@ -98,15 +98,11 @@ async function findByOrganizationId(req, res) {
     }
 }
 
-const publicRoutes = express.Router();
-publicRoutes.get('/organizations/:id/joboffers', findByOrganizationId);
-
-const protectedRoutes = express.Router();
-protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organizations/:id/joboffers', insert);
-protectedRoutes.delete('/organizations/joboffers/:jobOfferId', remove);
+const routes = express.Router();
+routes.get('/:id/joboffers', findByOrganizationId);
+routes.post('/:id/joboffers', jwtUtils.verifyToken, insert);
+routes.delete('/joboffers/:jobOfferId', jwtUtils.verifyToken, remove);
 
 module.exports = {
-    publicRoutes,
-    protectedRoutes
+    routes
 }

@@ -163,16 +163,15 @@ async function getOrganization(req, res) {
   }
 }
 
-const publicRoutes = express.Router();
-publicRoutes.get('/organizations/:id', organizationValidator.deleteOrGetOrganizationValidator, getOrganization);
-
-const protectedRoutes = express.Router();
-protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organizations', organizationValidator.createOrganizationValidator, createOrganization);
-protectedRoutes.patch('/organizations/:id', organizationValidator.updateOrganizationValidator, updateOrganization);
-protectedRoutes.delete('/organizations/:id', organizationValidator.deleteOrGetOrganizationValidator, deleteOrganization);
+// Here we can not use the jwtUtils.verifyToken as the Router's middleware directly, as the latter
+// will be mounted under /organizations, but there are other resources under /organizations
+// that do not require the authorization, e.g. job offers
+const routes = express.Router();
+routes.get('/:id', organizationValidator.deleteOrGetOrganizationValidator, getOrganization);
+routes.post('/', jwtUtils.verifyToken, organizationValidator.createOrganizationValidator, createOrganization);
+routes.patch('/:id', jwtUtils.verifyToken, organizationValidator.updateOrganizationValidator, updateOrganization);
+routes.delete('/:id', jwtUtils.verifyToken, organizationValidator.deleteOrGetOrganizationValidator, deleteOrganization);
 
 module.exports = {
-  publicRoutes,
-  protectedRoutes
+  routes
 };

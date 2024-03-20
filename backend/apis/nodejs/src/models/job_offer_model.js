@@ -76,7 +76,6 @@ async function findByOrganizationId(organizationId){
     const result = await knex('JobOffer')
         .where({organization_id: organizationId})
         .select();
-    console.log(result);
     return result;
 }
 

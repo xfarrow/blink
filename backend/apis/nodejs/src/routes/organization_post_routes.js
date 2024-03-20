@@ -94,14 +94,13 @@ async function deleteOrganizationPost(req, res) {
   }
 }
 
-const protectedRoutes = express.Router();
-protectedRoutes.use(jwtUtils.verifyToken);
-protectedRoutes.post('/organizations/:idOrganization/posts', createOrganizationPost);
-protectedRoutes.delete('/organizations/posts/:id', deleteOrganizationPost);
+const routes = express.Router();
+routes.post('/:idOrganization/posts', jwtUtils.verifyToken, createOrganizationPost);
+routes.delete('/posts/:id', jwtUtils.verifyToken, deleteOrganizationPost);
 
 // Exporting a function
 // means making a JavaScript function defined in one
 // module available for use in another module.
 module.exports = {
-  protectedRoutes
+  routes
 };
