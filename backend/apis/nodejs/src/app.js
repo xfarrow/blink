@@ -18,7 +18,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
+const rateLimiter = require('./utils/rate_limit_utils.js');
 const helmet = require('helmet')
 const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
@@ -38,13 +38,7 @@ const app = express();
 app.use(express.json()); // Middleware which parses JSON for POST requests
 app.use(cors()); // Enable CORS for all routes
 app.use(helmet()); // Some security settings
-app.use(rateLimit({
-  windowMs: process.env.LIMITER_WINDOW,
-  max: process.env.LIMITER_MAXIMUM_PER_WINDOW,
-  message: {
-    error: 'Too many requests from this IP, please try again later'
-  }
-})); // Apply the rate limiter middleware to all routes
+app.use(rateLimiter); // Apply the rate limiter middleware to all routes
 
 /*
 ===== END APPLICATION CONFIGURATION =====
@@ -65,16 +59,20 @@ app.use('/api/organizations', organizationPostRoutes.routes);
 ===== END ROUTE HANDLING =====
 */
 
-// Do not start the server in testing environment
-// It will be started by the test suite
-if (process.argv[2] != 'testing') {
-  // Start the server
-  // Default port is 3000
-  const port = process.env.API_SERVER_PORT || 3000;
-  app.listen(port, () => {
-    console.log(`Blink API server is running on port ${port}`);
-  });
-}
+
+/*
+===== STARTING THE SERVER =====
+*/
+
+// Default port is 3000
+const port = process.env.API_SERVER_PORT || 3000;
+app.listen(port, () => {
+  console.log(`Blink API server is running on port ${port}`);
+});
+
+/*
+===== END STARTING THE SERVER =====
+*/
 
 // Export the app for testing purposes
 module.exports = app;
