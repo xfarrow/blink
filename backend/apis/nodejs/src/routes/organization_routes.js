@@ -163,11 +163,24 @@ async function getOrganization(req, res) {
   }
 }
 
+async function filterByPrefix(req, res) {
+  try {
+    const organizations = await Organization.filterByPrefix(req.body.name);
+    return res.status(200).json(organizations).send();
+  } catch (error) {
+    console.error(`Error in function ${getOrganization.name}: ${error}`);
+    return res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+}
+
 // Here we can not use the jwtUtils.verifyToken as the Router's middleware directly, as the latter
 // will be mounted under /organizations, but there are other resources under /organizations
 // that do not require the authorization, e.g. job offers
 const routes = express.Router();
 routes.get('/:id', organizationValidator.deleteOrGetOrganizationValidator, getOrganization);
+routes.post('/filterByPrefix', filterByPrefix);
 routes.post('/', jwtUtils.verifyToken, organizationValidator.createOrganizationValidator, createOrganization);
 routes.patch('/:id', jwtUtils.verifyToken, organizationValidator.updateOrganizationValidator, updateOrganization);
 routes.delete('/:id', jwtUtils.verifyToken, organizationValidator.deleteOrGetOrganizationValidator, deleteOrganization);

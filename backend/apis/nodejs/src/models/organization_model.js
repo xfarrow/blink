@@ -110,6 +110,17 @@ async function remove(organizationId, requester) {
   return numberOfDeletedRows == 1;
 }
 
+/**
+ * Gets a list of Organizations given their prefix.
+ * E.g. "Can" --> "Canonical"
+ * @param {*} name 
+ */
+async function filterByPrefix(name) {
+  return await knex('Organization')
+    .where('name', 'ilike', `${name}%`)
+    .select('name', 'location');
+}
+
 // Exporting a function
 // means making a JavaScript function defined in one
 // module available for use in another module.
@@ -118,5 +129,6 @@ module.exports = {
   createOrganization,
   insert,
   update,
-  remove
+  remove,
+  filterByPrefix
 };
