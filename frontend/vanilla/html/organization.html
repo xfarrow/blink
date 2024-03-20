@@ -33,19 +33,19 @@
         });
 
         async function loadOrganization() {
-            const idToDisplay = new URLSearchParams(window.location.search).get('id');
-            if (!idToDisplay) {
+            const idOrganization = new URLSearchParams(window.location.search).get('id');
+            if (!idOrganization) {
                 alert("Invalid URL.");
                 return;
             }
-            const response = await fetch(`${API_URL}/organizations/${idToDisplay}`, {
+            const response = await fetch(`${API_URL}/organizations/${idOrganization}`, {
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
                 }
             });
             const data = await response.json();
             if (response.ok) {
-                populateFields(data.name, data.location, data.description, isOrganizationHiring(idToDisplay));
+                populateFields(data.name, data.location, data.description, await isOrganizationHiring(idOrganization));
                 document.body.style.display = "block"; // Show page
             } else {
                 alert(data.error);
@@ -60,10 +60,8 @@
             if (isHiring === true) {
                 document.getElementById('isHiring').textContent = 'Yes';
                 document.getElementById('isHiringBadge').style.display = 'block';
-            } else if (isHiring === false) {
-                document.getElementById('isHiring').textContent = 'No';
             } else {
-                document.getElementById('isHiring').textContent = 'Not specified';
+                document.getElementById('isHiring').textContent = 'No';
             }
 
         }
