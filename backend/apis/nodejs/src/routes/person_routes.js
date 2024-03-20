@@ -241,7 +241,7 @@ async function updatePerson(req, res) {
           error: 'The new password must be specified'
         });
       }
-      const user = await Person.getPersonById(req.jwt.person_id);
+      const user = await Person.findById(req.jwt.person_id);
       const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
       if (passwordMatches) {
         updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
