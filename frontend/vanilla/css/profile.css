@@ -38,7 +38,8 @@ h2 {
     margin-bottom: 10px;
 }
 
-.job h3, .education h3 {
+.job h3,
+.education h3 {
     color: #444;
     margin-bottom: 5px;
 }
@@ -72,4 +73,3 @@ footer {
     font-weight: bold;
     cursor: pointer;
 }
-

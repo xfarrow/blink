@@ -6,10 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Title</title>
     <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/topnav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body style="display: none;">
-    <div class="container">
+<body>
+    <div class="topnav">
+        <a class="active" href="#home">Home</a>
+        <a href="#contact">Discover</a>
+        <a href="#contact">Your Job Applications</a>
+        <a href="#contact">Messages</a>
+        <div class="search-container">
+            <form action="/action_page.php">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="button" onclick="onSearchButtonClick()"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" id="container" style="display: none;">
         <div class="edit-badge" style="display: none;" id="editBadge" onclick="editProfile()">Edit</div>
         <header>
             <img src="../content/profile-picture-example.jpg" alt="Profile Picture" class="profile-picture">
@@ -82,7 +97,7 @@
             const data = await response.json();
             if (response.ok) {
                 populateFields(data.display_name, data.email, data.about_me, data.qualification);
-                document.body.style.display = 'block'; // Show page
+                document.getElementById('container').style.display = 'block'; // Show page
             } else if (response.status == 401) {
                 window.location.href = 'login.html';
             } else {
@@ -100,6 +115,10 @@
 
         function editProfile() {
             alert('Editing');
+        }
+
+        function onSearchButtonClick(){
+            alert('Searching for something...');
         }
     </script>
 
