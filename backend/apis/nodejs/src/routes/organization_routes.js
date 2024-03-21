@@ -181,15 +181,15 @@ async function filter(req, res) {
   }
 }
 
-// Here we can not use the jwtUtils.verifyToken as the Router's middleware directly, as the latter
+// Here we can not use the jwtUtils.extractToken as the Router's middleware directly, as the latter
 // will be mounted under /organizations, but there are other resources under /organizations
 // that do not require the authorization, e.g. job offers
 const routes = express.Router();
 routes.get('/:id', organizationValidator.deleteOrGetOrganizationValidator, getOrganization);
 routes.post('/filter', organizationValidator.filterValidator, filter);
-routes.post('/', jwtUtils.verifyToken, organizationValidator.createOrganizationValidator, createOrganization);
-routes.patch('/:id', jwtUtils.verifyToken, organizationValidator.updateOrganizationValidator, updateOrganization);
-routes.delete('/:id', jwtUtils.verifyToken, organizationValidator.deleteOrGetOrganizationValidator, deleteOrganization);
+routes.post('/', jwtUtils.extractToken, organizationValidator.createOrganizationValidator, createOrganization);
+routes.patch('/:id', jwtUtils.extractToken, organizationValidator.updateOrganizationValidator, updateOrganization);
+routes.delete('/:id', jwtUtils.extractToken, organizationValidator.deleteOrGetOrganizationValidator, deleteOrganization);
 
 module.exports = {
   routes

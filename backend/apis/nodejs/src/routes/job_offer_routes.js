@@ -100,8 +100,8 @@ async function findByOrganizationId(req, res) {
 
 const routes = express.Router();
 routes.get('/:id/joboffers', findByOrganizationId);
-routes.post('/:id/joboffers', jwtUtils.verifyToken, insert);
-routes.delete('/joboffers/:jobOfferId', jwtUtils.verifyToken, remove);
+routes.post('/:id/joboffers', jwtUtils.extractToken, insert);
+routes.delete('/joboffers/:jobOfferId', jwtUtils.extractToken, remove);
 
 module.exports = {
     routes

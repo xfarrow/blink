@@ -25,31 +25,40 @@ function generateToken(person_id) {
   return token;
 }
 
-// Middlware
-function verifyToken(req, res, next) {
-  const token = req.headers.authorization;
+/**
+ * Verifies the validity of the token. If it is valid,
+ * sets the req.jwt property to the decoded object
+ * contained within the jwt
+ */
+function extractToken(req, res, next) {
 
-  if (!token) {
+  const authHeader = req.headers.authorization;
+
+  // Obtain the token using the Bearer scheme
+  // The Bearer token, contained in the header, has the following
+  // structure: "Bearer <jwt>"
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      // If the token is valid, store the decoded data in the request object
+      // req.jwt will contain the payload created in generateToken
+      req.jwt = decoded;
+      next();
+    } catch (error) {
+      return res.status(401).send({
+        error: 'Failed to authenticate token'
+      });
+    }
+  } else {
     return res.status(401).send({
       error: 'No token provided'
     });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({
-        error: 'Failed to authenticate token'
-      });
-    }
-
-    // If the token is valid, store the decoded data in the request object
-    // req.jwt will contain the payload created in generateToken
-    req.jwt = decoded;
-    next();
-  });
 }
 
 module.exports = {
   generateToken,
-  verifyToken
+  extractToken
 };

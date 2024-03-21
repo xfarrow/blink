@@ -78,8 +78,8 @@ async function removeOrganizationAdmin(req, res) {
 }
 
 const routes = express.Router();
-routes.post('/:organizationId/admins', jwtUtils.verifyToken, organizationAdminValidator.addOrganizationAdminValidator, addOrganizationAdmin);
-routes.delete('/:organizationId/admins/me', jwtUtils.verifyToken, organizationAdminValidator.removeOrganizationAdminValidator, removeOrganizationAdmin);
+routes.post('/:organizationId/admins', jwtUtils.extractToken, organizationAdminValidator.addOrganizationAdminValidator, addOrganizationAdmin);
+routes.delete('/:organizationId/admins/me', jwtUtils.extractToken, organizationAdminValidator.removeOrganizationAdminValidator, removeOrganizationAdmin);
 
 module.exports = {
   routes

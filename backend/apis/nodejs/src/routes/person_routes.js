@@ -329,7 +329,7 @@ publicRoutes.get('/:id/details', getPerson);
 publicRoutes.post('/me/activation', personValidator.confirmActivationValidator, confirmActivation);
 
 const protectedRoutes = express.Router(); // Routes requiring token
-protectedRoutes.use(jwtUtils.verifyToken);
+protectedRoutes.use(jwtUtils.extractToken);
 protectedRoutes.get('/me', getMyself);
 protectedRoutes.patch('/me', personValidator.updatePersonValidator, updatePerson);
 protectedRoutes.delete('/me', deletePerson);
