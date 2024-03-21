@@ -50,9 +50,7 @@
           email: email,
           password: password
         }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        }
+        headers: createHeaders(null)
       });
 
       const data = await response.json();

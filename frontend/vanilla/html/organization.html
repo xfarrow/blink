@@ -39,9 +39,7 @@
                 return;
             }
             const response = await fetch(`${API_URL}/organizations/${idOrganization}`, {
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                }
+                headers: createHeaders(null)
             });
             const data = await response.json();
             if (response.ok) {
@@ -68,9 +66,7 @@
 
         async function isOrganizationHiring(organizationId) {
             const response = await fetch(`${API_URL}/organizations/${organizationId}/joboffers`, {
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                }
+                headers: createHeaders(null)
             });
             const data = await response.json();
             return data.length > 0;

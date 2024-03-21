@@ -13,3 +13,10 @@ function getCookie(name) {
 function callbackErrors(errors, func) {
     errors.forEach(error => func(error.msg));
 }
+
+function createHeaders(token) {
+    return {
+        "Content-type": "application/json; charset=UTF-8",
+        "Authorization": `Bearer ${token}`
+    }
+}
