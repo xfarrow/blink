@@ -34,6 +34,7 @@
   </div>
 
   <script src="../js/constants.js"></script>
+  <script src="../js/utils.js"></script>
   <script>
     async function login() {
       const email = document.getElementById("email").value;
@@ -61,7 +62,8 @@
         document.cookie = `token=${data.token};`;
         window.location.href = 'userprofile.html?id=me';
       } else {
-        callbackErrors(data.errors, alert);
+        alert(data.error);
+        //callbackErrors(data.errors, alert);
       }
     }
   </script>
