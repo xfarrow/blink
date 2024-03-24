@@ -25,6 +25,7 @@ const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
 const organizationPostRoutes = require('./routes/organization_post_routes.js');
 const jobOffersRoutes = require('./routes/job_offer_routes.js');
+const serverRoutes = require('./routes/server_routes.js');
 
 /*
 ===== END IMPORTING MODULES =====
@@ -47,7 +48,7 @@ app.use(rateLimiter); // Apply the rate limiter middleware to all routes
 /*
 ===== BEGIN ROUTE HANDLING =====
 */
-
+app.use('/api/server', serverRoutes.routes);
 app.use('/api/persons', personRoutes.publicRoutes);
 app.use('/api/persons', personRoutes.protectedRoutes);
 app.use('/api/organizations', organizationRoutes.routes);
