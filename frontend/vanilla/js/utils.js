@@ -14,7 +14,7 @@ function getCookie(name) {
  * Validates an e-mail using a RegExpression
  *
  * @param {*} email
- * @returns 
+ * @returns true or false
  */
 function validateEmail(email) {
     return String(email)
