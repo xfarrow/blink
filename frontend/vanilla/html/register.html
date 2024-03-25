@@ -67,7 +67,7 @@
                                     <input type="email" class="form-control" name="email" id="email" required
                                         onblur="emailFieldLosesFocus();">
                                     <div class="invalid-feedback">
-                                        Please enter an email address
+                                        Please fill out this field
                                     </div>
                                 </div>
                             </div>
@@ -125,6 +125,9 @@
     <script src="../js/constants.js"></script>
     <script src="../js/utils.js"></script>
     <script>
+        /*
+         * Performs an API POST Request to register the user.
+         */
         async function register() {
             const display_name = document.getElementById('displayname').value;
             const email = document.getElementById('email').value;
@@ -149,11 +152,16 @@
                     response.json().then(data => {
                         if (response.ok) {
                             clearInputFields();
-                            if (!data.enabled) { // is the user already enabled or do they need email verification?
-                                showSuccessAlert("Congratulations! You've successfully registered to Blink. " +
-                                    "Please click on the e-mail we sent you to confirm your account");
+                            if (!data
+                                .enabled
+                            ) { // is the user already enabled or do they need email verification?
+                                showSuccessAlert(
+                                    "Congratulations! You've successfully registered to Blink. " +
+                                    "Please click on the e-mail we sent you to confirm your account"
+                                );
                             } else {
-                                showSuccessAlert("Congratulations! You've successfully registered to Blink. " +
+                                showSuccessAlert(
+                                    "Congratulations! You've successfully registered to Blink. " +
                                     "You can now <a href='login.html'>log in</a>");
                             }
                             window.location.href = '/login.html';
@@ -219,15 +227,43 @@
          * calls. Retrurns true or false
          */
         function validateFields() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const displayname = document.getElementById("displayname").value;
-            const iAgree = document.getElementById('iAgree');
-            if (!email || !password || !displayname || !validateEmail(email) || password.length < 5 || !iAgree
-                .checked) {
-                return false;
+            const emailField = document.getElementById("email");
+            const passwordField = document.getElementById("password");
+            const displaynameField = document.getElementById("displayname");
+            const isAgreeCheckBox = document.getElementById('iAgree');
+            var isFormValid = true;
+
+            if (!emailField.value || !validateEmail(emailField.value)) {
+                emailField.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                emailField.classList.remove("is-invalid");
             }
-            return true;
+
+            if (!passwordField.value) {
+                passwordField.classList.add("is-invalid");
+                document.getElementById('passwordErrorLabel').innerHTML = 'Please fill out this field';
+                isFormValid = false;
+            } else if (passwordField.value.length < 5) {
+                passwordField.classList.add("is-invalid");
+                document.getElementById('passwordErrorLabel').innerHTML = 'Password must be at least 5 characters';
+                isFormValid = false;
+            } else {
+                passwordField.classList.remove("is-invalid");
+            }
+
+            if (!displaynameField.value) {
+                displaynameField.classList.add("is-invalid");
+                isFormValid = false;
+            } else {
+                displaynameField.classList.remove("is-invalid");
+            }
+
+            if (!isAgreeCheckBox.checked) {
+                isFormValid = false;
+            } else {
+            }
+            return isFormValid;
         }
 
         function showSuccessAlert(message) {
@@ -236,7 +272,7 @@
             successAlert.style.display = 'block';
         }
 
-        function showErrorAlert(message){
+        function showErrorAlert(message) {
             const errorAlert = document.getElementById('errorAlert');
             errorAlert.innerHTML = message;
             errorAlert.style.display = 'block';
