@@ -139,7 +139,7 @@ async function remove(personId) {
 
 async function confirmActivation(personId) {
   await knex.transaction(async (tr) => {
-    await knex('Person')
+    await tr('Person')
       .where('id', personId)
       .update({
         enabled: true
@@ -149,7 +149,6 @@ async function confirmActivation(personId) {
       .where('person_id', personId)
       .del();
   });
-
 }
 
 // Exporting a function

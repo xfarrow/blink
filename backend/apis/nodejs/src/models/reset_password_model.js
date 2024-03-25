@@ -13,14 +13,47 @@
 
 const knex = require('../utils/knex_config');
 
-async function add(email, secret){
+async function add(email, secret) {
     await knex('RequestResetPassword')
-    .insert({
-        email,
+        .insert({
+            email,
+            secret
+        });
+}
+
+async function findBySecret(secret) {
+    return await knex('RequestResetPassword').where({
         secret
+    }).first();
+}
+
+/**
+ * Given a secret and a new password, update the Peron's personal password
+ *
+ * @param {*} password The new (hashed) password
+ * @param {*} secret The secret received via e-mail (table RequestResetPassword)
+ * @returns 
+ */
+async function resetPassword(password, secret) {
+    const request = await findBySecret(secret);
+    if (!request) {
+        return;
+    }
+    await knex.transaction(async tr => {
+        await tr('Person').where({
+            email: request.email
+        }).update({
+            password
+        });
+
+        await tr('RequestResetPassword').where({
+            email
+        }).del();
     });
 }
 
 module.exports = {
-    add
+    add,
+    findBySecret,
+    resetPassword
 }
