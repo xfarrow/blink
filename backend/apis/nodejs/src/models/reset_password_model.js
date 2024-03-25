@@ -35,7 +35,7 @@ async function findBySecret(secret) {
  * @returns 
  */
 async function resetPassword(password, secret) {
-    const request = await findBySecret(secret);
+    const request = await findBySecret(secret); //TODO should we avoid another db call by directly passing the email?
     if (!request) {
         return;
     }
@@ -46,6 +46,7 @@ async function resetPassword(password, secret) {
             password
         });
 
+        // Delete all the requests associated with that e-mail
         await tr('RequestResetPassword').where({
             email
         }).del();
