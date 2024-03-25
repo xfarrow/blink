@@ -6,7 +6,7 @@
 ## What is it?
 Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world.
 
-Think of it as an open-source alternative to LinkedIn.
+Think of it as a libre alternative to LinkedIn.
 
 ## Usage
 If you're an individual you can use one of the available instances.
