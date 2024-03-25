@@ -43,14 +43,14 @@ async function reset(req, res) {
         if (requester) {
             const diffMilliseconds = Date.now() - requester.time_of_request.getTime();
             // Check whether the request was not performed more than 30 minutes ago
-            if(diffMilliseconds / (1000 * 60) <= 30){
+            if (diffMilliseconds / (1000 * 60) <= 30) {
                 const newPassword = await bcrypt.hash(req.body.password, 10);
                 ResetPassword.resetPassword(newPassword, req.body.secret);
                 return res.status(204).send();
             }
         }
         return res.status(400).send("Request either invalid or expired");
-        
+
     } catch (error) {
         console.error(`Error in function ${reset.name}: ${error}`);
         res.status(500).json({
