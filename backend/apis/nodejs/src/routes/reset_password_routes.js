@@ -44,8 +44,8 @@ async function reset(req, res) {
             const diffMilliseconds = Date.now() - requester.time_of_request.getTime();
             // Check whether the request was not performed more than 30 minutes ago
             if (diffMilliseconds / (1000 * 60) <= 30) {
-                const newPassword = await bcrypt.hash(req.body.password, 10);
-                ResetPassword.resetPassword(newPassword, req.body.secret);
+                const newPassword = await bcrypt.hash(req.body.password.trim(), 10);
+                await ResetPassword.resetPassword(newPassword, req.body.secret);
                 return res.status(204).send();
             }
         }

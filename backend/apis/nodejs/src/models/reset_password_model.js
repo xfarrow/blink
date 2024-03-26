@@ -48,7 +48,7 @@ async function resetPassword(password, secret) {
 
         // Delete all the requests associated with that e-mail
         await tr('RequestResetPassword').where({
-            email
+            email: request.email
         }).del();
     });
 }
