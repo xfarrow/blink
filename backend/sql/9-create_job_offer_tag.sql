@@ -5,7 +5,7 @@
 
 CREATE TABLE IF NOT EXISTS public."JobOfferTag"
 (
-    id integer NOT NULL DEFAULT nextval('"JobOfferTag_id_seq"'::regclass),
+    id serial,
     job_offer_id integer NOT NULL,
     tag_id integer NOT NULL,
     CONSTRAINT "JobOfferTag_pkey" PRIMARY KEY (id),
