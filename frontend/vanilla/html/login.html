@@ -102,12 +102,12 @@
      * This function is responsible for the log-in process
      */
     async function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
       if (!validateFields()) {
         return;
       }
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
 
       const response = await fetch(`${API_URL}/persons/me/token`, {
         method: "POST",
