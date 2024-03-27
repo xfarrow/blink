@@ -72,10 +72,26 @@ async function findById(jobOfferId) {
     }).select().first();
 }
 
-async function findByOrganizationId(organizationId){
+/**
+ * Get all job offers for a specific organization, including their tags
+ * @param {*} organizationId 
+ * @returns 
+ */
+async function findByOrganizationId(organizationId) {
+    // This is equal to
+    //
+    // select "JobOffer".*, json_agg("Tag".tag) as tags
+    // from "JobOffer"
+    // left join "JobOfferTag" on "JobOffer".id = "JobOfferTag".job_offer_id
+    // left join "Tag" on "JobOfferTag".tag_id = "Tag".id
+    // where "JobOffer".organization_id = organizationId
+    // GROUP BY "JobOffer".id
     const result = await knex('JobOffer')
-        .where({organization_id: organizationId})
-        .select();
+        .select('JobOffer.*', knex.raw('json_agg("Tag".tag) as tags'))
+        .leftJoin('JobOfferTag', 'JobOffer.id', 'JobOfferTag.job_offer_id')
+        .leftJoin('Tag', 'JobOfferTag.tag_id', 'Tag.id')
+        .where('JobOffer.organization_id', organizationId)
+        .groupBy('JobOffer.id');
     return result;
 }
 
