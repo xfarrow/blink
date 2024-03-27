@@ -21,13 +21,25 @@ const {
 
 const insertValidator = [
     check('id').trim().notEmpty().escape(),
-    check('title').trim().notEmpty().escape(),
-    check('description').trim().escape(),
-    check('requirements').trim().escape(),
+    check('title').trim().notEmpty().escape().isLength({
+        max: 2048
+    }),
+    check('description').trim().escape().isLength({
+        max: 4096
+    }),
+    check('requirements').trim().escape().isLength({
+        max: 4096
+    }),
     check('salary').trim().notEmpty().escape().isCurrency(),
-    check('salary_frequency').trim().notEmpty().escape(),
-    check('salary_currency').trim().notEmpty().escape(),
-    check('location').trim().escape(),
+    check('salary_frequency').trim().notEmpty().escape().isLength({
+        max: 64
+    }),
+    check('salary_currency').trim().notEmpty().escape().isLength({
+        max: 64
+    }),
+    check('location').trim().escape().isLength({
+        max: 256
+    }),
     check('tags').custom(tags => {
         if (!Array.isArray(tags)) {
             throw new Error('tags must be an array');
