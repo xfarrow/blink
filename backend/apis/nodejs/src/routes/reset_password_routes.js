@@ -17,9 +17,16 @@ const ResetPassword = require('../models/reset_password_model');
 const crypto = require('crypto');
 const express = require('express');
 const bcrypt = require('bcrypt');
+const resetPasswordValidator = require('../utils/validators/reset_password_validator');
 
 async function add(req, res) {
     try {
+        const errors = resetPasswordValidator.validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            });
+        }
         const userExists = await Person.findByEmail(req.body.email);
         // If the user does not exist, do not inform them of the absence
         if (userExists) {
@@ -38,6 +45,12 @@ async function add(req, res) {
 
 async function reset(req, res) {
     try {
+        const errors = resetPasswordValidator.validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            });
+        }
         const requester = await ResetPassword.findBySecret(req.body.secret);
         if (requester) {
             const diffMilliseconds = Date.now() - requester.time_of_request.getTime();
@@ -59,8 +72,8 @@ async function reset(req, res) {
 }
 
 const routes = express.Router();
-routes.post('/request', add);
-routes.post('/reset', reset);
+routes.post('/request', resetPasswordValidator.addRequestValidator, add);
+routes.post('/reset', resetPasswordValidator.resetPasswordValidator, reset);
 
 module.exports = {
     routes
