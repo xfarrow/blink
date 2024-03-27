@@ -25,8 +25,7 @@ async function add(req, res) {
         if (userExists) {
             const secret = crypto.randomBytes(16).toString('hex');
             await ResetPassword.add(req.body.email, secret);
-            const body = `Click on this link: ...${secret} to reset your Blink password. If you did not ask for such a change, simply ignore this e-mail.`;
-            mailUtils.sendMail(req.body.email, 'Blink Reset Password', body, null);
+            mailUtils.sendResetPasswordLink(req.body.email, secret);
         }
         res.status(204).send();
     } catch (error) {

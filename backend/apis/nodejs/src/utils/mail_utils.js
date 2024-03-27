@@ -22,6 +22,11 @@ function sendConfirmationLink(destinationAddress, code) {
     sendMail(destinationAddress, 'Verify your Blink Account', null, getConfirmationLinkHtmlPage(confirmationLink));
 }
 
+function sendResetPasswordLink(destinationAddress, secret) {
+    const message = `A change of your Blink password has been requested. If you requested this, click on this link ${process.env.FRONT_END_URL}/reset-password.html?secret=${secret}. Otherwise you can simply ignore this e-mail`;
+    sendMail(destinationAddress, 'Blink Password change', message, null);
+}
+
 /**
  * 
  * @param {*} destinationAddress Destination Address
@@ -60,5 +65,6 @@ function getConfirmationLinkHtmlPage(confirmationLink) {
 
 module.exports = {
     sendConfirmationLink,
+    sendResetPasswordLink,
     sendMail
 }

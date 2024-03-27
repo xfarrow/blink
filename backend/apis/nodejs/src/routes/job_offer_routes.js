@@ -15,6 +15,7 @@ const JobOffer = require('../models/job_offer_model');
 const jwtUtils = require('../utils/jwt_utils');
 const express = require('express');
 const Tag = require('../models/tags_model');
+const jobOfferValidator = require('../utils/validators/job_offer_validator');
 
 /**
  * POST Request
@@ -26,6 +27,13 @@ const Tag = require('../models/tags_model');
  */
 async function insert(req, res) {
     try {
+        const errors = jobOfferValidator.validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            });
+        }
+
         const tags = await Tag.findByTags(req.body.tags);
         const insertedJobOffer = await JobOffer.insert(
             req.jwt.person_id,
@@ -64,6 +72,13 @@ async function insert(req, res) {
  */
 async function remove(req, res) {
     try {
+        const errors = jobOfferValidator.validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            });
+        }
+
         const result = await JobOffer.remove(req.jwt.person_id, req.params.jobOfferId);
         if (result) {
             return res.status(204).send();
@@ -88,6 +103,13 @@ async function remove(req, res) {
  */
 async function findByOrganizationId(req, res) {
     try {
+        const errors = jobOfferValidator.validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array()
+            });
+        }
+        
         const result = await JobOffer.findByOrganizationId(req.params.id);
         return res.status(200).send(result);
     } catch (error) {
@@ -99,9 +121,9 @@ async function findByOrganizationId(req, res) {
 }
 
 const routes = express.Router();
-routes.get('/:id/joboffers', findByOrganizationId);
-routes.post('/:id/joboffers', jwtUtils.extractToken, insert);
-routes.delete('/joboffers/:jobOfferId', jwtUtils.extractToken, remove);
+routes.post('/:id/joboffers', jobOfferValidator.insertValidator, jwtUtils.extractToken, insert);
+routes.delete('/joboffers/:jobOfferId', jobOfferValidator.removeValidator, jwtUtils.extractToken, remove);
+routes.get('/:id/joboffers', jobOfferValidator.findByOrganizationIdValidator, findByOrganizationId);
 
 module.exports = {
     routes
