@@ -28,7 +28,7 @@ async function findBySecret(secret) {
 }
 
 /**
- * Given a secret and a new password, update the Peron's personal password
+ * Given a secret and a new password, update the Peron's password
  *
  * @param {*} password The new (hashed) password
  * @param {*} secret The secret received via e-mail (table RequestResetPassword)

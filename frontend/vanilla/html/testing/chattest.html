@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Template</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .chat-list {
+            flex: 1;
+            border-right: 1px solid #ccc;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .chat-list-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .chat-list-item.active {
+            background-color: #f0f0f0;
+        }
+        .chat-area {
+            flex: 2;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 10px;
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 8px;
+            word-wrap: break-word;
+            clear: both;
+        }
+        .message.sent {
+            float: right;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .message.received {
+            float: left;
+            background-color: #ddd;
+        }
+        .message-input-container {
+            padding: 20px;
+        }
+        .message-input {
+            width: calc(100% - 40px); /* Adjusting width to match the chat area */
+            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            float: left;
+        }
+        .send-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+        .message-confirm {
+            color: #4CAF50;
+            font-style: italic;
+            margin-top: 5px;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-list">
+            <div class="chat-list-item active" onclick="selectChat(1)">Chat 1</div>
+            <div class="chat-list-item" onclick="selectChat(2)">Chat 2</div>
+            <div class="chat-list-item" onclick="selectChat(3)">Chat 3</div>
+            <!-- Add more chat list items as needed -->
+        </div>
+        <div class="chat-area" id="chat-area">
+            <!-- Messages will be displayed here -->
+        </div>
+    </div>
+    <div class="message-input-container">
+        <textarea class="message-input" id="message-input" placeholder="Type your message..." onkeydown="sendMessage(event)"></textarea>
+        <button class="send-button" onclick="sendMessage()">Send</button>
+        <div class="message-confirm" id="message-confirm" style="display: none;">Message Sent!</div>
+    </div>
+
+    <script>
+        function selectChat(chatId) {
+            // Simulate fetching messages from server
+            const messages = [
+                { text: "Hello!", sentByMe: true },
+                { text: "Hi there!", sentByMe: false },
+                { text: "How are you?", sentByMe: false },
+                { text: "I'm good, thanks!", sentByMe: true },
+                { text: "Great to hear!", sentByMe: false }
+            ];
+
+            // Clear previous messages
+            const chatArea = document.getElementById('chat-area');
+            chatArea.innerHTML = '';
+
+            // Display messages
+            messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                if (message.sentByMe) {
+                    messageElement.classList.add('sent');
+                } else {
+                    messageElement.classList.add('received');
+                }
+                messageElement.innerText = message.text;
+                chatArea.appendChild(messageElement);
+            });
+
+            // Highlight selected chat
+            const chatListItems = document.querySelectorAll('.chat-list-item');
+            chatListItems.forEach(item => item.classList.remove('active'));
+            chatListItems[chatId - 1].classList.add('active');
+        }
+
+        function sendMessage(event) {
+            const messageInput = document.getElementById('message-input');
+            const messageConfirm = document.getElementById('message-confirm');
+
+            // Get the typed message
+            const messageText = messageInput.value.trim();
+            if (messageText === '') {
+                return;
+            }
+
+            // Create a new message element
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'sent');
+            messageElement.innerText = messageText;
+
+            // Append the new message to the chat area
+            const chatArea = document.getElementById('chat-area');
+            chatArea.appendChild(messageElement);
+
+            // Clear the message input
+            messageInput.value = '';
+
+            // Show message confirmation
+            messageConfirm.style.display = 'block';
+
+            // Hide message confirmation after 2 seconds
+            setTimeout(function() {
+                messageConfirm.style.display = 'none';
+            }, 2000);
+
+            // Scroll to the bottom of the chat area
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Select the first chat by default
+        selectChat(1);
+    </script>
+</body>
+</html>

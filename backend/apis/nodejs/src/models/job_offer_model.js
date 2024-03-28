@@ -73,9 +73,10 @@ async function findById(jobOfferId) {
 }
 
 /**
- * Get all job offers for a specific organization, including their tags
- * @param {*} organizationId 
- * @returns 
+ * Get all job offers for a specific organization
+ * @param {*} organizationId The organization id for which
+ * you're looking job offers for
+ * @returns An array of JobOffers plus associated tags
  */
 async function findByOrganizationId(organizationId) {
     // This is equal to
