@@ -14,3 +14,6 @@ You can use one of the available instances. You can also create your own instanc
 
 ## Contacts
 Reach us on <a rel="me" href="https://mastodon.social/@blinknetwork">Mastodon</a>
+
+## Help us
+Blink needs funding. Currently its development is very limited.
