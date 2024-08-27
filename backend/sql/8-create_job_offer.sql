@@ -1,8 +1,8 @@
--- Table: public.JobOffer
+-- Table: JobOffer
 
--- DROP TABLE IF EXISTS public."JobOffer";
+-- DROP TABLE IF EXISTS "JobOffer";
 
-CREATE TABLE IF NOT EXISTS public."JobOffer"
+CREATE TABLE IF NOT EXISTS "JobOffer"
 (
     id SERIAL,
     title character varying(2048) NOT NULL,
@@ -15,13 +15,8 @@ CREATE TABLE IF NOT EXISTS public."JobOffer"
     organization_id integer,
     CONSTRAINT "JobOffer_pkey" PRIMARY KEY (id),
     CONSTRAINT "OrganizationFK" FOREIGN KEY (organization_id)
-        REFERENCES public."Organization" (id) MATCH SIMPLE
+        REFERENCES "Organization" (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
         NOT VALID
 )
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."JobOffer"
-    OWNER to postgres;

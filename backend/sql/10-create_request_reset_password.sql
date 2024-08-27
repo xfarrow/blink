@@ -1,8 +1,8 @@
--- Table: public.RequestResetPassword
+-- Table: RequestResetPassword
 
--- DROP TABLE IF EXISTS public."RequestResetPassword";
+-- DROP TABLE IF EXISTS "RequestResetPassword";
 
-CREATE TABLE IF NOT EXISTS public."RequestResetPassword"
+CREATE TABLE IF NOT EXISTS "RequestResetPassword"
 (
     id serial,
     email character varying(128) NOT NULL,
@@ -10,8 +10,3 @@ CREATE TABLE IF NOT EXISTS public."RequestResetPassword"
     time_of_request timestamp without time zone NOT NULL DEFAULT now(),
     CONSTRAINT "RequestResetPassword_pkey" PRIMARY KEY (id)
 )
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."RequestResetPassword"
-    OWNER to postgres;

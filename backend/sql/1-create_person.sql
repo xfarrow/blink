@@ -1,8 +1,8 @@
--- Table: public.Person
+-- Table: Person
 
--- DROP TABLE IF EXISTS public."Person";
+-- DROP TABLE IF EXISTS "Person";
 
-CREATE TABLE IF NOT EXISTS public."Person"
+CREATE TABLE IF NOT EXISTS "Person"
 (
     id SERIAL PRIMARY KEY,
     email character varying(128) NOT NULL UNIQUE, -- Primary e-mail
@@ -15,8 +15,3 @@ CREATE TABLE IF NOT EXISTS public."Person"
     about_me character varying(4096),
     qualification character varying(64)
 )
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Person"
-    OWNER to pg_database_owner;

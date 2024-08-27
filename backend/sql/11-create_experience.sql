@@ -1,8 +1,8 @@
--- Table: public.Experience
+-- Table: Experience
 
--- DROP TABLE IF EXISTS public."Experience";
+-- DROP TABLE IF EXISTS "Experience";
 
-CREATE TABLE IF NOT EXISTS public."Experience"
+CREATE TABLE IF NOT EXISTS "Experience"
 (
     id serial,
     title character varying(128) NOT NULL,
@@ -14,16 +14,11 @@ CREATE TABLE IF NOT EXISTS public."Experience"
     type character varying(32) NOT NULL,
     CONSTRAINT "Experience_pkey" PRIMARY KEY (id),
     CONSTRAINT "OrganizationFk" FOREIGN KEY (organization_id)
-        REFERENCES public."Organization" (id) MATCH SIMPLE
+        REFERENCES "Organization" (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE SET NULL,
     CONSTRAINT "PersonFk" FOREIGN KEY (person_id)
-        REFERENCES public."Person" (id) MATCH SIMPLE
+        REFERENCES "Person" (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
 )
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Experience"
-    OWNER to postgres;

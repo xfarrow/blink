@@ -1,16 +1,11 @@
--- Table: public.Organization
+    -- Table: Organization
 
--- DROP TABLE IF EXISTS public."Organization";
+    -- DROP TABLE IF EXISTS "Organization";
 
-CREATE TABLE IF NOT EXISTS public."Organization"
-(
-    id SERIAL PRIMARY KEY,
-    name character varying(128) NOT NULL,
-    location character varying,
-    description text
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Organization"
-    OWNER to pg_database_owner;
+    CREATE TABLE IF NOT EXISTS "Organization"
+    (
+        id SERIAL PRIMARY KEY,
+        name character varying(128) NOT NULL,
+        location character varying,
+        description text
+    )
