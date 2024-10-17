@@ -16,7 +16,7 @@ const jwtUtils = require('../utils/jwt_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const Person = require('../models/person_model');
-const activationModel = require('../models/activation_model');
+const Activation = require('../models/activation_model');
 const express = require('express');
 const mailUtils = require('../utils/mail_utils');
 
@@ -66,13 +66,14 @@ async function registerPerson(req, res) {
     const personToInsert = Person.createPerson(
       req.body.email,
       await hashPasswordPromise,
-      req.body.display_name,
-      req.body.date_of_birth,
-      req.body.available,
+      req.body.displayName,
+      req.body.dateOfBirth,
+      req.body.placeOfLiving,
+      req.body.aboutMe,
+      req.body.qualification,
+      req.body.openToWork,
       isEnabled,
-      req.body.place_of_living,
-      req.body.about_me,
-      req.body.qualification);
+    );
     const insertedPerson = await Person.insert(personToInsert, activationCode);
     delete insertedPerson.password;
 
@@ -190,8 +191,8 @@ async function getMyself(req, res) {
  * not present, they shall be ignored. An user can
  * only update themselves
  *
- * Required field(s): At least one. Both old_password and
- * new_password if updating the password.
+ * Required field(s): At least one. Both oldPassword and
+ * newPassword if updating the password.
  *
  */
 async function updatePerson(req, res) {
@@ -205,46 +206,50 @@ async function updatePerson(req, res) {
 
     const updatePerson = {};
 
-    if (req.body.display_name !== undefined) {
-      updatePerson.display_name = req.body.display_name;
+    if (req.body.displayName !== undefined) {
+      updatePerson.display_name = req.body.displayName;
     }
 
-    if (req.body.date_of_birth !== undefined) {
-      updatePerson.date_of_birth = req.body.date_of_birth;
+    if (req.body.dateOfBirth !== undefined) {
+      updatePerson.date_of_birth = req.body.dateOfBirth;
     }
 
-    if (req.body.available !== undefined) {
-      updatePerson.available = req.body.available;
+    if (req.body.openToWork !== undefined) {
+      updatePerson.open_to_work = req.body.openToWork;
     }
 
-    if (req.body.place_of_living !== undefined) {
-      updatePerson.place_of_living = req.body.place_of_living;
+    if (req.body.placeOfLiving !== undefined) {
+      updatePerson.place_of_living = req.body.placeOfLiving;
     }
 
-    if (req.body.about_me !== undefined) {
-      updatePerson.about_me = req.body.about_me;
+    if (req.body.aboutMe !== undefined) {
+      updatePerson.about_me = req.body.aboutMe;
     }
 
     if (req.body.qualification !== undefined) {
       updatePerson.qualification = req.body.qualification;
     }
 
+    if (req.body.visibility !== undefined) {
+      updatePerson.visibility = req.body.visibility;
+    }
+
     // If we are tying to change password, the old password must be provided
-    if (req.body.old_password !== undefined || req.body.new_password !== undefined) {
-      if (req.body.old_password === undefined) {
+    if (req.body.oldPassword !== undefined || req.body.newPassword !== undefined) {
+      if (req.body.oldPassword === undefined) {
         return res.status(401).json({
           error: 'The old password must be specified'
         });
       }
-      if (req.body.new_password === undefined) {
+      if (req.body.newPassword === undefined) {
         return res.status(401).json({
           error: 'The new password must be specified'
         });
       }
       const user = await Person.findById(req.jwt.person_id);
-      const passwordMatches = await bcrypt.compare(req.body.old_password, user.password);
+      const passwordMatches = await bcrypt.compare(req.body.oldPassword, user.password);
       if (passwordMatches) {
-        updatePerson.password = await bcrypt.hash(req.body.new_password, 10);
+        updatePerson.password = await bcrypt.hash(req.body.newPassword, 10);
       } else {
         return res.status(401).json({
           error: 'Password verification failed'
@@ -306,7 +311,7 @@ async function confirmActivation(req, res) {
         errors: errors.array()
       });
     }
-    const personId = await activationModel.getPersonIdByIdentifier(req.body.code);
+    const personId = await Activation.getPersonIdByIdentifier(req.body.code);
     if (!personId) {
       return res.status(401).json({
         error: 'Activation Link either not valid or expired'

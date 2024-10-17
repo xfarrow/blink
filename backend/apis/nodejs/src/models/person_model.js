@@ -25,17 +25,18 @@ const bcrypt = require('bcrypt');
  * @param {*} placeOfLiving
  * @returns
  */
-function createPerson(email, password, displayName, dateOfBirth, available, enabled, placeOfLiving, aboutMe, qualification) {
+function createPerson(email, password, displayName, dateOfBirth, placeOfLiving, aboutMe, qualification, openToWork, enabled) {
   const person = {
     email: email.toLowerCase(),
     password,
     display_name: displayName,
     date_of_birth: dateOfBirth,
-    available,
-    enabled,
+    open_to_work: openToWork,
     place_of_living: placeOfLiving,
     about_me: aboutMe,
-    qualification
+    qualification,
+    enabled,
+    visibility: "EVERYONE"
   };
   return person;
 }
@@ -80,12 +81,12 @@ async function insert(person, activationLink) {
     const insertedPerson = await tr('Person')
       .insert(person)
       .returning('*');
-    if(activationLink != null){
+    if (activationLink != null) {
       await tr('ActivationLink')
-      .insert({
-        person_id: insertedPerson[0].id,
-        identifier: activationLink
-      });
+        .insert({
+          person_id: insertedPerson[0].id,
+          identifier: activationLink
+        });
     }
     return insertedPerson[0];
   });

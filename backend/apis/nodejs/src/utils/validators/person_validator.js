@@ -17,7 +17,7 @@ const {
 } = require("express-validator"); // This is the destructuring part. It specifies which properties of the imported object (express-validator) you want to extract.
 
 const registerValidator = [
-  check('display_name').trim().notEmpty().escape().isLength({
+  check('displayName').trim().notEmpty().escape().isLength({
     max: 128
   }),
   check('email').isEmail().normalizeEmail().escape().isLength({
@@ -26,12 +26,12 @@ const registerValidator = [
   check('password').isLength({
     min: 5
   }).trim().escape().withMessage('Password must be at least 5 characters'),
-  check('date_of_birth').optional().isDate().withMessage('Invalid date format. Date must be YYYY-MM-DD'),
-  check('available').optional().isBoolean(),
-  check('place_of_living').isLength({
+  check('dateOfBirth').optional().isDate().withMessage('Invalid date format. Date must be YYYY-MM-DD'),
+  check('openToWork').optional().isBoolean(),
+  check('placeOfLiving').isLength({
     max: 128
   }).escape(),
-  check('about_me').isLength({
+  check('aboutMe').isLength({
     max: 4096
   }).escape(),
   check('qualification').isLength({
@@ -45,15 +45,15 @@ const getTokenValidator = [
 ];
 
 const updatePersonValidator = [
-  check('display_name').trim().escape().isLength({
+  check('displayName').trim().escape().isLength({
     max: 128
   }),
-  check('date_of_birth').optional().isDate().withMessage('Invalid date format. Date must be YYYY-MM-DD'),
-  check('available').optional().isBoolean(),
-  check('place_of_living').isLength({
+  check('dateOfBirth').optional().isDate().withMessage('Invalid date format. Date must be YYYY-MM-DD'),
+  check('openToWork').optional().isBoolean(),
+  check('placeOfLiving').isLength({
     max: 128
   }).escape(),
-  check('about_me').isLength({
+  check('aboutMe').isLength({
     max: 4096
   }).escape(),
   check('qualification').isLength({
