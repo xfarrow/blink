@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS "Organization" (
   id SERIAL PRIMARY KEY, 
   name CHARACTER VARYING(128) NOT NULL, 
   location CHARACTER VARYING, 
-  description TEXT
+  description TEXT,
+  is_hiring BOOLEAN
 );
 
 -- Table: OrganizationAdministrator

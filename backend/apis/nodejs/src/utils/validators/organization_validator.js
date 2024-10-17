@@ -23,8 +23,8 @@ const createOrganizationValidator = [
     check('location').trim().escape().isLength({
         max: 256
     }),
-    check('description').trim().escape(),
-    check('is_hiring').isBoolean()
+    check('description').optional().trim().escape(),
+    check('isHiring').optional().isBoolean()
 ];
 
 const updateOrganizationValidator = [
@@ -34,8 +34,8 @@ const updateOrganizationValidator = [
     check('location').trim().escape().isLength({
         max: 256
     }),
-    check('description').trim().escape(),
-    check('is_hiring').optional().isBoolean()
+    check('description').optional().trim().escape(),
+    check('isHiring').optional().isBoolean()
 ];
 
 const deleteOrGetOrganizationValidator = [
