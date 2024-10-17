@@ -23,7 +23,6 @@ const helmet = require('helmet')
 const personRoutes = require('./routes/person_routes.js');
 const organizationRoutes = require('./routes/organization_routes.js');
 const organizationAdminRoutes = require('./routes/organization_admin_routes.js');
-const organizationPostRoutes = require('./routes/organization_post_routes.js');
 const jobOffersRoutes = require('./routes/job_offer_routes.js');
 const serverRoutes = require('./routes/server_routes.js');
 const resetPasswordRoutes = require('./routes/reset_password_routes.js');
@@ -55,7 +54,6 @@ app.use('/api/persons', personRoutes.protectedRoutes);
 app.use('/api/organizations', organizationRoutes.routes);
 app.use('/api/organizations', jobOffersRoutes.routes);
 app.use('/api/organizations', organizationAdminRoutes.routes);
-app.use('/api/organizations', organizationPostRoutes.routes);
 app.use('/api/resetpassword', resetPasswordRoutes.routes);
 
 /*

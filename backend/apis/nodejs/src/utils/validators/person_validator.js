@@ -50,17 +50,17 @@ const updatePersonValidator = [
   }),
   check('dateOfBirth').optional().isDate().withMessage('Invalid date format. Date must be YYYY-MM-DD'),
   check('openToWork').optional().isBoolean(),
-  check('placeOfLiving').isLength({
+  check('placeOfLiving').optional().isLength({
     max: 128
   }).escape(),
-  check('aboutMe').isLength({
+  check('aboutMe').optional().isLength({
     max: 4096
   }).escape(),
-  check('qualification').isLength({
+  check('qualification').optional().isLength({
     max: 64
   }).escape(),
-  check('old_password').trim().escape(),
-  check('new_password').isLength({
+  check('oldPassword').optional().trim().escape(),
+  check('newPassword').optional().isLength({
     min: 5
   }).trim().escape().withMessage('Password must be at least 5 characters'),
 ];
