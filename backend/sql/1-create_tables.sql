@@ -4,6 +4,7 @@ CREATE TYPE RemotePosition as ENUM ('YES', 'NO', 'NOT_SPECIFIED', 'PARTIALLY');
 CREATE TYPE ContractType as ENUM ('FULL-TIME','PART-TIME','INTERNSHIP','CONTRACT','FREELANCE','TEMPORARY','SEASONAL','APPRENTICESHIP','VOLUNTEER','ZERO-HOURS','FIXED-TERM','CASUAL','PROBATIONARY','SECONDMENT','JOB-SHARING');
 CREATE TYPE ExperienceType as ENUM ('EDUCATION', 'WORK', 'VOLOUNTEER');
 CREATE TYPE SalaryFrequency as ENUM ('WEEKLY', 'YEARLY');
+CREATE TYPE InfoType AS ENUM ('EMAIL', 'PHONE', 'WEBSITE', 'GIT', 'MASTODON', 'YOUTUBE', 'FACEBOOK', 'INSTAGRAM', 'OTHER');
 
 -- Table: Person
 CREATE TABLE IF NOT EXISTS "Person" (
@@ -31,9 +32,8 @@ CREATE TABLE IF NOT EXISTS "ActivationLink" (
 CREATE TABLE IF NOT EXISTS "Organization" (
   id SERIAL PRIMARY KEY, 
   name CHARACTER VARYING(128) NOT NULL, 
-  location CHARACTER VARYING, 
-  description TEXT,
-  is_hiring BOOLEAN
+  location CHARACTER VARYING(256), 
+  description CHARACTER VARYING(4096)
 );
 
 -- Table: OrganizationAdministrator
@@ -57,7 +57,8 @@ CREATE TABLE IF NOT EXISTS "JobOffer" (
   organization_id INTEGER, 
   title CHARACTER VARYING(2048) NOT NULL, 
   description CHARACTER VARYING(4096), 
-  salary int4range, 
+  salary int4range,
+  salary_frequency SalaryFrequency,
   salary_currency SalaryCurrency,
   location CHARACTER VARYING(256), 
   remote RemotePosition NOT NULL,
@@ -98,7 +99,7 @@ CREATE TABLE IF NOT EXISTS "RequestResetPassword" (
   id SERIAL, 
   email CHARACTER VARYING(128) NOT NULL, 
   secret CHARACTER VARYING NOT NULL, 
-  time_of_request timestamp without time zone NOT NULL DEFAULT now(), 
+  time_of_request TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(), 
   CONSTRAINT "RequestResetPassword_pkey" PRIMARY KEY (id)
 );
 
@@ -115,3 +116,36 @@ CREATE TABLE IF NOT EXISTS "Experience" (
   CONSTRAINT "OrganizationFk" FOREIGN KEY (organization_id) REFERENCES "Organization" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE SET NULL,
   CONSTRAINT "PersonFk" FOREIGN KEY (person_id) REFERENCES "Person" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+-- Table: Message
+CREATE TABLE IF NOT EXISTS "Message" (
+  id SERIAL PRIMARY KEY, 
+  sender_id INTEGER NOT NULL,
+  sender_organization_id INTEGER NOT NULL,
+  receiver_id INTEGER,
+  receiver_organization_id INTEGER,
+  content CHARACTER VARYING(4096) NOT NULL,
+  timestamp TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  CONSTRAINT "SenderFK" FOREIGN KEY (sender_id) REFERENCES "Person" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "ReceiverFK" FOREIGN KEY (receiver_id) REFERENCES "Person" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "OrganizationSender" FOREIGN KEY (sender_organization_id) REFERENCES "Organization" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT "OrganizationReceiver" FOREIGN KEY (receiver_organization_id) REFERENCES "Organization" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Table: PersonContactInfo
+CREATE TABLE IF NOT EXISTS "PersonContactInfo" (
+  id SERIAL PRIMARY KEY,
+  person_id INTEGER NOT NULL,
+  info CHARACTER VARYING(128) NOT NULL,
+  info_type InfoType NOT NULL,
+  CONSTRAINT "PersonFK" FOREIGN KEY (person_id) REFERENCES "Person" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Table: OrganizationContactInfo
+CREATE TABLE IF NOT EXISTS "OrganizationContactInfo" (
+  id SERIAL PRIMARY KEY,
+  organization_id INTEGER NOT NULL,
+  info CHARACTER VARYING(128) NOT NULL,
+  info_type InfoType NOT NULL,
+  CONSTRAINT "OrganizationFK" FOREIGN KEY (organization_id) REFERENCES "Organization" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
+)
