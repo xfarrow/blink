@@ -35,16 +35,30 @@ async function insert(req, res) {
         }
 
         const tags = await Tag.findByTags(req.body.tags);
+
+        let salaryMin = null;
+        let salaryMax = null;
+        if (req.body.salary != null && req.body.salary.length >= 1) {
+            salaryMin = req.body.salary[0];
+            if (req.body.salary.length == 2) {
+                salaryMax = req.body.salary[1];
+            } else {
+                salaryMax = salaryMin;
+            }
+        }
+
         const insertedJobOffer = await JobOffer.insert(
             req.jwt.person_id,
             req.params.id, // organization id
             req.body.title,
             req.body.description,
-            req.body.requirements,
-            req.body.salary,
-            req.body.salary_frequency,
-            req.body.salary_currency,
+            salaryMin,
+            salaryMax,
+            req.body.salaryFrequency,
+            req.body.salaryCurrency,
             req.body.location,
+            req.body.remote,
+            req.body.contractType,
             tags);
 
         if (insertedJobOffer) {
@@ -109,7 +123,7 @@ async function findByOrganizationId(req, res) {
                 errors: errors.array()
             });
         }
-        
+
         const result = await JobOffer.findByOrganizationId(req.params.id);
         return res.status(200).send(result);
     } catch (error) {

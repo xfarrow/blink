@@ -24,23 +24,34 @@ const insertValidator = [
     check('title').trim().notEmpty().escape().isLength({
         max: 2048
     }),
-    check('description').trim().escape().isLength({
+    check('description').optional().trim().escape().isLength({
         max: 4096
     }),
-    check('requirements').trim().escape().isLength({
-        max: 4096
-    }),
-    check('salary').trim().notEmpty().escape().isCurrency(),
-    check('salary_frequency').trim().notEmpty().escape().isLength({
+    check('salary').optional().isArray().withMessage('Salary must be an array').custom((value) => {
+        if (value.length < 1 || value.length > 2) {
+          throw new Error('Salary array must have between 1 and 2 elements');
+        }
+        if (value !== null && !value.every((element) => typeof element === 'number')) {
+            throw new Error('Salary array elements must be numbers');
+        }
+        return true;
+      }),
+    check('salaryFrequency').trim().notEmpty().escape().isLength({
         max: 64
     }),
-    check('salary_currency').trim().notEmpty().escape().isLength({
+    check('salaryCurrency').optional().trim().notEmpty().escape().isLength({
         max: 64
     }),
-    check('location').trim().escape().isLength({
+    check('location').optional().trim().escape().isLength({
         max: 256
     }),
-    check('tags').custom(tags => {
+    check('remote').optional().trim().escape().isLength({
+        max: 256
+    }),
+    check('contractType').trim().escape().isLength({
+        max: 256
+    }),
+    check('tags').optional().custom(tags => {
         if (!Array.isArray(tags)) {
             throw new Error('tags must be an array');
         }

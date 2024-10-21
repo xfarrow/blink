@@ -32,7 +32,7 @@ async function addOrganizationAdmin(req, res) {
         errors: errors.array()
       });
     }
-    const success = await organizationAdmin.insert(req.body.person_id, req.params.organizationId, req.jwt.person_id);
+    const success = await organizationAdmin.insert(req.body.personId, req.params.organizationId, req.jwt.person_id);
     if (success) {
       return res.status(204).send();
     }

@@ -13,6 +13,13 @@
 
 const knex = require('../utils/knex_config');
 
+/**
+ *  Given an array of strings, return an array of
+ *  database tags
+ *
+ * @param {*} tags
+ * @returns 
+ */
 async function findByTags(tags) {
     if(!tags){
         return null;

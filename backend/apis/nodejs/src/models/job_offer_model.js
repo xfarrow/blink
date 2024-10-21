@@ -14,19 +14,20 @@
 const knex = require('../utils/knex_config');
 const OrganizationAdmin = require('../models/organization_admin_model');
 
-async function insert(requester, organizationId, title, description, requirements, salary, salaryFrequency, salaryCurrency, location, tags) {
+async function insert(requester, organizationId, title, description, salaryMin, salaryMax, salaryFrequency, salaryCurrency, location, remote, contractType, tags) {
     const isAdmin = await OrganizationAdmin.isAdmin(requester, organizationId);
     if (isAdmin) {
         return await knex.transaction(async (tr) => {
             const jobOffer = await tr('JobOffer').insert({
+                    organization_id: organizationId,
                     title,
                     description,
-                    requirements,
-                    salary,
+                    salary: salaryMin != null ? knex.raw(`int4range('[${salaryMin}, ${salaryMax}]')`) : null,
                     salary_frequency: salaryFrequency,
+                    salary_currency: salaryCurrency,
                     location,
-                    organization_id: organizationId,
-                    salary_currency: salaryCurrency
+                    remote,
+                    contract_type: contractType
                 })
                 .returning('*');
 
