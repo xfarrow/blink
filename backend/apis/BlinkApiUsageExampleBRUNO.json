@@ -1,0 +1,806 @@
+{
+  "name": "Blink",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "ActivatePerson",
+      "seq": 22,
+      "request": {
+        "url": "http://localhost:3000/api/persons/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "AddOrganizationAdmin",
+      "seq": 10,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1/admins",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"personId\" : \"2\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTUxNjAzMCwiZXhwIjoxNzI5NTQ0ODMwfQ.jWVfSL_D4pabdihXDfoZ1dPLy4Nn6C3aePHIommiHqw"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "CreateApplication",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:3000/api/applications",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"jobOfferId\": 1\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "CreateJobOffer",
+      "seq": 8,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1/joboffers",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"title\" : \"NodeJS developer\",\n  \"description\" : \"We are looking for NodeJS developers which can help us build Blink\",\n  \"salaryFrequency\": \"YEARLY\",\n  \"salary\": [20000, 23000],\n  \"salaryCurrency\": \"EUR\",\n  \"location\" : \"Rome\",\n  \"remote\": \"PARTIALLY\",\n  \"contractType\": \"PART-TIME\",\n  \"tags\" : [\"javascript\"]\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "CreateOrganization",
+      "seq": 15,
+      "request": {
+        "url": "http://localhost:3000/api/organizations",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"name\" : \"Blink Inc.\",\n  \"location\" : \"Napoli, Italy\",\n  \"description\" : \"Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world.\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "DeleteJobOffer",
+      "seq": 6,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/joboffers/3",
+        "method": "DELETE",
+        "headers": [
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc2NDI0NiwiZXhwIjoxNzI5NzkzMDQ2fQ.TOZMas9WujFp_hP7bqFzbSqWighmT7NmfkohEmpWr5A"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "DeleteOrganization",
+      "seq": 12,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1",
+        "method": "DELETE",
+        "headers": [
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjIsImlhdCI6MTcxMTAzMjk1NCwiZXhwIjoxNzExMDYxNzU0fQ.5el1ymu9qZQpoJpWfM4ZPfNcs34GGFc6WVfCBitlyEk"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "DeletePerson",
+      "seq": 18,
+      "request": {
+        "url": "http://localhost:3000/api/persons/me",
+        "method": "DELETE",
+        "headers": [
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjIsImlhdCI6MTcxMTAzMjk1NCwiZXhwIjoxNzExMDYxNzU0fQ.5el1ymu9qZQpoJpWfM4ZPfNcs34GGFc6WVfCBitlyEk"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "FilterOrganizationByPrefix",
+      "seq": 11,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/filter",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"name\" : \"bli\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetJobOffers",
+      "seq": 7,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1/joboffers/",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetMyself",
+      "seq": 20,
+      "request": {
+        "url": "http://localhost:3000/api/persons/me",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTUxNTY3NywiZXhwIjoxNzI5NTQ0NDc3fQ.OxlOKzzZpl2H8cxjPP_8vsD5LRBi-ZxDplvQf63jMkk"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetOrganization",
+      "seq": 14,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetPerson",
+      "seq": 21,
+      "request": {
+        "url": "http://localhost:3000/api/persons/1/details",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "Login",
+      "seq": 23,
+      "request": {
+        "url": "http://localhost:3000/api/persons/me/token",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"john@mail.org\",\n  \"password\": \"password\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "Register",
+      "seq": 24,
+      "request": {
+        "url": "http://localhost:3000/api/persons",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": ""
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "RemoveOrganizationAdmin",
+      "seq": 9,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1/admins/me",
+        "method": "DELETE",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjIsImlhdCI6MTcyOTUxNjM0NywiZXhwIjoxNzI5NTQ1MTQ3fQ.W09-xjGYSVI2EftoI9lSJAkzlo3V1NADcv4RbhE414I"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "RequestNewPassword",
+      "seq": 17,
+      "request": {
+        "url": "http://localhost:3000/api/resetpassword/request",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"john@mail.org\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "ResetNewPassword",
+      "seq": 16,
+      "request": {
+        "url": "http://localhost:3000/api/resetpassword/reset",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"secret\": \"360837853e2d3cf799c709b44720b4e3\",\n  \"password\": \"password\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "UpdateOrganization",
+      "seq": 13,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1",
+        "method": "PATCH",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"name\": \"Blink Inc.\",\n  \"location\": \"Naples (Campania), Italy\",\n  \"description\": \"Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world. Think of it as an open-source alternative to LinkedIn.\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTUxNjAzMCwiZXhwIjoxNzI5NTQ0ODMwfQ.jWVfSL_D4pabdihXDfoZ1dPLy4Nn6C3aePHIommiHqw"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "UpdatePerson",
+      "seq": 19,
+      "request": {
+        "url": "http://localhost:3000/api/persons/me",
+        "method": "PATCH",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"new_password\": \"password\",\n  \"old_password\": \"password\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTUxNTY3NywiZXhwIjoxNzI5NTQ0NDc3fQ.OxlOKzzZpl2H8cxjPP_8vsD5LRBi-ZxDplvQf63jMkk"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetMyApplications",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:3000/api/applications/myapplications",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "DeleteApplication",
+      "seq": 2,
+      "request": {
+        "url": "http://localhost:3000/api/applications",
+        "method": "DELETE",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"jobApplicationId\": 1\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc1NTMyNCwiZXhwIjoxNzI5Nzg0MTI0fQ.U2leC3wu51iSOeItTk02TZCDttTYBWBcLahCdoXiIR8"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetApplicantsByOrganization",
+      "seq": 3,
+      "request": {
+        "url": "http://localhost:3000/api/applications/applicantsbyorganization",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"organizationId\": 1\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "ChangeApplicationStatus",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:3000/api/applications",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"jobOfferId\": 1\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+          }
+        }
+      }
+    }
+  ],
+  "environments": [],
+  "brunoConfig": {
+    "version": "1",
+    "name": "Blink",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}
