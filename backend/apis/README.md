@@ -11,7 +11,7 @@ In order to deploy the Blink APIs, follow these steps:
 
 ## Testing the APIs
 You can test the APIs in two ways:
-* Open `BlinkApiUsageExample.json` with Insomnia or Bruno in order to have the collection of APIs already configured and ready to be seen in action;
+* Open `BlinkApiUsageExample.json` with an API client (such as Insomnia, Bruno or Postman) in order to have the collection of APIs already configured and ready to be seen in action;
 * Run `npm test` in `./nodejs` to run a suite of automated tests.
 
 ## For Developers
