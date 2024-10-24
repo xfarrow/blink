@@ -131,5 +131,6 @@ async function filter(title, description, requirements, salary, salaryOperator, 
 module.exports = {
     insert,
     remove,
-    findByOrganizationId
+    findByOrganizationId,
+    findById
 }

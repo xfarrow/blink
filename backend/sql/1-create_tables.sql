@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS "JobOfferTag" (
   CONSTRAINT "TagFk" FOREIGN KEY (tag_id) REFERENCES "Tag" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Table: Applicant
-CREATE TABLE IF NOT EXISTS "Applicant" (
+-- Table: JobApplication
+CREATE TABLE IF NOT EXISTS "JobApplication" (
   id SERIAL PRIMARY KEY,
   person_id INTEGER NOT NULL, 
   job_offer_id INTEGER NOT NULL, 
