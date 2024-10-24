@@ -1,3 +1,5 @@
+// TODO: I don't like the routes. It should be /api/organizations/idOrganization/joboffers/idJobOffer/
+// TODO: Create a validator
 /*
     This code is part of Blink
     licensed under GPLv3
@@ -18,12 +20,9 @@ const express = require('express');
 const jwtUtils = require('../utils/jwt_utils');
 
 /**
- * POST Request
+ * **POST** Request
  * 
  * Inserts a new job application
- * @param {*} req 
- * @param {*} res 
- * @returns 
  */
 async function insert(req, res) {
   try {
@@ -53,12 +52,9 @@ async function insert(req, res) {
 }
 
 /**
- * GET Request
+ * **GET** Request
  * 
  * Retrieves all the job applications of the logged in user
- * @param {*} req 
- * @param {*} res 
- * @returns 
  */
 async function myApplications(req, res) {
   try {
@@ -73,15 +69,15 @@ async function myApplications(req, res) {
 }
 
 /**
- * GET Request. Retrieve all the applicants who applicated to a job offer.
+ * **GET** Request 
+ * 
+ * Retrieve all the applicants who applicated to a job offer.
  * Only an organization administrator is allowed to perform this action.
- * @param {*} req 
- * @param {*} res 
  */
 async function getApplicantsByJobOffer(req, res) {
   try {
-    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, jobOffer.organization_id);
-    if(!isAdmin){
+    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.body.organizationId);
+    if (!isAdmin) {
       return res.status(401).json({
         error: 'Forbidden'
       });
@@ -97,16 +93,16 @@ async function getApplicantsByJobOffer(req, res) {
 }
 
 /**
- * GET Request. Retrieve all the applicants who applicated to a job offer created
+ * **GET** Request
+ * 
+ * Retrieve all the applicants who applicated to a job offer created
  * by the specific organization.
  * Only an organization administrator is allowed to perform this action.
- * @param {*} req 
- * @param {*} res 
  */
-async function getApplicantsByOrganization(req, res){
+async function getApplicantsByOrganization(req, res) {
   try {
     const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.body.organizationId);
-    if(!isAdmin){
+    if (!isAdmin) {
       return res.status(401).json({
         error: 'Forbidden'
       });
@@ -121,11 +117,63 @@ async function getApplicantsByOrganization(req, res){
   }
 }
 
+/**
+ * **DELETE** Request
+ *
+ * Removes a job application. Only the applicant is allowed to do that.
+ */
+async function remove(req, res) {
+  try {
+    const jobApplication = await Application.find(req.body.jobApplicationId);
+    if (jobApplication == null) {
+      return res.status(404).send();
+    }
+    if (jobApplication.person_id !== req.jwt.person_id) {
+      return res.status(401).json({
+        error: 'Forbidden'
+      });
+    }
+    await Application.remove(req.body.jobApplicationId);
+    return res.status(200).send();
+  } catch (error) {
+    console.error(`Error in function ${remove.name}: ${error}`);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+}
+
+/**
+ * **PATCH** Request
+ * 
+ * Sets a new status to a JobApplication. Only an Organization Administrator
+ * can perform this action
+ */
+async function setStatus(req, res) {
+  try {
+    const canPersonSetStatus = Application.canPersonSetStatus(req.body.jobApplication, req.jwt.person_id);
+    if (!canPersonSetStatus) {
+      return res.status(401).json({
+        error: 'Forbidden'
+      });
+    }
+    await Application.setStatus(req.body.jobApplication, req.body.status);
+    return res.status(204).send();
+  } catch (error) {
+    console.error(`Error in function ${remove.name}: ${error}`);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+}
+
 const routes = express.Router();
 routes.post('/', jwtUtils.extractToken, insert);
 routes.get('/myapplications', jwtUtils.extractToken, myApplications);
 routes.get('/applicantsbyjoboffer', jwtUtils.extractToken, getApplicantsByJobOffer);
 routes.get('/applicantsbyorganization', jwtUtils.extractToken, getApplicantsByOrganization);
+routes.delete('/', jwtUtils.extractToken, remove);
+routes.patch('/', jwtUtils.extractToken, setStatus);
 
 module.exports = {
   routes

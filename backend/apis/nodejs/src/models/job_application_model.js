@@ -11,6 +11,7 @@
     IN THE SOFTWARE.
 */
 const knex = require('../utils/knex_config');
+const OrganizationAdmin = require('../models/organization_admin_model');
 
 /**
  * Inserts a new JobApplication.
@@ -99,7 +100,43 @@ async function getApplicansByOrganization(organizationId) {
             description: applicant.description,
         },
     }));
+}
 
+async function find(jobApplicationId) {
+    return await knex('JobApplication')
+        .where('id', jobApplicationId)
+        .first();
+}
+
+async function remove(jobApplicationId) {
+    return await knex('JobApplication')
+        .where('id', jobApplicationId)
+        .del();
+}
+
+async function setStatus(jobApplicationId, status) {
+    return await knex('JobApplication')
+        .where('id', jobApplicationId)
+        .update('application_status', status);
+}
+
+/**
+ * Only Organization Administrators can change the status of a JobApplication
+ * @param {*} jobApplicationId 
+ * @param {*} personId 
+ */
+async function canPersonSetStatus(jobApplicationId, personId) {
+    const organization = await knex('JobApplication')
+        .where('JobApplication.id', jobApplicationId)
+        .join('JobOffer', 'JobOffer.id', 'JobApplication.job_offer_id')
+        .join('Organization', 'Organization.id', 'JobOffer.organization_id')
+        .first()
+        .select('Organization.id');
+    if (organization == null) {
+        return false;
+    }
+    const isAdmin = await OrganizationAdmin.isAdmin(personId, organization.id);
+    return isAdmin;
 }
 
 module.exports = {
@@ -107,5 +144,9 @@ module.exports = {
     userAlreadyApplicated,
     getMyApplications,
     getApplicantsByJobOffer,
-    getApplicansByOrganization
+    getApplicansByOrganization,
+    find,
+    remove,
+    setStatus,
+    canPersonSetStatus
 }
