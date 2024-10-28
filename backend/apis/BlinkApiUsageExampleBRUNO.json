@@ -77,16 +77,16 @@
     },
     {
       "type": "http",
-      "name": "CreateApplication",
-      "seq": 4,
+      "name": "ChangeApplicationStatus",
+      "seq": 1,
       "request": {
-        "url": "http://localhost:3000/api/applications",
-        "method": "POST",
+        "url": "http://localhost:3000/api/organizations/joboffers/applications/2",
+        "method": "PATCH",
         "headers": [],
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"jobOfferId\": 1\n}",
+          "json": "{\n  \"status\": \"ACCEPTED\"\n}",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -97,7 +97,33 @@
         "auth": {
           "mode": "bearer",
           "bearer": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDEyNTUzNywiZXhwIjoxNzMwMTU0MzM3fQ.X216UkLuDL6-Qs6EUbIRL_YKQKKcxyzQFmAKzJNWEzI"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "CreateApplication",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/joboffers/1",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDEyNTUzNywiZXhwIjoxNzMwMTU0MzM3fQ.X216UkLuDL6-Qs6EUbIRL_YKQKKcxyzQFmAKzJNWEzI"
           }
         }
       }
@@ -174,6 +200,33 @@
           "mode": "bearer",
           "bearer": {
             "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "DeleteApplication",
+      "seq": 2,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/joboffers/applications/2",
+        "method": "DELETE",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"jobApplicationId\": 1\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDEyODc2NSwiZXhwIjoxNzMwMTU3NTY1fQ.puQ4gw9K_fL4FhXs7UlvyZwq98XZEIuXwnZ0JBIXzaw"
           }
         }
       }
@@ -311,6 +364,33 @@
     },
     {
       "type": "http",
+      "name": "GetApplicantsByOrganization",
+      "seq": 3,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"organizationId\": 1\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDEyNTUzNywiZXhwIjoxNzMwMTU0MzM3fQ.X216UkLuDL6-Qs6EUbIRL_YKQKKcxyzQFmAKzJNWEzI"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "GetJobOffers",
       "seq": 7,
       "request": {
@@ -335,6 +415,32 @@
         "tests": "",
         "auth": {
           "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetMyApplications",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/applications/mine",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDEyNTUzNywiZXhwIjoxNzMwMTU0MzM3fQ.X216UkLuDL6-Qs6EUbIRL_YKQKKcxyzQFmAKzJNWEzI"
+          }
         }
       }
     },
@@ -465,44 +571,6 @@
     },
     {
       "type": "http",
-      "name": "Register",
-      "seq": 24,
-      "request": {
-        "url": "http://localhost:3000/api/persons",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "bearer",
-          "bearer": {
-            "token": ""
-          }
-        }
-      }
-    },
-    {
-      "type": "http",
       "name": "RemoveOrganizationAdmin",
       "seq": 9,
       "request": {
@@ -541,6 +609,44 @@
     },
     {
       "type": "http",
+      "name": "Register",
+      "seq": 24,
+      "request": {
+        "url": "http://localhost:3000/api/persons",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": ""
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "RequestNewPassword",
       "seq": 17,
       "request": {
@@ -562,41 +668,6 @@
         "body": {
           "mode": "json",
           "json": "{\n  \"email\": \"john@mail.org\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "ResetNewPassword",
-      "seq": 16,
-      "request": {
-        "url": "http://localhost:3000/api/resetpassword/reset",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"secret\": \"360837853e2d3cf799c709b44720b4e3\",\n  \"password\": \"password\"\n}",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -649,6 +720,41 @@
     },
     {
       "type": "http",
+      "name": "ResetNewPassword",
+      "seq": 16,
+      "request": {
+        "url": "http://localhost:3000/api/resetpassword/reset",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"secret\": \"360837853e2d3cf799c709b44720b4e3\",\n  \"password\": \"password\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "UpdatePerson",
       "seq": 19,
       "request": {
@@ -681,113 +787,6 @@
           "mode": "bearer",
           "bearer": {
             "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTUxNTY3NywiZXhwIjoxNzI5NTQ0NDc3fQ.OxlOKzzZpl2H8cxjPP_8vsD5LRBi-ZxDplvQf63jMkk"
-          }
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "GetMyApplications",
-      "seq": 5,
-      "request": {
-        "url": "http://localhost:3000/api/applications/myapplications",
-        "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "bearer",
-          "bearer": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
-          }
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "DeleteApplication",
-      "seq": 2,
-      "request": {
-        "url": "http://localhost:3000/api/applications",
-        "method": "DELETE",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"jobApplicationId\": 1\n}",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "bearer",
-          "bearer": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc1NTMyNCwiZXhwIjoxNzI5Nzg0MTI0fQ.U2leC3wu51iSOeItTk02TZCDttTYBWBcLahCdoXiIR8"
-          }
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "GetApplicantsByOrganization",
-      "seq": 3,
-      "request": {
-        "url": "http://localhost:3000/api/applications/applicantsbyorganization",
-        "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"organizationId\": 1\n}",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "bearer",
-          "bearer": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
-          }
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "ChangeApplicationStatus",
-      "seq": 1,
-      "request": {
-        "url": "http://localhost:3000/api/applications",
-        "method": "POST",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"jobOfferId\": 1\n}",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "bearer",
-          "bearer": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTcyOTc3NDc4NywiZXhwIjoxNzI5ODAzNTg3fQ.Li0NeQH6e4ykQ8tpY3KYkS_bQhv7cIFmjz96U-E9S0c"
           }
         }
       }

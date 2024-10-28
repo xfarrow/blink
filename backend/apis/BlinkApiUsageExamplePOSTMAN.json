@@ -89,14 +89,14 @@
       "event": []
     },
     {
-      "name": "CreateApplication",
+      "name": "ChangeApplicationStatus",
       "event": [],
       "request": {
-        "method": "POST",
+        "method": "PATCH",
         "header": [],
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/applications",
+          "raw": "http://localhost:3000/api/organizations/joboffers/applications/2",
           "host": [
             "localhost"
           ],
@@ -106,12 +106,30 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"jobOfferId\": 1\n}",
+          "raw": "{\n  \"status\": \"ACCEPTED\"\n}",
           "options": {
             "raw": {
               "language": "json"
             }
           }
+        }
+      }
+    },
+    {
+      "name": "CreateApplication",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/joboffers/1",
+          "host": [
+            "localhost"
+          ],
+          "path": [],
+          "query": [],
+          "variable": []
         }
       }
     },
@@ -187,6 +205,33 @@
         "body": {
           "mode": "raw",
           "raw": "{\n  \"name\" : \"Blink Inc.\",\n  \"location\" : \"Napoli, Italy\",\n  \"description\" : \"Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DeleteApplication",
+      "event": [],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/joboffers/applications/2",
+          "host": [
+            "localhost"
+          ],
+          "path": [],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jobApplicationId\": 1\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -311,6 +356,33 @@
       }
     },
     {
+      "name": "GetApplicantsByOrganization",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/1",
+          "host": [
+            "localhost"
+          ],
+          "path": [],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"organizationId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
       "name": "GetJobOffers",
       "event": [],
       "request": {
@@ -326,6 +398,24 @@
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/1/joboffers/",
+          "host": [
+            "localhost"
+          ],
+          "path": [],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "GetMyApplications",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/applications/mine",
           "host": [
             "localhost"
           ],
@@ -451,6 +541,45 @@
       }
     },
     {
+      "name": "RemoveOrganizationAdmin",
+      "event": [],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/1/admins/me",
+          "host": [
+            "localhost"
+          ],
+          "path": [],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
       "name": "Register",
       "event": [],
       "request": {
@@ -482,45 +611,6 @@
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "RemoveOrganizationAdmin",
-      "event": [],
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "disabled": false,
-            "type": "default"
-          },
-          {
-            "key": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "disabled": false,
-            "type": "default"
-          }
-        ],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/organizations/1/admins/me",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
           "options": {
             "raw": {
               "language": "json"
@@ -570,46 +660,6 @@
       }
     },
     {
-      "name": "ResetNewPassword",
-      "event": [],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "disabled": false,
-            "type": "default"
-          },
-          {
-            "key": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "disabled": false,
-            "type": "default"
-          }
-        ],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/resetpassword/reset",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"secret\": \"360837853e2d3cf799c709b44720b4e3\",\n  \"password\": \"password\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
       "name": "UpdateOrganization",
       "event": [],
       "request": {
@@ -650,6 +700,46 @@
       }
     },
     {
+      "name": "ResetNewPassword",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/resetpassword/reset",
+          "host": [
+            "localhost"
+          ],
+          "path": [],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"secret\": \"360837853e2d3cf799c709b44720b4e3\",\n  \"password\": \"password\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
       "name": "UpdatePerson",
       "event": [],
       "request": {
@@ -681,105 +771,6 @@
         "body": {
           "mode": "raw",
           "raw": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"new_password\": \"password\",\n  \"old_password\": \"password\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "GetMyApplications",
-      "event": [],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/applications/myapplications",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        }
-      }
-    },
-    {
-      "name": "DeleteApplication",
-      "event": [],
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/applications",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"jobApplicationId\": 1\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "GetApplicantsByOrganization",
-      "event": [],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/applications/applicantsbyorganization",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"organizationId\": 1\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "ChangeApplicationStatus",
-      "event": [],
-      "request": {
-        "method": "POST",
-        "header": [],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/applications",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"jobOfferId\": 1\n}",
           "options": {
             "raw": {
               "language": "json"
