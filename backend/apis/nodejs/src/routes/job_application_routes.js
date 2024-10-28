@@ -173,7 +173,8 @@ routes.get('/:idOrganization/joboffers/:idJobOffer', jwtUtils.extractToken, getA
 routes.get('/:idOrganization/', jwtUtils.extractToken, getApplicantsByOrganization);
 routes.delete('/joboffers/applications/:idApplication', jwtUtils.extractToken, remove);
 routes.patch('/joboffers/applications/:idApplication', jwtUtils.extractToken, setStatus);
-
+// TODO: Get by single application
+// TODO: Change routes (see if practical)
 module.exports = {
   routes
 };
