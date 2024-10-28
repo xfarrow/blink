@@ -1,4 +1,3 @@
-// TODO: I don't like the routes. It should be /api/organizations/idOrganization/joboffers/idJobOffer/
 // TODO: Create a validator
 /*
     This code is part of Blink
@@ -27,20 +26,20 @@ const jwtUtils = require('../utils/jwt_utils');
 async function insert(req, res) {
   try {
     // Check if the job offer exists
-    if (await JobOffer.findById(req.body.jobOfferId) == null) {
+    if (await JobOffer.findById(req.params.idJobOffer) == null) {
       return res.status(404).json({
         error: 'This job offer does not exist'
       });
     }
 
     // Check if the user has already applied for this position
-    if (await Application.userAlreadyApplicated(req.jwt.person_id, req.body.jobOfferId)) {
+    if (await Application.userAlreadyApplicated(req.jwt.person_id, req.params.idJobOffer)) {
       return res.status(400).json({
         error: 'User has already applied to this job'
       });
     }
 
-    const application = await Application.insert(req.jwt.person_id, req.body.jobOfferId);
+    const application = await Application.insert(req.jwt.person_id, req.params.idJobOffer);
     res.set('Location', `/api/applications/${application.id}`);
     return res.status(201).json(application);
   } catch (error) {
@@ -76,13 +75,13 @@ async function myApplications(req, res) {
  */
 async function getApplicantsByJobOffer(req, res) {
   try {
-    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.body.organizationId);
+    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.params.idJobOffer);
     if (!isAdmin) {
       return res.status(401).json({
         error: 'Forbidden'
       });
     }
-    const applicants = await Application.getApplicantsByJobOffer(req.body.jobOfferId);
+    const applicants = await Application.getApplicantsByJobOffer(req.params.idJobOffer);
     return res.status(200).json(applicants);
   } catch (error) {
     console.error(`Error in function ${getApplicantsByJobOffer.name}: ${error}`);
@@ -101,13 +100,13 @@ async function getApplicantsByJobOffer(req, res) {
  */
 async function getApplicantsByOrganization(req, res) {
   try {
-    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.body.organizationId);
+    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.params.idOrganization);
     if (!isAdmin) {
       return res.status(401).json({
         error: 'Forbidden'
       });
     }
-    const applicants = await Application.getApplicansByOrganization(req.body.organizationId);
+    const applicants = await Application.getApplicansByOrganization(req.params.idOrganization);
     return res.status(200).json(applicants);
   } catch (error) {
     console.error(`Error in function ${getApplicantsByOrganization.name}: ${error}`);
@@ -124,7 +123,7 @@ async function getApplicantsByOrganization(req, res) {
  */
 async function remove(req, res) {
   try {
-    const jobApplication = await Application.find(req.body.jobApplicationId);
+    const jobApplication = await Application.find(req.params.idApplication);
     if (jobApplication == null) {
       return res.status(404).send();
     }
@@ -133,7 +132,7 @@ async function remove(req, res) {
         error: 'Forbidden'
       });
     }
-    await Application.remove(req.body.jobApplicationId);
+    await Application.remove(req.params.idApplication);
     return res.status(200).send();
   } catch (error) {
     console.error(`Error in function ${remove.name}: ${error}`);
@@ -151,16 +150,16 @@ async function remove(req, res) {
  */
 async function setStatus(req, res) {
   try {
-    const canPersonSetStatus = Application.canPersonSetStatus(req.body.jobApplication, req.jwt.person_id);
+    const canPersonSetStatus = Application.canPersonSetStatus(req.params.idApplication, req.jwt.person_id);
     if (!canPersonSetStatus) {
       return res.status(401).json({
         error: 'Forbidden'
       });
     }
-    await Application.setStatus(req.body.jobApplication, req.body.status);
+    await Application.setStatus(req.params.idApplication, req.body.status);
     return res.status(204).send();
   } catch (error) {
-    console.error(`Error in function ${remove.name}: ${error}`);
+    console.error(`Error in function ${setStatus.name}: ${error}`);
     res.status(500).json({
       error: 'Internal server error'
     });
@@ -168,12 +167,12 @@ async function setStatus(req, res) {
 }
 
 const routes = express.Router();
-routes.post('/', jwtUtils.extractToken, insert);
-routes.get('/myapplications', jwtUtils.extractToken, myApplications);
-routes.get('/applicantsbyjoboffer', jwtUtils.extractToken, getApplicantsByJobOffer);
-routes.get('/applicantsbyorganization', jwtUtils.extractToken, getApplicantsByOrganization);
-routes.delete('/', jwtUtils.extractToken, remove);
-routes.patch('/', jwtUtils.extractToken, setStatus);
+routes.post('/joboffers/:idJobOffer', jwtUtils.extractToken, insert);
+routes.get('/applications/mine', jwtUtils.extractToken, myApplications); // TODO: filter by organization as well
+routes.get('/:idOrganization/joboffers/:idJobOffer', jwtUtils.extractToken, getApplicantsByJobOffer);
+routes.get('/:idOrganization/', jwtUtils.extractToken, getApplicantsByOrganization);
+routes.delete('/joboffers/applications/:idApplication', jwtUtils.extractToken, remove);
+routes.patch('/joboffers/applications/:idApplication', jwtUtils.extractToken, setStatus);
 
 module.exports = {
   routes

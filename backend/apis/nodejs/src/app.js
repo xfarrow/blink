@@ -56,7 +56,7 @@ app.use('/api/organizations', organizationRoutes.routes);
 app.use('/api/organizations', jobOffersRoutes.routes);
 app.use('/api/organizations', organizationAdminRoutes.routes);
 app.use('/api/resetpassword', resetPasswordRoutes.routes);
-app.use('/api/applications', applicationRoutes.routes);
+app.use('/api/organizations', applicationRoutes.routes);
 
 /*
 ===== END ROUTE HANDLING =====
