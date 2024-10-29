@@ -50,12 +50,18 @@ async function userAlreadyApplicated(personId, jobOfferId) {
  * @returns All the applications of the specified Person, throws an exception
  * otherwise
  */
-async function getMyApplications(personId) {
-    return await knex('JobApplication')
+async function getMyApplications(personId, organizationId) {
+    const query = knex('JobApplication')
         .where('person_id', personId)
         .join('JobOffer', 'JobOffer.id', 'JobApplication.job_offer_id')
         .join('Organization', 'Organization.id', 'JobOffer.organization_id')
         .select('JobApplication.id', 'JobOffer.title', 'JobOffer.description', 'Organization.name', 'Organization.location');
+
+    if (organizationId != null) {
+        query.where('Organization.id', organizationId);
+    }
+
+    return await query;
 }
 
 /**

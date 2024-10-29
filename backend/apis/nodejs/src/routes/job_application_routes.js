@@ -50,6 +50,31 @@ async function insert(req, res) {
   }
 }
 
+// TODO
+/**
+ * **GET** Request
+ *
+ * Obtain a JobApplication. Only the user themselves or the organization
+ * administrator can perform this action
+ * 
+ * @param {*} req
+ * @param {*} res
+ */
+async function find(req, res){
+  try {
+    const jobApplication = await Application.find(req.params.idApplication);
+    if (jobApplication == null) {
+      return res.status(404).send();
+    }
+    
+  } catch (error) {
+    console.error(`Error in function ${find.name}: ${error}`);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+}
+
 /**
  * **GET** Request
  * 
@@ -57,7 +82,7 @@ async function insert(req, res) {
  */
 async function myApplications(req, res) {
   try {
-    const applications = await Application.getMyApplications(req.jwt.person_id);
+    const applications = await Application.getMyApplications(req.jwt.person_id, req.body.organizationId);
     return res.status(200).json(applications);
   } catch (error) {
     console.error(`Error in function ${myApplications.name}: ${error}`);
@@ -70,12 +95,12 @@ async function myApplications(req, res) {
 /**
  * **GET** Request 
  * 
- * Retrieve all the applicants who applicated to a job offer.
+ * Retrieve all the applications who applicated to a job offer.
  * Only an organization administrator is allowed to perform this action.
  */
-async function getApplicantsByJobOffer(req, res) {
+async function getApplicationsByJobOffer(req, res) {
   try {
-    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.params.idJobOffer);
+    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.params.idJobOffer); //todo error! It's not idJobOffer
     if (!isAdmin) {
       return res.status(401).json({
         error: 'Forbidden'
@@ -84,7 +109,7 @@ async function getApplicantsByJobOffer(req, res) {
     const applicants = await Application.getApplicantsByJobOffer(req.params.idJobOffer);
     return res.status(200).json(applicants);
   } catch (error) {
-    console.error(`Error in function ${getApplicantsByJobOffer.name}: ${error}`);
+    console.error(`Error in function ${getApplicationsByJobOffer.name}: ${error}`);
     res.status(500).json({
       error: 'Internal server error'
     });
@@ -98,7 +123,7 @@ async function getApplicantsByJobOffer(req, res) {
  * by the specific organization.
  * Only an organization administrator is allowed to perform this action.
  */
-async function getApplicantsByOrganization(req, res) {
+async function getApplicationsByOrganization(req, res) {
   try {
     const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.params.idOrganization);
     if (!isAdmin) {
@@ -109,7 +134,7 @@ async function getApplicantsByOrganization(req, res) {
     const applicants = await Application.getApplicansByOrganization(req.params.idOrganization);
     return res.status(200).json(applicants);
   } catch (error) {
-    console.error(`Error in function ${getApplicantsByOrganization.name}: ${error}`);
+    console.error(`Error in function ${getApplicationsByOrganization.name}: ${error}`);
     res.status(500).json({
       error: 'Internal server error'
     });
@@ -150,7 +175,7 @@ async function remove(req, res) {
  */
 async function setStatus(req, res) {
   try {
-    const canPersonSetStatus = Application.canPersonSetStatus(req.params.idApplication, req.jwt.person_id);
+    const canPersonSetStatus = await Application.canPersonSetStatus(req.params.idApplication, req.jwt.person_id);
     if (!canPersonSetStatus) {
       return res.status(401).json({
         error: 'Forbidden'
@@ -167,14 +192,14 @@ async function setStatus(req, res) {
 }
 
 const routes = express.Router();
-routes.post('/joboffers/:idJobOffer', jwtUtils.extractToken, insert);
-routes.get('/applications/mine', jwtUtils.extractToken, myApplications); // TODO: filter by organization as well
-routes.get('/:idOrganization/joboffers/:idJobOffer', jwtUtils.extractToken, getApplicantsByJobOffer);
-routes.get('/:idOrganization/', jwtUtils.extractToken, getApplicantsByOrganization);
+routes.post('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, insert);
+routes.get('/joboffers/:idJobOffer/applications/:idApplication', jwtUtils.extractToken, find);
+routes.get('/joboffers/applications/mine', jwtUtils.extractToken, myApplications);
+routes.get('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, getApplicationsByJobOffer);
+routes.get('/:idOrganization/joboffers/applications', jwtUtils.extractToken, getApplicationsByOrganization);
 routes.delete('/joboffers/applications/:idApplication', jwtUtils.extractToken, remove);
 routes.patch('/joboffers/applications/:idApplication', jwtUtils.extractToken, setStatus);
-// TODO: Get by single application
-// TODO: Change routes (see if practical)
+
 module.exports = {
   routes
 };

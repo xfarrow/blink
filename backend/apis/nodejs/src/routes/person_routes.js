@@ -160,7 +160,7 @@ async function getPerson(req, res) {
 
 /**
  *
- * GET Request
+ * **GET** Request
  *
  * Get myself, from the JWT token
  *
