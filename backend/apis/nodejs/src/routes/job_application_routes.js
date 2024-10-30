@@ -17,6 +17,7 @@ const JobOffer = require('../models/job_offer_model');
 const OrganizationAdmin = require('../models/organization_admin_model');
 const express = require('express');
 const jwtUtils = require('../utils/jwt_utils');
+const jobApplicationValidator = require('../utils/validators/job_application_validator');
 
 /**
  * **POST** Request
@@ -25,6 +26,13 @@ const jwtUtils = require('../utils/jwt_utils');
  */
 async function insert(req, res) {
   try {
+    const errors = jobApplicationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        });
+    }
+
     // Check if the job offer exists
     if (await JobOffer.findById(req.params.idJobOffer) == null) {
       return res.status(404).json({
@@ -50,7 +58,6 @@ async function insert(req, res) {
   }
 }
 
-// TODO
 /**
  * **GET** Request
  *
@@ -60,13 +67,32 @@ async function insert(req, res) {
  * @param {*} req
  * @param {*} res
  */
-async function find(req, res){
+async function find(req, res) {
   try {
+    const errors = jobApplicationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        });
+    }
+
     const jobApplication = await Application.find(req.params.idApplication);
     if (jobApplication == null) {
       return res.status(404).send();
     }
-    
+    // Case in which the user themselves requested it
+    if (jobApplication.person_id == req.jwt.person_id) {
+      return res.status(200).json(jobApplication)
+    } else {
+      const isPersonOrganizationAdmin = await Application.isPersonJobApplicationAdministrator(jobApplication.id, req.jwt.person_id);
+      if (isPersonOrganizationAdmin === true) {
+        return res.status(200).json(jobApplication)
+      } else {
+        return res.status(401).json({
+          error: 'Forbidden'
+        });
+      }
+    }
   } catch (error) {
     console.error(`Error in function ${find.name}: ${error}`);
     res.status(500).json({
@@ -82,6 +108,13 @@ async function find(req, res){
  */
 async function myApplications(req, res) {
   try {
+    const errors = jobApplicationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        });
+    }
+
     const applications = await Application.getMyApplications(req.jwt.person_id, req.body.organizationId);
     return res.status(200).json(applications);
   } catch (error) {
@@ -100,7 +133,14 @@ async function myApplications(req, res) {
  */
 async function getApplicationsByJobOffer(req, res) {
   try {
-    const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.params.idJobOffer); //todo error! It's not idJobOffer
+    const errors = jobApplicationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        });
+    }
+    
+    const isAdmin = await JobOffer.isPersonJobOfferAdministrator(req.jwt.person_id, req.params.idJobOffer);
     if (!isAdmin) {
       return res.status(401).json({
         error: 'Forbidden'
@@ -131,7 +171,7 @@ async function getApplicationsByOrganization(req, res) {
         error: 'Forbidden'
       });
     }
-    const applicants = await Application.getApplicansByOrganization(req.params.idOrganization);
+    const applicants = await Application.getApplicantsByOrganization(req.params.idOrganization);
     return res.status(200).json(applicants);
   } catch (error) {
     console.error(`Error in function ${getApplicationsByOrganization.name}: ${error}`);
@@ -175,7 +215,7 @@ async function remove(req, res) {
  */
 async function setStatus(req, res) {
   try {
-    const canPersonSetStatus = await Application.canPersonSetStatus(req.params.idApplication, req.jwt.person_id);
+    const canPersonSetStatus = await Application.isPersonJobApplicationAdministrator(req.params.idApplication, req.jwt.person_id);
     if (!canPersonSetStatus) {
       return res.status(401).json({
         error: 'Forbidden'
@@ -192,7 +232,7 @@ async function setStatus(req, res) {
 }
 
 const routes = express.Router();
-routes.post('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, insert);
+routes.post('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, jobApplicationValidator.insertValidator, insert);
 routes.get('/joboffers/:idJobOffer/applications/:idApplication', jwtUtils.extractToken, find);
 routes.get('/joboffers/applications/mine', jwtUtils.extractToken, myApplications);
 routes.get('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, getApplicationsByJobOffer);

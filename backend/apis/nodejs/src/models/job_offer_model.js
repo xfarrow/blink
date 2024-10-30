@@ -97,6 +97,19 @@ async function findByOrganizationId(organizationId) {
     return result;
 }
 
+async function isPersonJobOfferAdministrator(personId, jobOfferId) {
+    const organization = await knex('JobOffer')
+        .where('JobOffer.id', jobOfferId)
+        .join('Organization', 'Organization.id', 'JobOffer.organization_id')
+        .first()
+        .select('Organization.id');
+    if (organization == null) {
+        return false;
+    }
+    const isAdmin = await OrganizationAdmin.isAdmin(personId, organization.id);
+    return isAdmin;
+}
+
 // test
 async function filter(title, description, requirements, salary, salaryOperator, salaryFrequency, location, tags) {
     let query = knex('JobOffer');
@@ -132,5 +145,6 @@ module.exports = {
     insert,
     remove,
     findByOrganizationId,
-    findById
+    findById,
+    isPersonJobOfferAdministrator
 }

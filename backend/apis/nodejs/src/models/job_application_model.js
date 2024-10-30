@@ -55,13 +55,25 @@ async function getMyApplications(personId, organizationId) {
         .where('person_id', personId)
         .join('JobOffer', 'JobOffer.id', 'JobApplication.job_offer_id')
         .join('Organization', 'Organization.id', 'JobOffer.organization_id')
-        .select('JobApplication.id', 'JobOffer.title', 'JobOffer.description', 'Organization.name', 'Organization.location');
+        .select('JobApplication.id', 'JobOffer.id AS JobOfferId', 'JobOffer.title', 'JobOffer.description', 'Organization.id AS OrganizationId', 'Organization.name', 'Organization.location');
 
     if (organizationId != null) {
         query.where('Organization.id', organizationId);
     }
 
-    return await query;
+    return (await query).map(myApplication => ({
+        id: myApplication.id,
+        JobOffer: {
+            id: myApplication.JobOfferId,
+            title: myApplication.title,
+            description: myApplication.description
+        },
+        Organization: {
+            id: myApplication.OrganizationId,
+            name: myApplication.name,
+            location: myApplication.location
+        }
+    }));
 }
 
 /**
@@ -85,7 +97,7 @@ async function getApplicantsByJobOffer(jobOfferId) {
  * @param {*} organizationId
  * @returns An array of Person and JobOffer objects. Throws an exception if an error occurs
  */
-async function getApplicansByOrganization(organizationId) {
+async function getApplicantsByOrganization(organizationId) {
     const applicants = await knex('JobApplication')
         .join('Person', 'Person.id', 'JobApplication.person_id')
         .join('JobOffer', 'JobOffer.id', 'JobApplication.job_offer_id')
@@ -127,11 +139,12 @@ async function setStatus(jobApplicationId, status) {
 }
 
 /**
- * Only Organization Administrators can change the status of a JobApplication
+ * Determines whether the submitted personId represents an administrator
+ * of the company which created the joboffer of the current application
  * @param {*} jobApplicationId 
  * @param {*} personId 
  */
-async function canPersonSetStatus(jobApplicationId, personId) {
+async function isPersonJobApplicationAdministrator(jobApplicationId, personId) {
     const organization = await knex('JobApplication')
         .where('JobApplication.id', jobApplicationId)
         .join('JobOffer', 'JobOffer.id', 'JobApplication.job_offer_id')
@@ -150,9 +163,9 @@ module.exports = {
     userAlreadyApplicated,
     getMyApplications,
     getApplicantsByJobOffer,
-    getApplicansByOrganization,
+    getApplicantsByOrganization,
     find,
     remove,
     setStatus,
-    canPersonSetStatus
+    isPersonJobApplicationAdministrator
 }
