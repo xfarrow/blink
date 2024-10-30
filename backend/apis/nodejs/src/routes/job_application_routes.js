@@ -1,4 +1,3 @@
-// TODO: Create a validator
 /*
     This code is part of Blink
     licensed under GPLv3

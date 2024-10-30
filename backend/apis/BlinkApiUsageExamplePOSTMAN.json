@@ -24,13 +24,20 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/persons/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "persons",
+            "me",
+            "activation"
+          ],
           "query": [],
           "variable": []
         },
@@ -63,13 +70,20 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/1/admins",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "1",
+            "admins"
+          ],
           "query": [],
           "variable": []
         },
@@ -94,13 +108,21 @@
       "request": {
         "method": "PATCH",
         "header": [],
+        "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/joboffers/applications/2",
+          "raw": "http://localhost:3000/api/organizations/joboffers/applications/5",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "applications",
+            "5"
+          ],
           "query": [],
           "variable": []
         },
@@ -121,13 +143,21 @@
       "request": {
         "method": "POST",
         "header": [],
+        "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/joboffers/1",
+          "raw": "http://localhost:3000/api/organizations/joboffers/1/applications",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "1",
+            "applications"
+          ],
           "query": [],
           "variable": []
         }
@@ -152,13 +182,20 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/1/joboffers",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "1",
+            "joboffers"
+          ],
           "query": [],
           "variable": []
         },
@@ -192,13 +229,18 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations"
+          ],
           "query": [],
           "variable": []
         },
@@ -219,13 +261,21 @@
       "request": {
         "method": "DELETE",
         "header": [],
+        "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/joboffers/applications/2",
+          "raw": "http://localhost:3000/api/organizations/joboffers/applications/6",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "applications",
+            "6"
+          ],
           "query": [],
           "variable": []
         },
@@ -253,13 +303,20 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/joboffers/3",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "3"
+          ],
           "query": [],
           "variable": []
         }
@@ -278,13 +335,19 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/1",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "1"
+          ],
           "query": [],
           "variable": []
         }
@@ -303,13 +366,19 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/persons/me",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "persons",
+            "me"
+          ],
           "query": [],
           "variable": []
         }
@@ -334,13 +403,19 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/filter",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "filter"
+          ],
           "query": [],
           "variable": []
         },
@@ -361,19 +436,26 @@
       "request": {
         "method": "GET",
         "header": [],
+        "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/1",
+          "raw": "http://localhost:3000/api/organizations/1/joboffers/applications",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "1",
+            "joboffers",
+            "applications"
+          ],
           "query": [],
           "variable": []
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"organizationId\": 1\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -395,13 +477,21 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/1/joboffers/",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "1",
+            "joboffers",
+            ""
+          ],
           "query": [],
           "variable": []
         }
@@ -413,13 +503,21 @@
       "request": {
         "method": "GET",
         "header": [],
+        "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/applications/mine",
+          "raw": "http://localhost:3000/api/organizations/joboffers/applications/mine",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "applications",
+            "mine"
+          ],
           "query": [],
           "variable": []
         }
@@ -438,13 +536,19 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/persons/me",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "persons",
+            "me"
+          ],
           "query": [],
           "variable": []
         }
@@ -463,13 +567,19 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/organizations/1",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "organizations",
+            "1"
+          ],
           "query": [],
           "variable": []
         }
@@ -488,13 +598,20 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/persons/1/details",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "persons",
+            "1",
+            "details"
+          ],
           "query": [],
           "variable": []
         }
@@ -519,58 +636,26 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/persons/me/token",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "persons",
+            "me",
+            "token"
+          ],
           "query": [],
           "variable": []
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"john@mail.org\",\n  \"password\": \"password\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "RemoveOrganizationAdmin",
-      "event": [],
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "disabled": false,
-            "type": "default"
-          },
-          {
-            "key": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "disabled": false,
-            "type": "default"
-          }
-        ],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/organizations/1/admins/me",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
           "options": {
             "raw": {
               "language": "json"
@@ -598,19 +683,71 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/persons",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "persons"
+          ],
           "query": [],
           "variable": []
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "RemoveOrganizationAdmin",
+      "event": [],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/1/admins/me",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "organizations",
+            "1",
+            "admins",
+            "me"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
           "options": {
             "raw": {
               "language": "json"
@@ -638,59 +775,25 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/resetpassword/request",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "resetpassword",
+            "request"
+          ],
           "query": [],
           "variable": []
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n\t\"email\": \"john@mail.org\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "UpdateOrganization",
-      "event": [],
-      "request": {
-        "method": "PATCH",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "disabled": false,
-            "type": "default"
-          },
-          {
-            "key": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "disabled": false,
-            "type": "default"
-          }
-        ],
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/organizations/1",
-          "host": [
-            "localhost"
-          ],
-          "path": [],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"Blink Inc.\",\n  \"location\": \"Naples (Campania), Italy\",\n  \"description\": \"Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world. Think of it as an open-source alternative to LinkedIn.\"\n}",
+          "raw": "{\n  \"email\": \"john@mail.org\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -718,19 +821,71 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/resetpassword/reset",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "resetpassword",
+            "reset"
+          ],
           "query": [],
           "variable": []
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"secret\": \"360837853e2d3cf799c709b44720b4e3\",\n  \"password\": \"password\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "UpdateOrganization",
+      "event": [],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/1",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "organizations",
+            "1"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Blink Inc.\",\n  \"location\": \"Naples (Campania), Italy\",\n  \"description\": \"Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world. Think of it as an open-source alternative to LinkedIn.\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -758,19 +913,59 @@
             "type": "default"
           }
         ],
+        "auth": null,
         "description": "",
         "url": {
           "raw": "http://localhost:3000/api/persons/me",
+          "protocol": "http",
           "host": [
-            "localhost"
+            "localhost:3000"
           ],
-          "path": [],
+          "path": [
+            "api",
+            "persons",
+            "me"
+          ],
           "query": [],
           "variable": []
         },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"new_password\": \"password\",\n  \"old_password\": \"password\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "GetApplicantsByJobOffer",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/joboffers/1/applications",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "1",
+            "applications"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
           "options": {
             "raw": {
               "language": "json"
