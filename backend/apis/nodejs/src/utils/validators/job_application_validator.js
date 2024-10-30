@@ -33,7 +33,20 @@ const myApplicationsValidator = [
 ];
 
 const getApplicationsByJobOfferValidator = [
-    check('idJobOffer').optional().trim().escape().isInt()
+    check('idJobOffer').trim().escape().isInt()
+];
+
+const getApplicationsByOrganizationValidator = [
+    check('idOrganization').trim().escape().isInt()
+];
+
+const removeValidator = [
+    check('idApplication').trim().escape().isInt()
+];
+
+const setStatusValidator = [
+    check('idApplication').trim().escape().isInt(),
+    check('status').trim().escape().isIn(['ACCEPTED', 'REJECTED']).withMessage('Invalid status. Status must be ACCEPTED or REJECTED')
 ];
 
 module.exports = {
@@ -41,5 +54,8 @@ module.exports = {
     findValidator,
     myApplicationsValidator,
     getApplicationsByJobOfferValidator,
+    getApplicationsByOrganizationValidator,
+    removeValidator,
+    setStatusValidator,
     validationResult
 }

@@ -165,6 +165,13 @@ async function getApplicationsByJobOffer(req, res) {
  */
 async function getApplicationsByOrganization(req, res) {
   try {
+    const errors = jobApplicationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        });
+    }
+
     const isAdmin = await OrganizationAdmin.isAdmin(req.jwt.person_id, req.params.idOrganization);
     if (!isAdmin) {
       return res.status(401).json({
@@ -188,6 +195,13 @@ async function getApplicationsByOrganization(req, res) {
  */
 async function remove(req, res) {
   try {
+    const errors = jobApplicationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        });
+    }
+
     const jobApplication = await Application.find(req.params.idApplication);
     if (jobApplication == null) {
       return res.status(404).send();
@@ -215,6 +229,13 @@ async function remove(req, res) {
  */
 async function setStatus(req, res) {
   try {
+    const errors = jobApplicationValidator.validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        });
+    }
+
     const canPersonSetStatus = await Application.isPersonJobApplicationAdministrator(req.params.idApplication, req.jwt.person_id);
     if (!canPersonSetStatus) {
       return res.status(401).json({
@@ -233,12 +254,12 @@ async function setStatus(req, res) {
 
 const routes = express.Router();
 routes.post('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, jobApplicationValidator.insertValidator, insert);
-routes.get('/joboffers/:idJobOffer/applications/:idApplication', jwtUtils.extractToken, find);
-routes.get('/joboffers/applications/mine', jwtUtils.extractToken, myApplications);
-routes.get('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, getApplicationsByJobOffer);
-routes.get('/:idOrganization/joboffers/applications', jwtUtils.extractToken, getApplicationsByOrganization);
-routes.delete('/joboffers/applications/:idApplication', jwtUtils.extractToken, remove);
-routes.patch('/joboffers/applications/:idApplication', jwtUtils.extractToken, setStatus);
+routes.get('/joboffers/:idJobOffer/applications/:idApplication', jwtUtils.extractToken, jobApplicationValidator.findValidator, find);
+routes.get('/joboffers/applications/mine', jwtUtils.extractToken, jobApplicationValidator.myApplicationsValidator, myApplications);
+routes.get('/joboffers/:idJobOffer/applications', jwtUtils.extractToken, jobApplicationValidator.getApplicationsByJobOfferValidator, getApplicationsByJobOffer);
+routes.get('/:idOrganization/joboffers/applications', jwtUtils.extractToken, jobApplicationValidator.getApplicationsByOrganizationValidator, getApplicationsByOrganization);
+routes.delete('/joboffers/applications/:idApplication', jwtUtils.extractToken, jobApplicationValidator.removeValidator, remove);
+routes.patch('/joboffers/applications/:idApplication', jwtUtils.extractToken, jobApplicationValidator.setStatusValidator, setStatus);
 
 module.exports = {
   routes
