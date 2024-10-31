@@ -27,6 +27,7 @@ const jobOffersRoutes = require('./routes/job_offer_routes.js');
 const serverRoutes = require('./routes/server_routes.js');
 const resetPasswordRoutes = require('./routes/reset_password_routes.js');
 const applicationRoutes = require('./routes/job_application_routes.js');
+const personContactInfosRoutes = require('./routes/person_contact_info_routes.js');
 
 /*
 ===== END IMPORTING MODULES =====
@@ -57,6 +58,7 @@ app.use('/api/organizations', jobOffersRoutes.routes);
 app.use('/api/organizations', organizationAdminRoutes.routes);
 app.use('/api/resetpassword', resetPasswordRoutes.routes);
 app.use('/api/organizations', applicationRoutes.routes);
+app.use('/api/persons', personContactInfosRoutes.routes);
 
 /*
 ===== END ROUTE HANDLING =====
