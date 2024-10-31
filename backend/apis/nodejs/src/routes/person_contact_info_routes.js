@@ -40,13 +40,26 @@ async function findByPerson(req, res) {
     }
 }
 
-async function remove(req, res){
-    
+async function remove(req, res) {
+    try {
+        const success = await PersonContactInfo.remove(req.params.contactInfoId, req.jwt.person_id);
+        if (success) {
+            return res.status(200).send();
+        } else {
+            return res.status(400).send();
+        }
+    } catch (error) {
+        console.error(`Error in function ${insert.name}: ${error}`);
+        res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
 }
 
 const routes = express.Router();
 routes.post('/myself/contactinfos', jwtUtils.extractToken, insert);
 routes.get('/:personId/contactinfos', jwtUtils.extractToken, findByPerson)
+routes.delete('/contactinfos/:contactInfoId', jwtUtils.extractToken, remove)
 module.exports = {
     routes
 };

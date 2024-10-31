@@ -29,7 +29,15 @@ async function getInfoByPerson(personId) {
         .where('person_id', personId);
 }
 
+async function remove(contactInfoId, personId) {
+    return (await knex('PersonContactInfo')
+        .where('id', contactInfoId)
+        .where('person_id', personId)
+        .del() === 1)
+}
+
 module.exports = {
     insert,
+    remove,
     getInfoByPerson
 }
