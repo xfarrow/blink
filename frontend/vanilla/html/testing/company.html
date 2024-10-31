@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Website</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #00509e;
+            color: white;
+            padding: 20px 10%;
+            text-align: center;
+        }
+
+        header img {
+            max-width: 100px;
+            border-radius: 10px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+
+        header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        /* Main Content */
+        .content {
+            width: 80%;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Section Styles */
+        section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        section h2 {
+            color: #00509e;
+            margin-bottom: 15px;
+        }
+
+        /* Contact Info */
+        .contact-info p {
+            line-height: 1.8;
+            font-size: 1em;
+        }
+
+        /* Open Positions */
+        .position {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .position h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .position p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .apply-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #00509e;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .apply-button:hover {
+            background-color: #003f7f;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #00509e;
+            color: white;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <img src="./google.png" alt="Company Logo">
+        <h1>Google</h1>
+        <p>Don't be evil</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content">
+
+        <!-- Basic Info Section -->
+        <section class="basic-info">
+            <h2>About Us</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
+                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </section>
+
+        <!-- Contact Info Section -->
+        <section class="contact-info">
+            <h2>Contact Information</h2>
+            <p><strong>Address:</strong> New York</p>
+            <p><strong>Email:</strong> contacts@google.com</p>
+            <p><strong>Phone:</strong> +1 (234) 567-890</p>
+            <p><strong>Website:</strong> <a href="https://google.com">google.com</a></p>
+        </section>
+
+        <!-- Open Positions Section -->
+        <section class="open-positions">
+            <h2>Open Positions</h2>
+            
+            <div class="position">
+                <h3>Software Engineer</h3>
+                <p>Join our team to develop cutting-edge software solutions that impact millions. We are looking for individuals with a passion for technology and a dedication to excellence.</p>
+                <a href="#" class="apply-button">Apply Now</a>
+            </div>
+
+            <div class="position">
+                <h3>Product Designer</h3>
+                <p>We're seeking a creative and innovative Product Designer who can help us shape the future of our products. Join us to bring design excellence to every user interaction.</p>
+                <a href="#" class="apply-button">Apply Now</a>
+            </div>
+
+            <div class="position">
+                <h3>Marketing Specialist</h3>
+                <p>Help us tell our story! We need a Marketing Specialist to craft effective campaigns and elevate our brand presence across various platforms.</p>
+                <a href="#" class="apply-button">Apply Now</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Awesome Company. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
