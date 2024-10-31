@@ -5,7 +5,7 @@
     {
       "type": "http",
       "name": "ActivatePerson",
-      "seq": 23,
+      "seq": 26,
       "request": {
         "url": "http://localhost:3000/api/persons/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
         "method": "GET",
@@ -40,7 +40,7 @@
     {
       "type": "http",
       "name": "AddOrganizationAdmin",
-      "seq": 11,
+      "seq": 14,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/admins",
         "method": "POST",
@@ -75,7 +75,7 @@
     {
       "type": "http",
       "name": "ChangeApplicationStatus",
-      "seq": 1,
+      "seq": 4,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/applications/5",
         "method": "PATCH",
@@ -99,7 +99,7 @@
     {
       "type": "http",
       "name": "CreateApplication",
-      "seq": 6,
+      "seq": 9,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/1/applications",
         "method": "POST",
@@ -122,7 +122,7 @@
     {
       "type": "http",
       "name": "CreateJobOffer",
-      "seq": 9,
+      "seq": 12,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/joboffers",
         "method": "POST",
@@ -157,7 +157,7 @@
     {
       "type": "http",
       "name": "CreateOrganization",
-      "seq": 16,
+      "seq": 19,
       "request": {
         "url": "http://localhost:3000/api/organizations",
         "method": "POST",
@@ -192,7 +192,7 @@
     {
       "type": "http",
       "name": "DeleteApplication",
-      "seq": 2,
+      "seq": 5,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/applications/6",
         "method": "DELETE",
@@ -216,7 +216,7 @@
     {
       "type": "http",
       "name": "DeleteJobOffer",
-      "seq": 7,
+      "seq": 10,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/3",
         "method": "DELETE",
@@ -245,7 +245,7 @@
     {
       "type": "http",
       "name": "DeleteOrganization",
-      "seq": 13,
+      "seq": 16,
       "request": {
         "url": "http://localhost:3000/api/organizations/1",
         "method": "DELETE",
@@ -274,7 +274,7 @@
     {
       "type": "http",
       "name": "DeletePerson",
-      "seq": 19,
+      "seq": 22,
       "request": {
         "url": "http://localhost:3000/api/persons/me",
         "method": "DELETE",
@@ -303,7 +303,7 @@
     {
       "type": "http",
       "name": "FilterOrganizationByPrefix",
-      "seq": 12,
+      "seq": 15,
       "request": {
         "url": "http://localhost:3000/api/organizations/filter",
         "method": "POST",
@@ -337,8 +337,32 @@
     },
     {
       "type": "http",
+      "name": "GetApplicantsByJobOffer",
+      "seq": 6,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/joboffers/1/applications",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "GetApplicantsByOrganization",
-      "seq": 4,
+      "seq": 7,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/joboffers/applications",
         "method": "GET",
@@ -362,7 +386,7 @@
     {
       "type": "http",
       "name": "GetJobOffers",
-      "seq": 8,
+      "seq": 11,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/joboffers/",
         "method": "GET",
@@ -391,7 +415,7 @@
     {
       "type": "http",
       "name": "GetMyApplications",
-      "seq": 5,
+      "seq": 8,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/applications/mine",
         "method": "GET",
@@ -414,7 +438,7 @@
     {
       "type": "http",
       "name": "GetMyself",
-      "seq": 21,
+      "seq": 24,
       "request": {
         "url": "http://localhost:3000/api/persons/me",
         "method": "GET",
@@ -443,7 +467,7 @@
     {
       "type": "http",
       "name": "GetOrganization",
-      "seq": 15,
+      "seq": 18,
       "request": {
         "url": "http://localhost:3000/api/organizations/1",
         "method": "GET",
@@ -472,7 +496,7 @@
     {
       "type": "http",
       "name": "GetPerson",
-      "seq": 22,
+      "seq": 25,
       "request": {
         "url": "http://localhost:3000/api/persons/1/details",
         "method": "GET",
@@ -500,8 +524,31 @@
     },
     {
       "type": "http",
+      "name": "InsertContactInfo",
+      "seq": 3,
+      "request": {
+        "url": "http://localhost:3000/persons/myself/contactinfos",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "Login",
-      "seq": 24,
+      "seq": 27,
       "request": {
         "url": "http://localhost:3000/api/persons/me/token",
         "method": "POST",
@@ -536,7 +583,7 @@
     {
       "type": "http",
       "name": "Register",
-      "seq": 25,
+      "seq": 28,
       "request": {
         "url": "http://localhost:3000/api/persons",
         "method": "POST",
@@ -570,43 +617,8 @@
     },
     {
       "type": "http",
-      "name": "RemoveOrganizationAdmin",
-      "seq": 10,
-      "request": {
-        "url": "http://localhost:3000/api/organizations/1/admins/me",
-        "method": "DELETE",
-        "headers": [
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
       "name": "RequestNewPassword",
-      "seq": 18,
+      "seq": 21,
       "request": {
         "url": "http://localhost:3000/api/resetpassword/request",
         "method": "POST",
@@ -640,8 +652,43 @@
     },
     {
       "type": "http",
+      "name": "RemoveOrganizationAdmin",
+      "seq": 13,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1/admins/me",
+        "method": "DELETE",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "ResetNewPassword",
-      "seq": 17,
+      "seq": 20,
       "request": {
         "url": "http://localhost:3000/api/resetpassword/reset",
         "method": "POST",
@@ -676,7 +723,7 @@
     {
       "type": "http",
       "name": "UpdateOrganization",
-      "seq": 14,
+      "seq": 17,
       "request": {
         "url": "http://localhost:3000/api/organizations/1",
         "method": "PATCH",
@@ -711,7 +758,7 @@
     {
       "type": "http",
       "name": "UpdatePerson",
-      "seq": 20,
+      "seq": 23,
       "request": {
         "url": "http://localhost:3000/api/persons/me",
         "method": "PATCH",
@@ -745,16 +792,15 @@
     },
     {
       "type": "http",
-      "name": "GetApplicantsByJobOffer",
-      "seq": 3,
+      "name": "GetContactInfosByPerson",
+      "seq": 2,
       "request": {
-        "url": "http://localhost:3000/api/organizations/joboffers/1/applications",
+        "url": "http://localhost:3000/api/persons/1/contactinfos",
         "method": "GET",
         "headers": [],
         "params": [],
         "body": {
-          "mode": "json",
-          "json": "",
+          "mode": "none",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -763,7 +809,30 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "DeleteContactInfo",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:3000/api/persons/contactinfos/2",
+        "method": "DELETE",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
         }
       }
     }
@@ -774,7 +843,7 @@
       "auth": {
         "mode": "bearer",
         "bearer": {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDI5ODY0NywiZXhwIjoxNzMwMzI3NDQ3fQ.Quqwib7DasUSmWwLPpaCLQscBna_jNs-P0u2QW12lgA"
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDM4MzIzMiwiZXhwIjoxNzMwNDEyMDMyfQ.sAW5wdB_dmjBxEyWI8dty8en9Fhtwyxbb45YV8q6u90"
         }
       }
     }

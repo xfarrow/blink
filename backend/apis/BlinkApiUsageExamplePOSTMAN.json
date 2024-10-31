@@ -431,6 +431,40 @@
       }
     },
     {
+      "name": "GetApplicantsByJobOffer",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/joboffers/1/applications",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "1",
+            "applications"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
       "name": "GetApplicantsByOrganization",
       "event": [],
       "request": {
@@ -618,6 +652,30 @@
       }
     },
     {
+      "name": "InsertContactInfo",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/persons/myself/contactinfos",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "persons",
+            "myself",
+            "contactinfos"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
       "name": "Login",
       "event": [],
       "request": {
@@ -710,6 +768,52 @@
       }
     },
     {
+      "name": "RequestNewPassword",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/resetpassword/request",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "resetpassword",
+            "request"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@mail.org\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
       "name": "RemoveOrganizationAdmin",
       "event": [],
       "request": {
@@ -748,52 +852,6 @@
         },
         "body": {
           "mode": "raw",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "RequestNewPassword",
-      "event": [],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "disabled": false,
-            "type": "default"
-          },
-          {
-            "key": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "disabled": false,
-            "type": "default"
-          }
-        ],
-        "auth": null,
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/resetpassword/request",
-          "protocol": "http",
-          "host": [
-            "localhost:3000"
-          ],
-          "path": [
-            "api",
-            "resetpassword",
-            "request"
-          ],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"john@mail.org\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -941,7 +999,7 @@
       }
     },
     {
-      "name": "GetApplicantsByJobOffer",
+      "name": "GetContactInfosByPerson",
       "event": [],
       "request": {
         "method": "GET",
@@ -949,28 +1007,44 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/joboffers/1/applications",
+          "raw": "http://localhost:3000/api/persons/1/contactinfos",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "organizations",
-            "joboffers",
+            "persons",
             "1",
-            "applications"
+            "contactinfos"
           ],
           "query": [],
           "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
+        }
+      }
+    },
+    {
+      "name": "DeleteContactInfo",
+      "event": [],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/persons/contactinfos/2",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "persons",
+            "contactinfos",
+            "2"
+          ],
+          "query": [],
+          "variable": []
         }
       }
     }
