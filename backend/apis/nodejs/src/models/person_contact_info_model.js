@@ -14,15 +14,22 @@
 const knex = require('../utils/knex_config');
 
 async function insert(personId, infoContent, infoType) {
-    return await knex('PersonContactInfo')
+    const contactInfo = await knex('PersonContactInfo')
         .insert({
             person_id: personId,
             info: infoContent,
             info_type: infoType
         })
         .returning("*");
+    return contactInfo[0];
+}
+
+async function getInfoByPerson(personId) {
+    return await knex('PersonContactInfo')
+        .where('person_id', personId);
 }
 
 module.exports = {
-    insert
+    insert,
+    getInfoByPerson
 }
