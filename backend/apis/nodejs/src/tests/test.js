@@ -132,7 +132,7 @@ describe('Person tests', () => {
     });
 
     // Get myself
-    it('should return a 200 status code for POST /persons/me', async () => {
+    it('should return a 200 status code for GET /persons/me', async () => {
         const response = await request(apiEndpoint)
             .get('/persons/me')
             .set("Authorization", `Bearer ${bearerToken}`)
@@ -141,7 +141,7 @@ describe('Person tests', () => {
     });
 
     // Get myself without token
-    it('should return a 401 status code for POST /persons/me', async () => {
+    it('should return a 401 status code for GET /persons/me', async () => {
         const response = await request(apiEndpoint)
             .get('/persons/me')
             .send();
