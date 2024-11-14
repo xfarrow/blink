@@ -15,9 +15,8 @@ function randomString() {
     return result;
 };
 
-const userEmail = randomString() + "_test@mail.org";
-
 describe('Person tests', () => {
+    const userEmail = randomString() + "_test@mail.org";
     it('should return a 201 status code for POST /persons', async () => {
         const userData = {
             "email": userEmail,
