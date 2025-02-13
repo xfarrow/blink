@@ -7,7 +7,7 @@
       "name": "ActivatePerson",
       "seq": 26,
       "request": {
-        "url": "http://localhost:3000/api/persons/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
+        "url": "http://localhost:3000/api/users/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
         "method": "GET",
         "headers": [
           {
@@ -21,7 +21,14 @@
             "enabled": true
           }
         ],
-        "params": [],
+        "params": [
+          {
+            "name": "q",
+            "value": "3ac9c204de1676b54163ed8015c7af00",
+            "type": "query",
+            "enabled": true
+          }
+        ],
         "body": {
           "mode": "json",
           "json": "",
@@ -156,6 +163,30 @@
     },
     {
       "type": "http",
+      "name": "DeleteApplication",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/joboffers/applications/6",
+        "method": "DELETE",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"jobApplicationId\": 1\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "CreateOrganization",
       "seq": 19,
       "request": {
@@ -191,16 +222,15 @@
     },
     {
       "type": "http",
-      "name": "DeleteApplication",
-      "seq": 5,
+      "name": "DeleteContactInfo",
+      "seq": 1,
       "request": {
-        "url": "http://localhost:3000/api/organizations/joboffers/applications/6",
+        "url": "http://localhost:3000/api/users/contactinfos/2",
         "method": "DELETE",
         "headers": [],
         "params": [],
         "body": {
-          "mode": "json",
-          "json": "{\n  \"jobApplicationId\": 1\n}",
+          "mode": "none",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -209,7 +239,7 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
+          "mode": "none"
         }
       }
     },
@@ -276,7 +306,7 @@
       "name": "DeletePerson",
       "seq": 22,
       "request": {
-        "url": "http://localhost:3000/api/persons/me",
+        "url": "http://localhost:3000/api/users/me",
         "method": "DELETE",
         "headers": [
           {
@@ -288,6 +318,30 @@
         "params": [],
         "body": {
           "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetApplicantsByOrganization",
+      "seq": 7,
+      "request": {
+        "url": "http://localhost:3000/api/organizations/1/joboffers/applications",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -361,16 +415,15 @@
     },
     {
       "type": "http",
-      "name": "GetApplicantsByOrganization",
-      "seq": 7,
+      "name": "GetContactInfosByPerson",
+      "seq": 2,
       "request": {
-        "url": "http://localhost:3000/api/organizations/1/joboffers/applications",
+        "url": "http://localhost:3000/api/users/1/contactinfos",
         "method": "GET",
         "headers": [],
         "params": [],
         "body": {
-          "mode": "json",
-          "json": "",
+          "mode": "none",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -379,7 +432,7 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
+          "mode": "none"
         }
       }
     },
@@ -440,7 +493,7 @@
       "name": "GetMyself",
       "seq": 24,
       "request": {
-        "url": "http://localhost:3000/api/persons/me",
+        "url": "http://localhost:3000/api/users/me",
         "method": "GET",
         "headers": [
           {
@@ -498,7 +551,7 @@
       "name": "GetPerson",
       "seq": 25,
       "request": {
-        "url": "http://localhost:3000/api/persons/1/details",
+        "url": "http://localhost:3000/api/users/1/details",
         "method": "GET",
         "headers": [
           {
@@ -527,7 +580,7 @@
       "name": "InsertContactInfo",
       "seq": 3,
       "request": {
-        "url": "http://localhost:3000/persons/myself/contactinfos",
+        "url": "http://localhost:3000/users/myself/contactinfos",
         "method": "POST",
         "headers": [],
         "params": [],
@@ -550,7 +603,7 @@
       "name": "Login",
       "seq": 27,
       "request": {
-        "url": "http://localhost:3000/api/persons/me/token",
+        "url": "http://localhost:3000/api/users/me/token",
         "method": "POST",
         "headers": [
           {
@@ -585,7 +638,7 @@
       "name": "Register",
       "seq": 28,
       "request": {
-        "url": "http://localhost:3000/api/persons",
+        "url": "http://localhost:3000/api/users",
         "method": "POST",
         "headers": [
           {
@@ -603,41 +656,6 @@
         "body": {
           "mode": "json",
           "json": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "RequestNewPassword",
-      "seq": 21,
-      "request": {
-        "url": "http://localhost:3000/api/resetpassword/request",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"email\": \"john@mail.org\"\n}",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -682,6 +700,41 @@
         "tests": "",
         "auth": {
           "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "RequestNewPassword",
+      "seq": 21,
+      "request": {
+        "url": "http://localhost:3000/api/resetpassword/request",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"john@mail.org\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
         }
       }
     },
@@ -760,7 +813,7 @@
       "name": "UpdatePerson",
       "seq": 23,
       "request": {
-        "url": "http://localhost:3000/api/persons/me",
+        "url": "http://localhost:3000/api/users/me",
         "method": "PATCH",
         "headers": [
           {
@@ -777,7 +830,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"new_password\": \"password\",\n  \"old_password\": \"password\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
+          "json": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
           "formUrlEncoded": [],
           "multipartForm": []
         },
@@ -789,52 +842,6 @@
           "mode": "inherit"
         }
       }
-    },
-    {
-      "type": "http",
-      "name": "GetContactInfosByPerson",
-      "seq": 2,
-      "request": {
-        "url": "http://localhost:3000/api/persons/1/contactinfos",
-        "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "DeleteContactInfo",
-      "seq": 1,
-      "request": {
-        "url": "http://localhost:3000/api/persons/contactinfos/2",
-        "method": "DELETE",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
     }
   ],
   "environments": [],
@@ -843,7 +850,7 @@
       "auth": {
         "mode": "bearer",
         "bearer": {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDM4MzIzMiwiZXhwIjoxNzMwNDEyMDMyfQ.sAW5wdB_dmjBxEyWI8dty8en9Fhtwyxbb45YV8q6u90"
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczOTQ1NTMyMSwiZXhwIjoxNzM5NDg0MTIxfQ.w46bReN1O761D3ZCgh6mt6l74JE0nGD4A3_LDmqlZw0"
         }
       }
     }

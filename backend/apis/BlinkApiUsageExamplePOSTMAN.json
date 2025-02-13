@@ -27,18 +27,23 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/persons/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
+          "raw": "http://localhost:3000/api/users/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "persons",
+            "users",
             "me",
             "activation"
           ],
-          "query": [],
+          "query": [
+            {
+              "key": "q",
+              "value": "3ac9c204de1676b54163ed8015c7af00"
+            }
+          ],
           "variable": []
         },
         "body": {
@@ -99,10 +104,6 @@
       }
     },
     {
-      "name": "bruno",
-      "event": []
-    },
-    {
       "name": "ChangeApplicationStatus",
       "event": [],
       "request": {
@@ -136,6 +137,10 @@
           }
         }
       }
+    },
+    {
+      "name": "bruno",
+      "event": []
     },
     {
       "name": "CreateApplication",
@@ -211,6 +216,41 @@
       }
     },
     {
+      "name": "DeleteApplication",
+      "event": [],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/joboffers/applications/6",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "organizations",
+            "joboffers",
+            "applications",
+            "6"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jobApplicationId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
       "name": "CreateOrganization",
       "event": [],
       "request": {
@@ -256,7 +296,7 @@
       }
     },
     {
-      "name": "DeleteApplication",
+      "name": "DeleteContactInfo",
       "event": [],
       "request": {
         "method": "DELETE",
@@ -264,29 +304,19 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/joboffers/applications/6",
+          "raw": "http://localhost:3000/api/users/contactinfos/2",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "organizations",
-            "joboffers",
-            "applications",
-            "6"
+            "users",
+            "contactinfos",
+            "2"
           ],
           "query": [],
           "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"jobApplicationId\": 1\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
         }
       }
     },
@@ -369,18 +399,52 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/persons/me",
+          "raw": "http://localhost:3000/api/users/me",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "persons",
+            "users",
             "me"
           ],
           "query": [],
           "variable": []
+        }
+      }
+    },
+    {
+      "name": "GetApplicantsByOrganization",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/organizations/1/joboffers/applications",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "organizations",
+            "1",
+            "joboffers",
+            "applications"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     },
@@ -421,7 +485,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n\t\"name\" : \"bli\"\n}",
+          "raw": "{\n  \"name\" : \"bli\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -465,7 +529,7 @@
       }
     },
     {
-      "name": "GetApplicantsByOrganization",
+      "name": "GetContactInfosByPerson",
       "event": [],
       "request": {
         "method": "GET",
@@ -473,28 +537,19 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/organizations/1/joboffers/applications",
+          "raw": "http://localhost:3000/api/users/1/contactinfos",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "organizations",
+            "users",
             "1",
-            "joboffers",
-            "applications"
+            "contactinfos"
           ],
           "query": [],
           "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
         }
       }
     },
@@ -573,14 +628,14 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/persons/me",
+          "raw": "http://localhost:3000/api/users/me",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "persons",
+            "users",
             "me"
           ],
           "query": [],
@@ -635,14 +690,14 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/persons/1/details",
+          "raw": "http://localhost:3000/api/users/1/details",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "persons",
+            "users",
             "1",
             "details"
           ],
@@ -660,13 +715,13 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/persons/myself/contactinfos",
+          "raw": "http://localhost:3000/users/myself/contactinfos",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
-            "persons",
+            "users",
             "myself",
             "contactinfos"
           ],
@@ -697,14 +752,14 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/persons/me/token",
+          "raw": "http://localhost:3000/api/users/me/token",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "persons",
+            "users",
             "me",
             "token"
           ],
@@ -744,14 +799,14 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/persons",
+          "raw": "http://localhost:3000/api/users",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "persons"
+            "users"
           ],
           "query": [],
           "variable": []
@@ -759,52 +814,6 @@
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "RequestNewPassword",
-      "event": [],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "disabled": false,
-            "type": "default"
-          },
-          {
-            "key": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "disabled": false,
-            "type": "default"
-          }
-        ],
-        "auth": null,
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/resetpassword/request",
-          "protocol": "http",
-          "host": [
-            "localhost:3000"
-          ],
-          "path": [
-            "api",
-            "resetpassword",
-            "request"
-          ],
-          "query": [],
-          "variable": []
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"john@mail.org\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -852,6 +861,52 @@
         },
         "body": {
           "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "RequestNewPassword",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "auth": null,
+        "description": "",
+        "url": {
+          "raw": "http://localhost:3000/api/resetpassword/request",
+          "protocol": "http",
+          "host": [
+            "localhost:3000"
+          ],
+          "path": [
+            "api",
+            "resetpassword",
+            "request"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"john@mail.org\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -974,14 +1029,14 @@
         "auth": null,
         "description": "",
         "url": {
-          "raw": "http://localhost:3000/api/persons/me",
+          "raw": "http://localhost:3000/api/users/me",
           "protocol": "http",
           "host": [
             "localhost:3000"
           ],
           "path": [
             "api",
-            "persons",
+            "users",
             "me"
           ],
           "query": [],
@@ -989,62 +1044,12 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"new_password\": \"password\",\n  \"old_password\": \"password\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
+          "raw": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
           "options": {
             "raw": {
               "language": "json"
             }
           }
-        }
-      }
-    },
-    {
-      "name": "GetContactInfosByPerson",
-      "event": [],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "auth": null,
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/persons/1/contactinfos",
-          "protocol": "http",
-          "host": [
-            "localhost:3000"
-          ],
-          "path": [
-            "api",
-            "persons",
-            "1",
-            "contactinfos"
-          ],
-          "query": [],
-          "variable": []
-        }
-      }
-    },
-    {
-      "name": "DeleteContactInfo",
-      "event": [],
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "auth": null,
-        "description": "",
-        "url": {
-          "raw": "http://localhost:3000/api/persons/contactinfos/2",
-          "protocol": "http",
-          "host": [
-            "localhost:3000"
-          ],
-          "path": [
-            "api",
-            "persons",
-            "contactinfos",
-            "2"
-          ],
-          "query": [],
-          "variable": []
         }
       }
     }
