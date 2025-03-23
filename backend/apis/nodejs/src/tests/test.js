@@ -22,137 +22,137 @@ describe('Person tests', () => {
     const userPassword = "password"
 
     // Correct registration
-    it('should return a 201 status code for POST /persons', async () => {
+    it('should return a 201 status code for POST /people', async () => {
         const userData = {
             "email": userEmail,
             "password": userPassword,
             "displayName": "Test1",
         };
         const response = await request(apiEndpoint)
-            .post('/persons')
+            .post('/people')
             .send(userData);
         expect(response.status).toBe(201);
         bearerToken = response.body.token;
     });
 
     // Registration with no email
-    it('should return a 400 status code for POST /persons', async () => {
+    it('should return a 400 status code for POST /people', async () => {
         const userData = {
             "password": userPassword,
             "displayName": "Test1",
         };
         const response = await request(apiEndpoint)
-            .post('/persons')
+            .post('/people')
             .send(userData);
         expect(response.status).toBe(400);
     });
 
     // Registration with no password
-    it('should return a 400 status code for POST /persons', async () => {
+    it('should return a 400 status code for POST /people', async () => {
         const userData = {
             "email": "test1@mail.org",
             "displayName": "Test1",
         };
         const response = await request(apiEndpoint)
-            .post('/persons')
+            .post('/people')
             .send(userData);
         expect(response.status).toBe(400);
     });
 
     // Registration with no display name
-    it('should return a 400 status code for POST /persons', async () => {
+    it('should return a 400 status code for POST /people', async () => {
         const userData = {
             "email": "test1@mail.org",
             "password": userPassword
         };
         const response = await request(apiEndpoint)
-            .post('/persons')
+            .post('/people')
             .send(userData);
         expect(response.status).toBe(400);
     });
 
     // Registration with an e-mail which is not a valid e-mail
-    it('should return a 400 status code for POST /persons', async () => {
+    it('should return a 400 status code for POST /people', async () => {
         const userData = {
             "email": randomString() + "_test_not_an_email",
             "password": userPassword,
             "displayName": "Test1",
         };
         const response = await request(apiEndpoint)
-            .post('/persons')
+            .post('/people')
             .send(userData);
         expect(response.status).toBe(400);
     });
 
     // Correct login
-    it('should return a 200 status code for POST /persons/me/token', async () => {
+    it('should return a 200 status code for POST /people/me/token', async () => {
         const userData = {
             "email": userEmail,
             "password": userPassword
         };
         const response = await request(apiEndpoint)
-            .post('/persons/me/token')
+            .post('/people/me/token')
             .send(userData);
         expect(response.status).toBe(200);
         bearerToken = response.body.token;
     });
 
     // Login with wrong password
-    it('should return a 401 status code for POST /persons/me/token', async () => {
+    it('should return a 401 status code for POST /people/me/token', async () => {
         const userData = {
             "email": userEmail,
             "password": randomString()
         };
         const response = await request(apiEndpoint)
-            .post('/persons/me/token')
+            .post('/people/me/token')
             .send(userData);
         expect(response.status).toBe(401);
     });
 
     // Login without password
-    it('should return a 400 status code for POST /persons/me/token', async () => {
+    it('should return a 400 status code for POST /people/me/token', async () => {
         const userData = {
             "email": userEmail
         };
         const response = await request(apiEndpoint)
-            .post('/persons/me/token')
+            .post('/people/me/token')
             .send(userData);
         expect(response.status).toBe(400);
     });
 
     // Login without email
-    it('should return a 400 status code for POST /persons/me/token', async () => {
+    it('should return a 400 status code for POST /people/me/token', async () => {
         const userData = {
             "password": randomString()
         };
         const response = await request(apiEndpoint)
-            .post('/persons/me/token')
+            .post('/people/me/token')
             .send(userData);
         expect(response.status).toBe(400);
     });
 
     // Get myself
-    it('should return a 200 status code for GET /persons/me', async () => {
+    it('should return a 200 status code for GET /people/me', async () => {
         const response = await request(apiEndpoint)
-            .get('/persons/me')
+            .get('/people/me')
             .set("Authorization", `Bearer ${bearerToken}`)
             .send();
         expect(response.status).toBe(200);
     });
 
     // Get myself without token
-    it('should return a 401 status code for GET /persons/me', async () => {
+    it('should return a 401 status code for GET /people/me', async () => {
         const response = await request(apiEndpoint)
-            .get('/persons/me')
+            .get('/people/me')
             .send();
         expect(response.status).toBe(401);
     });
 
     // Get myself with invalid token
-    it('should return a 401 status code for POST /persons/me', async () => {
+    it('should return a 401 status code for POST /people/me', async () => {
         const response = await request(apiEndpoint)
-            .get('/persons/me')
-            .set("Authorization", `Bearer abc`)
+            .get('/people/me')
+            .set("Authorization", `Bearer this_is_not_a_valid_bearer`)
             .send();
         expect(response.status).toBe(401);
     });

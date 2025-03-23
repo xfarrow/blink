@@ -5,9 +5,9 @@
     {
       "type": "http",
       "name": "ActivatePerson",
-      "seq": 26,
+      "seq": 1,
       "request": {
-        "url": "http://localhost:3000/api/persons/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
+        "url": "http://localhost:3000/api/people/me/activation?q=3ac9c204de1676b54163ed8015c7af00",
         "method": "GET",
         "headers": [
           {
@@ -21,7 +21,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "",
@@ -33,14 +32,21 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": [
+          {
+            "name": "q",
+            "value": "3ac9c204de1676b54163ed8015c7af00",
+            "enabled": true
+          }
+        ]
       }
     },
     {
       "type": "http",
       "name": "AddOrganizationAdmin",
-      "seq": 14,
+      "seq": 2,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/admins",
         "method": "POST",
@@ -56,7 +62,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"personId\" : \"2\"\n}",
@@ -68,19 +73,19 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "ChangeApplicationStatus",
-      "seq": 4,
+      "seq": 3,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/applications/5",
         "method": "PATCH",
         "headers": [],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"status\": \"ACCEPTED\"\n}",
@@ -92,19 +97,19 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "CreateApplication",
-      "seq": 9,
+      "seq": 4,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/1/applications",
         "method": "POST",
         "headers": [],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -115,14 +120,15 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "CreateJobOffer",
-      "seq": 12,
+      "seq": 5,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/joboffers",
         "method": "POST",
@@ -138,7 +144,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"title\" : \"NodeJS developer\",\n  \"description\" : \"We are looking for NodeJS developers which can help us build Blink\",\n  \"salaryFrequency\": \"YEARLY\",\n  \"salary\": [20000, 23000],\n  \"salaryCurrency\": \"EUR\",\n  \"location\" : \"Rome\",\n  \"remote\": \"PARTIALLY\",\n  \"contractType\": \"PART-TIME\",\n  \"tags\" : [\"javascript\"]\n}",
@@ -150,14 +155,15 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "CreateOrganization",
-      "seq": 19,
+      "seq": 6,
       "request": {
         "url": "http://localhost:3000/api/organizations",
         "method": "POST",
@@ -173,7 +179,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"name\" : \"Blink Inc.\",\n  \"location\" : \"Napoli, Italy\",\n  \"description\" : \"Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world.\"\n}",
@@ -185,19 +190,19 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "DeleteApplication",
-      "seq": 5,
+      "seq": 7,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/applications/6",
         "method": "DELETE",
         "headers": [],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"jobApplicationId\": 1\n}",
@@ -209,14 +214,38 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "DeleteContactInfo",
+      "seq": 28,
+      "request": {
+        "url": "http://localhost:3000/api/people/contactinfos/2",
+        "method": "DELETE",
+        "headers": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "DeleteJobOffer",
-      "seq": 10,
+      "seq": 8,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/3",
         "method": "DELETE",
@@ -227,7 +256,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -238,14 +266,15 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "DeleteOrganization",
-      "seq": 16,
+      "seq": 9,
       "request": {
         "url": "http://localhost:3000/api/organizations/1",
         "method": "DELETE",
@@ -256,7 +285,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -267,16 +295,17 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "DeletePerson",
-      "seq": 22,
+      "seq": 10,
       "request": {
-        "url": "http://localhost:3000/api/persons/me",
+        "url": "http://localhost:3000/api/people/me",
         "method": "DELETE",
         "headers": [
           {
@@ -285,7 +314,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -296,14 +324,15 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "FilterOrganizationByPrefix",
-      "seq": 15,
+      "seq": 11,
       "request": {
         "url": "http://localhost:3000/api/organizations/filter",
         "method": "POST",
@@ -319,7 +348,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"name\" : \"bli\"\n}",
@@ -332,18 +360,18 @@
         "tests": "",
         "auth": {
           "mode": "none"
-        }
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "GetApplicantsByJobOffer",
-      "seq": 6,
+      "seq": 12,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/1/applications",
         "method": "GET",
         "headers": [],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "",
@@ -355,19 +383,19 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "GetApplicantsByOrganization",
-      "seq": 7,
+      "seq": 13,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/joboffers/applications",
         "method": "GET",
         "headers": [],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "",
@@ -379,14 +407,38 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "GetContactInfosByPerson",
+      "seq": 27,
+      "request": {
+        "url": "http://localhost:3000/api/people/1/contactinfos",
+        "method": "GET",
+        "headers": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "GetJobOffers",
-      "seq": 11,
+      "seq": 14,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/joboffers/",
         "method": "GET",
@@ -397,7 +449,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -409,18 +460,18 @@
         "tests": "",
         "auth": {
           "mode": "none"
-        }
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "GetMyApplications",
-      "seq": 8,
+      "seq": 15,
       "request": {
         "url": "http://localhost:3000/api/organizations/joboffers/applications/mine",
         "method": "GET",
         "headers": [],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -431,16 +482,17 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "GetMyself",
-      "seq": 24,
+      "seq": 16,
       "request": {
-        "url": "http://localhost:3000/api/persons/me",
+        "url": "http://localhost:3000/api/people/me",
         "method": "GET",
         "headers": [
           {
@@ -449,7 +501,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -460,14 +511,15 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "GetOrganization",
-      "seq": 18,
+      "seq": 17,
       "request": {
         "url": "http://localhost:3000/api/organizations/1",
         "method": "GET",
@@ -478,7 +530,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -490,15 +541,16 @@
         "tests": "",
         "auth": {
           "mode": "none"
-        }
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "GetPerson",
-      "seq": 25,
+      "seq": 18,
       "request": {
-        "url": "http://localhost:3000/api/persons/1/details",
+        "url": "http://localhost:3000/api/people/1/details",
         "method": "GET",
         "headers": [
           {
@@ -507,7 +559,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -519,18 +570,18 @@
         "tests": "",
         "auth": {
           "mode": "none"
-        }
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "InsertContactInfo",
-      "seq": 3,
+      "seq": 19,
       "request": {
-        "url": "http://localhost:3000/persons/myself/contactinfos",
+        "url": "http://localhost:3000/people/myself/contactinfos",
         "method": "POST",
         "headers": [],
-        "params": [],
         "body": {
           "mode": "none",
           "formUrlEncoded": [],
@@ -541,16 +592,17 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "Login",
-      "seq": 27,
+      "seq": 20,
       "request": {
-        "url": "http://localhost:3000/api/persons/me/token",
+        "url": "http://localhost:3000/api/people/me/token",
         "method": "POST",
         "headers": [
           {
@@ -564,7 +616,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"email\": \"john@mail.org\",\n  \"password\": \"password\"\n}",
@@ -576,16 +627,17 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "Register",
-      "seq": 28,
+      "seq": 21,
       "request": {
-        "url": "http://localhost:3000/api/persons",
+        "url": "http://localhost:3000/api/people",
         "method": "POST",
         "headers": [
           {
@@ -599,7 +651,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"email\" : \"john@mail.org\",\n  \"password\" : \"password\",\n  \"displayName\" : \"John Doe\",\n  \"aboutMe\" : \"I am a passionate software engineer\",\n  \"qualification\" : \"Software Engineer\"\n}",
@@ -612,48 +663,14 @@
         "tests": "",
         "auth": {
           "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "RequestNewPassword",
-      "seq": 21,
-      "request": {
-        "url": "http://localhost:3000/api/resetpassword/request",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "User-Agent",
-            "value": "insomnia/2023.5.8",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"email\": \"john@mail.org\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": []
         },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "none"
-        }
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "RemoveOrganizationAdmin",
-      "seq": 13,
+      "seq": 23,
       "request": {
         "url": "http://localhost:3000/api/organizations/1/admins/me",
         "method": "DELETE",
@@ -669,7 +686,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "",
@@ -681,14 +697,50 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
+      }
+    },
+    {
+      "type": "http",
+      "name": "RequestNewPassword",
+      "seq": 22,
+      "request": {
+        "url": "http://localhost:3000/api/resetpassword/request",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "User-Agent",
+            "value": "insomnia/2023.5.8",
+            "enabled": true
+          }
+        ],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"email\": \"john@mail.org\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "ResetNewPassword",
-      "seq": 20,
+      "seq": 24,
       "request": {
         "url": "http://localhost:3000/api/resetpassword/reset",
         "method": "POST",
@@ -704,7 +756,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"secret\": \"360837853e2d3cf799c709b44720b4e3\",\n  \"password\": \"password\"\n}",
@@ -717,13 +768,14 @@
         "tests": "",
         "auth": {
           "mode": "none"
-        }
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "UpdateOrganization",
-      "seq": 17,
+      "seq": 25,
       "request": {
         "url": "http://localhost:3000/api/organizations/1",
         "method": "PATCH",
@@ -739,7 +791,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"name\": \"Blink Inc.\",\n  \"location\": \"Naples (Campania), Italy\",\n  \"description\": \"Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world. Think of it as an open-source alternative to LinkedIn.\"\n}",
@@ -751,16 +802,17 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
       "type": "http",
       "name": "UpdatePerson",
-      "seq": 23,
+      "seq": 26,
       "request": {
-        "url": "http://localhost:3000/api/persons/me",
+        "url": "http://localhost:3000/api/people/me",
         "method": "PATCH",
         "headers": [
           {
@@ -774,7 +826,6 @@
             "enabled": true
           }
         ],
-        "params": [],
         "body": {
           "mode": "json",
           "json": "{\n  \"displayName\": \"John Junior Doe III\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"openToWork\": \"false\",\n  \"placeOfLiving\": \"Oslo, Norway\",\n  \"aboutMe\": \"I am a passionate software engineer, but I also love art and music\",\n  \"new_password\": \"password\",\n  \"old_password\": \"password\",\n  \"qualification\" : \"Software Engineer at Blink Inc. & Google LLC\",\n  \"visibility\": \"EVERYONE\",\n  \"oldPassword\": \"password\",\n  \"newPassword\": \"password\"\n}",
@@ -786,68 +837,17 @@
         "assertions": [],
         "tests": "",
         "auth": {
-          "mode": "inherit"
-        }
+          "mode": "none"
+        },
+        "query": []
       }
     },
     {
-      "type": "http",
-      "name": "GetContactInfosByPerson",
-      "seq": 2,
-      "request": {
-        "url": "http://localhost:3000/api/persons/1/contactinfos",
-        "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "DeleteContactInfo",
-      "seq": 1,
-      "request": {
-        "url": "http://localhost:3000/api/persons/contactinfos/2",
-        "method": "DELETE",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
+      "type": "folder",
+      "name": "bruno"
     }
   ],
   "environments": [],
-  "root": {
-    "request": {
-      "auth": {
-        "mode": "bearer",
-        "bearer": {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJzb25faWQiOjEsImlhdCI6MTczMDM4MzIzMiwiZXhwIjoxNzMwNDEyMDMyfQ.sAW5wdB_dmjBxEyWI8dty8en9Fhtwyxbb45YV8q6u90"
-        }
-      }
-    }
-  },
   "brunoConfig": {
     "version": "1",
     "name": "Blink",
