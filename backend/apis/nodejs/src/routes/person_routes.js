@@ -16,6 +16,7 @@ const jwtUtils = require('../utils/jwt_utils');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const Person = require('../models/person_model');
+const PersonContactInfo = require('../models/person_contact_info_model');
 const Activation = require('../models/activation_model');
 const express = require('express');
 const mailUtils = require('../utils/mail_utils');
@@ -145,6 +146,8 @@ async function getPerson(req, res) {
     const person = await Person.findById(req.params.id);
     if (person && person.enabled) {
       delete person.password; // remove password field for security reasons
+      const contactInfos = await PersonContactInfo.getInfoByPerson(person.id);
+      person.contact_infos = contactInfos;
       return res.status(200).send(person);
     }
     return res.status(404).json({
