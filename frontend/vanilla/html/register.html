@@ -129,7 +129,7 @@
          * Performs an API POST Request to register the user.
          */
         async function register() {
-            const display_name = document.getElementById('displayname').value;
+            const displayName = document.getElementById('displayname').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -141,7 +141,7 @@
                 method: 'POST',
                 headers: createHeaders(null),
                 body: JSON.stringify({
-                    display_name,
+                    displayName,
                     email,
                     password
                 }),

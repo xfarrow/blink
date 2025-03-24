@@ -10,27 +10,26 @@
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" href="../css/profile.css">
+  <link rel="stylesheet" href="../css/profile.css">
 </head>
 
 <body style="background-color: #ecf2fa; display: none;">
-  
-    <!-- Navbar items -->
-    <div id="navlist">
-      <a href="#">Home</a>
-      <a href="#">Your Applications</a>
-      <a href="#">Your organizations</a>
 
-      <!-- search bar right align -->
-      <div class="search">
-          <form action="#">
-              <input type="text" placeholder="Search Blink"
-                     name="search">
-              <button>
-                  <i class="fa fa-search"></i>
-              </button>
-          </form>
-      </div>
+  <!-- Navbar items -->
+  <div id="navlist">
+    <a href="#">Home</a>
+    <a href="#">Your Applications</a>
+    <a href="#">Your organizations</a>
+
+    <!-- search bar right align -->
+    <div class="search">
+      <form action="#">
+        <input type="text" placeholder="Search Blink" name="search">
+        <button>
+          <i class="fa fa-search"></i>
+        </button>
+      </form>
+    </div>
   </div>
 
 
@@ -62,31 +61,7 @@
         <!-- Person's contact infos -->
         <div class="card mb-4 mb-lg-0">
           <div class="card-body p-0">
-            <ul class="list-group list-group-flush rounded-3">
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fa-regular fa-envelope"></i>
-                <p class="mb-0"><a href="#" id="email">johndoe@proton.com</a></p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fas fa-globe fa-lg text-warning"></i>
-                <p class="mb-0"><a href="#">johndoe.com</a></p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fab fa-github fa-lg" style="color: #333333;"></i>
-                <p class="mb-0"><a href="https://github.com/xfarrow">johndoe</a></p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-                <p class="mb-0">@mdbootstrap</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-                <p class="mb-0">mdbootstrap</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-                <p class="mb-0">mdbootstrap</p>
-              </li>
+            <ul class="list-group list-group-flush rounded-3" id="contact-info">
             </ul>
           </div>
         </div>
@@ -231,7 +206,8 @@
 
       const data = await response.json();
       if (response.ok) {
-        populateFields(data.display_name, data.about_me, data.qualification, data.place_of_living);
+        populateFields(data.display_name, data.about_me, data.qualification, data.place_of_living, data
+          .contact_infos);
         document.body.style.display = 'block'; // Show page
       } else if (response.status == 401) {
         window.location.href = 'login.html';
@@ -240,12 +216,107 @@
       }
     }
 
-    function populateFields(displayName, aboutMe, qualification, placeOfLiving) {
+    function populateFields(displayName, aboutMe, qualification, placeOfLiving, contactInfos) {
       document.getElementById('display-name').textContent = displayName;
       document.title = `${displayName} - Blink`
       document.getElementById('about-me').textContent = aboutMe;
       document.getElementById('qualification').textContent = qualification;
       document.getElementById('place-of-living').textContent = placeOfLiving;
+
+      populateContactInfo(contactInfos);
+
+    }
+
+
+    function populateContactInfo(contactInfos) {
+      const contactInfoList = document.getElementById('contact-info');
+
+      contactInfos.forEach((contactInfo) => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center', 'p-3');
+
+        const icon = document.createElement('i');
+        var isLink;
+
+        switch (contactInfo.info_type) {
+          case 'EMAIL':
+            icon.classList.add('fa-envelope');
+            icon.classList.add("fa-regular");
+            icon.style.color = '#3498db';
+            isLink = false;
+            break;
+          case 'WEBSITE':
+            icon.classList.add('fa-globe');
+            icon.classList.add("fas");
+            icon.classList.add("text-warning");
+            isLink = true;
+            break;
+          case 'GIT':
+            icon.classList.add('fa-git');
+            icon.classList.add("fab");
+            icon.style.color = '#db3e00';
+            isLink = true;
+            break;
+          case 'FACEBOOK':
+            icon.classList.add('fa-facebook-f');
+            icon.classList.add("fab");
+            icon.style.color = '#3b5998';
+            isLink = true;
+            break;
+          case 'INSTAGRAM':
+            icon.classList.add('fa-instagram');
+            icon.classList.add("fab");
+            icon.style.color = '#e1306c';
+            isLink = true;
+            break;
+          case 'YOUTUBE':
+            icon.classList.add('fa-youtube');
+            icon.classList.add("fab");
+            icon.style.color = '#ff0000';
+            isLink = true;
+            break;
+          case 'PHONE':
+            icon.classList.add('fa-phone');
+            icon.classList.add("fas");
+            icon.style.color = '#8e44ad';
+            isLink = false;
+            break;
+          case 'MASTODON':
+            icon.classList.add('fa-mastodon');
+            icon.classList.add("faB");
+            icon.style.color = '#6364ff';
+            isLink = true;
+            break;
+          default:
+            icon.classList.add('fa-question');
+            icon.classList.add("far");
+            iconColor = '#95a5a6';
+            isLink = false;
+        }
+        icon.style.fontSize = '1.5em';
+
+        if (isLink) {
+          const link = document.createElement('a');
+          link.textContent = contactInfo.info;
+          if (contactInfo.info.startsWith('http://') || contactInfo.info.startsWith('https://') || contactInfo.info.startsWith('tel:')) {
+            link.href = contactInfo.info;
+          } else {
+            link.href = 'https://' + contactInfo.info;
+          }
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          listItem.appendChild(link);
+        } else {
+          const paragraph = document.createElement('p');
+          paragraph.classList.add('mb-0');
+          paragraph.textContent = contactInfo.info;
+          listItem.appendChild(paragraph);
+        }
+
+        listItem.appendChild(icon);
+        contactInfoList.appendChild(listItem);
+      });
+
     }
   </script>
 
