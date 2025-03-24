@@ -146,8 +146,13 @@ async function getPerson(req, res) {
     const person = await Person.findById(req.params.id);
     if (person && person.enabled) {
       delete person.password; // remove password field for security reasons
+
+      // Add contact infos
       const contactInfos = await PersonContactInfo.getInfoByPerson(person.id);
       person.contact_infos = contactInfos;
+
+      // TODO: Add experiences
+
       return res.status(200).send(person);
     }
     return res.status(404).json({
@@ -174,6 +179,13 @@ async function getMyself(req, res) {
     const person = await Person.findById(req.jwt.person_id);
     if (person) {
       delete person.password;
+
+      // Add contact infos
+      const contactInfos = await PersonContactInfo.getInfoByPerson(person.id);
+      person.contact_infos = contactInfos;
+
+      // TODO: Add experiences
+
       return res.status(200).send(person);
     }
     return res.status(404).json({
@@ -286,7 +298,7 @@ async function updatePerson(req, res) {
  *
  */
 async function deletePerson(req, res) {
-  // TODO: Delete Organization if this user was its only administrator
+  // TODO: Delete an Organization if this user was its only administrator
   try {
     await Person.remove(req.jwt.person_id);
     return res.status(204).send();
