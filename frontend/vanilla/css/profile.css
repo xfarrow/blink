@@ -1,75 +1,98 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
+#navlist {
+    background-color: #cfddf9;
+    overflow: hidden;
+    padding: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
 }
 
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-header {
+#navlist a {
+    color: black;
+    padding: 14px 20px;
+    text-decoration: none;
     text-align: center;
-    margin-bottom: 20px;
 }
 
-h1 {
-    color: #333;
-    margin-bottom: 5px;
+#navlist a:hover {
+    background-color: #95b5f4;
+    color: white;
 }
 
-p {
-    color: #666;
+.search {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
-section {
-    margin-bottom: 20px;
+.search input[type="text"] {
+    padding: 6px;
+    margin-right: 10px;
+    border: none;
+    font-size: 17px;
+    border-radius: 4px;
 }
 
-h2 {
-    color: #333;
-    margin-bottom: 10px;
+.search button {
+    padding: 6px 10px;
+    background: white;
+    color: #95b5f4;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
-.job h3,
-.education h3 {
-    color: #444;
-    margin-bottom: 5px;
+.search button i {
+    font-size: 18px;
 }
 
-ul {
-    list-style-type: disc;
-    margin-left: 20px;
+.search button:hover {
+    background: #95b5f4;
+    color: white;
 }
 
-footer {
+/* Logo and tag styling */
+.content {
     text-align: center;
     margin-top: 20px;
-    color: #666;
 }
 
-.profile-picture {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 10px;
+.content h1 {
+    color: green;
 }
 
-.edit-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #008CFF;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
+/* Responsive styling */
+@media screen and (max-width: 600px) {
+    #navlist {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search {
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 10px;
+        padding-left: 10px;
+    }
+
+    .search input[type="text"] {
+        margin-right: 10px;
+        width: auto;
+    }
+
+    .search button {
+        padding: 4px 8px;
+    }
+
+    .search button i {
+        font-size: 14px;
+    }
+
+    #navlist a {
+        width: 100%;
+        text-align: left;
+        padding: 10px 20px;
+    }
 }

@@ -51,14 +51,14 @@ app.use(rateLimiter); // Apply the rate limiter middleware to all routes
 ===== BEGIN ROUTE HANDLING =====
 */
 app.use('/api/server', serverRoutes.routes);
-app.use('/api/people', personRoutes.publicRoutes); // TODO: Change in "/people". Idk why I chose "persons"
-app.use('/api/people', personRoutes.protectedRoutes); // TODO: Change in "/people". Idk why I chose "persons"
+app.use('/api/people', personRoutes.publicRoutes);
+app.use('/api/people', personRoutes.protectedRoutes);
 app.use('/api/organizations', organizationRoutes.routes);
 app.use('/api/organizations', jobOffersRoutes.routes);
 app.use('/api/organizations', organizationAdminRoutes.routes);
 app.use('/api/resetpassword', resetPasswordRoutes.routes);
 app.use('/api/organizations', applicationRoutes.routes);
-app.use('/api/persons', personContactInfosRoutes.routes); // TODO: Change in "/people". Idk why I chose "persons"
+app.use('/api/people', personContactInfosRoutes.routes);
 
 /*
 ===== END ROUTE HANDLING =====

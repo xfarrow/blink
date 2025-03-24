@@ -34,7 +34,7 @@
                 return;
             }
 
-            const response = await fetch(`${API_URL}/persons/me/activation`, {
+            const response = await fetch(`${API_URL}/people/me/activation`, {
                 method: 'POST',
                 headers: createHeaders(null),
                 body: JSON.stringify({

@@ -9,9 +9,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="../css/profile.css">
 </head>
 
 <body style="background-color: #ecf2fa; display: none;">
+  
+    <!-- Navbar items -->
+    <div id="navlist">
+      <a href="#">Home</a>
+      <a href="#">Your Applications</a>
+      <a href="#">Your organizations</a>
+
+      <!-- search bar right align -->
+      <div class="search">
+          <form action="#">
+              <input type="text" placeholder="Search Blink"
+                     name="search">
+              <button>
+                  <i class="fa fa-search"></i>
+              </button>
+          </form>
+      </div>
+  </div>
+
+
   <div class="container py-5">
 
     <!-- Person's name + profile picture card -->
@@ -24,7 +46,8 @@
             <h5 class="my-3" id="display-name">John Doe</h5>
             <p class="text-muted mb-2" id="qualification">Full Stack Developer</p>
             <p class="text-muted mb-4" id="place-of-living">New York City, United States of America</p>
-            <p class="text-muted mb-4" id="about-me"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            <p class="text-muted mb-4" id="about-me"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
               laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
               esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
@@ -175,8 +198,8 @@
     </div>
   </div>
 
-  <script src="../../js/constants.js"></script>
-  <script src="../../js/utils.js"></script>
+  <script src="../js/constants.js"></script>
+  <script src="../js/utils.js"></script>
   <script>
     window.addEventListener("load", async function () {
       loadProfile();
@@ -194,18 +217,21 @@
         if (!token) {
           window.location.href = 'login.html';
         }
-        response = await fetch(`${API_URL}/persons/me`, {
+        response = await fetch(`${API_URL}/people/me`, {
           headers: createHeaders(token)
         });
-      } else {
-        response = await fetch(`${API_URL}/persons/${idToDisplay}/details`, {
+      }
+
+      // If it's someone else
+      else {
+        response = await fetch(`${API_URL}/people/${idToDisplay}/details`, {
           headers: createHeaders(null)
         });
       }
 
       const data = await response.json();
       if (response.ok) {
-        populateFields(data.display_name, data.email, data.about_me, data.qualification, data.place_of_living);
+        populateFields(data.display_name, data.about_me, data.qualification, data.place_of_living);
         document.body.style.display = 'block'; // Show page
       } else if (response.status == 401) {
         window.location.href = 'login.html';
@@ -214,10 +240,9 @@
       }
     }
 
-    function populateFields(displayName, email, aboutMe, qualification, placeOfLiving) {
+    function populateFields(displayName, aboutMe, qualification, placeOfLiving) {
       document.getElementById('display-name').textContent = displayName;
       document.title = `${displayName} - Blink`
-      document.getElementById('email').textContent = email;
       document.getElementById('about-me').textContent = aboutMe;
       document.getElementById('qualification').textContent = qualification;
       document.getElementById('place-of-living').textContent = placeOfLiving;

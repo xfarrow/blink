@@ -18,7 +18,7 @@ const PersonContactInfo = require('../models/person_contact_info_model');
 async function insert(req, res) {
     try {
         const contactInfo = await PersonContactInfo.insert(req.jwt.person_id, req.body.content, req.body.info_type);
-        res.set('Location', `/api/persons/${req.jwt.person_id}/contactinfos/${contactInfo.id}`);
+        res.set('Location', `/api/people/${req.jwt.person_id}/contactinfos/${contactInfo.id}`);
         return res.status(201).json(contactInfo);
     } catch (error) {
         console.error(`Error in function ${insert.name}: ${error}`);

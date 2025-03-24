@@ -147,14 +147,12 @@
                 }),
             };
 
-            fetch(`${API_URL}/persons`, options)
+            fetch(`${API_URL}/people`, options)
                 .then(response => {
                     response.json().then(data => {
                         if (response.ok) {
                             clearInputFields();
-                            if (!data
-                                .enabled
-                            ) { // is the user already enabled or do they need email verification?
+                            if (!data.enabled) { // is the user already enabled or do they need email verification?
                                 showSuccessAlert(
                                     "Congratulations! You've successfully registered to Blink. " +
                                     "Please click on the e-mail we sent you to confirm your account"
