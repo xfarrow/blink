@@ -28,7 +28,7 @@ const serverRoutes = require('./routes/server_routes.js');
 const resetPasswordRoutes = require('./routes/reset_password_routes.js');
 const applicationRoutes = require('./routes/job_application_routes.js');
 const personContactInfosRoutes = require('./routes/person_contact_info_routes.js');
-
+const experienceRoutes = require('./routes/experience_routes.js');
 /*
 ===== END IMPORTING MODULES =====
 */
@@ -59,7 +59,7 @@ app.use('/api/organizations', organizationAdminRoutes.routes);
 app.use('/api/resetpassword', resetPasswordRoutes.routes);
 app.use('/api/organizations', applicationRoutes.routes);
 app.use('/api/people', personContactInfosRoutes.routes);
-
+app.use('/api/experiences', experienceRoutes.routes);
 /*
 ===== END ROUTE HANDLING =====
 */

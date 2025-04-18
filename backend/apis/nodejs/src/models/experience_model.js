@@ -10,3 +10,33 @@
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
     IN THE SOFTWARE.
 */
+
+const knex = require('../utils/knex_config');
+
+function createExperience(title, description, organizationId, organizationName, date, person_id, type) {
+    const experience = {
+        title,
+        description,
+        organization_id: organizationId,
+        organization_name: organizationName,
+        date,
+        person_id,
+        type
+    };
+    return experience;
+}
+
+async function insert(experience){
+    const insertedExperience = await knex('Experience')
+    .insert(experience)
+    .returning('*');
+    return insertedExperience[0];
+}
+
+// Exporting a function
+// means making a JavaScript function defined in one
+// module available for use in another module.
+module.exports = {
+    createExperience,
+    insert
+};

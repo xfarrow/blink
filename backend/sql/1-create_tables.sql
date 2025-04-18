@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS "Experience" (
   id SERIAL PRIMARY KEY, 
   title CHARACTER VARYING(128) NOT NULL, 
   description TEXT NOT NULL, 
-  organization CHARACTER VARYING(128) NOT NULL, 
+  organization_name CHARACTER VARYING(128), 
   organization_id INTEGER, 
   date daterange NOT NULL, 
   person_id INTEGER NOT NULL, 
@@ -150,4 +150,4 @@ CREATE TABLE IF NOT EXISTS "OrganizationContactInfo" (
   info CHARACTER VARYING(128) NOT NULL,
   info_type InfoType NOT NULL,
   CONSTRAINT "OrganizationFK" FOREIGN KEY (organization_id) REFERENCES "Organization" (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
-)
+);

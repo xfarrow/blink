@@ -1,0 +1,24 @@
+meta {
+  name: CreateOrganization
+  type: http
+  seq: 17
+}
+
+post {
+  url: http://localhost:3000/api/organizations
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/2023.5.8
+}
+
+body:json {
+  {
+    "name" : "Blink Inc.",
+    "location" : "Napoli, Italy",
+    "description" : "Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world."
+  }
+}

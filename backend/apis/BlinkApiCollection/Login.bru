@@ -1,0 +1,23 @@
+meta {
+  name: Login
+  type: http
+  seq: 28
+}
+
+post {
+  url: http://localhost:3000/api/people/me/token
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/2023.5.8
+}
+
+body:json {
+  {
+    "email": "john@mail.org",
+    "password": "password"
+  }
+}

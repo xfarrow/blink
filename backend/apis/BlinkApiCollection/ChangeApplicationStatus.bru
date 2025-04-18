@@ -1,0 +1,17 @@
+meta {
+  name: ChangeApplicationStatus
+  type: http
+  seq: 8
+}
+
+patch {
+  url: http://localhost:3000/api/organizations/joboffers/applications/5
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "status": "ACCEPTED"
+  }
+}
