@@ -55,7 +55,6 @@ function extractToken(req, res, next) {
       error: 'No token provided'
     });
   }
-
 }
 
 module.exports = {

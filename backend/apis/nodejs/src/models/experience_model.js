@@ -17,8 +17,8 @@ function createExperience(title, description, organizationId, organizationName, 
     const experience = {
         title,
         description,
-        organization_id: organizationId,
-        organization_name: organizationName,
+        organization_id: organizationId, // Either OrganizationId or OrganizationName should be set, not both (TODO in validator)
+        organization_name: organizationName, // Either OrganizationId or OrganizationName should be set, not both (TODO in validator)
         date,
         person_id,
         type
@@ -26,11 +26,31 @@ function createExperience(title, description, organizationId, organizationName, 
     return experience;
 }
 
-async function insert(experience){
+async function insert(experience) {
     const insertedExperience = await knex('Experience')
-    .insert(experience)
-    .returning('*');
+        .insert(experience)
+        .returning('*');
     return insertedExperience[0];
+}
+
+async function findById(experienceId) {
+    return await knex('Experience').where({
+        id: experienceId
+    }).select().first();
+}
+
+async function remove(experienceId) {
+    await knex('Experience')
+        .where({
+            id: experienceId
+        })
+        .del();
+}
+
+async function update(experience) {
+    await knex('Experience')
+        .where('id', experience.id)
+        .update(experience);
 }
 
 // Exporting a function
@@ -38,5 +58,8 @@ async function insert(experience){
 // module available for use in another module.
 module.exports = {
     createExperience,
-    insert
+    insert,
+    findById,
+    remove,
+    update
 };

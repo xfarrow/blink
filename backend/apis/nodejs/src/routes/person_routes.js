@@ -278,7 +278,8 @@ async function updatePerson(req, res) {
       });
     }
 
-    await Person.update(updatePerson, req.jwt.person_id);
+    updatePerson.id = req.jwt.person_id;
+    await Person.update(updatePerson);
     return res.status(204).send();
   } catch (error) {
     console.error(`Error in function ${updatePerson.name}: ${error}`);

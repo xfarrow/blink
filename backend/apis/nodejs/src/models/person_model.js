@@ -120,9 +120,9 @@ async function authenticate(email, password) {
  * @param {*} person The Person to update
  * @param {*} person_id The database id of the Person to update
  */
-async function update(person, person_id) {
+async function update(person) {
   await knex('Person')
-    .where('id', person_id)
+    .where('id', person.id)
     .update(person);
 }
 
