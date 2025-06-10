@@ -1,0 +1,24 @@
+meta {
+  name: UpdateOrganization
+  type: http
+  seq: 3
+}
+
+patch {
+  url: http://localhost:3000/api/organizations/1
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/2023.5.8
+}
+
+body:json {
+  {
+    "name": "Blink Inc.",
+    "location": "Naples (Campania), Italy",
+    "description": "Blink is a privacy-respecting business-oriented social media platform focused on fostering connections between businesses and individuals, propelling careers and sparking innovation in the professional world. Think of it as an open-source alternative to LinkedIn."
+  }
+}

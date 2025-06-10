@@ -1,0 +1,18 @@
+meta {
+  name: InsertContactInfo
+  type: http
+  seq: 10
+}
+
+post {
+  url: http://localhost:3000/api/people/myself/contactinfos
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "content": "www.john.com",
+    "info_type": "WEBSITE"
+  }
+}

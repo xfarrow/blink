@@ -1,0 +1,20 @@
+meta {
+  name: ActivatePerson
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3000/api/people/me/activation?q=3ac9c204de1676b54163ed8015c7af00
+  body: json
+  auth: none
+}
+
+params:query {
+  q: 3ac9c204de1676b54163ed8015c7af00
+}
+
+headers {
+  Content-Type: application/json
+  User-Agent: insomnia/2023.5.8
+}

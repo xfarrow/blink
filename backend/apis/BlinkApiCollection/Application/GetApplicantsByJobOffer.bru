@@ -1,0 +1,11 @@
+meta {
+  name: GetApplicantsByJobOffer
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:3000/api/organizations/joboffers/1/applications
+  body: json
+  auth: none
+}

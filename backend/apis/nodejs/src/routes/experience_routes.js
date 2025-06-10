@@ -15,7 +15,7 @@ const Experience = require('../models/experience_model');
 const express = require('express');
 const jwtUtils = require('../utils/jwt_utils');
 
-async function addExperience(req, res) {
+async function insert(req, res) {
     try {
         const experienceToInsert = Experience.createExperience(
             req.body.title,
@@ -29,15 +29,31 @@ async function addExperience(req, res) {
         const insertedExperience = await Experience.insert(experienceToInsert);
         return res.status(201).json(insertedExperience);
     } catch (error) {
-        console.error(`Error in function ${addExperience.name}: ${error}`);
+        console.error(`Error in function ${insert.name}: ${error}`);
         return res.status(500).json({
             error: 'Internal server error'
         });
     }
 }
 
+async function find(req, res) {
+    try {
+        const experience = await Experience.find(req.params.experienceId);
+        if (experience == null) {
+            return res.status(404).send();
+        }
+        return res.status(200).json(jobApplication);
+    } catch (error) {
+        console.error(`Error in function ${find.name}: ${error}`);
+        res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+}
+
 const routes = express.Router();
-routes.post('/', jwtUtils.extractToken, addExperience);
+routes.post('/', jwtUtils.extractToken, insert);
+routes.get('/:experienceId', jwtUtils.extractToken, find);
 
 module.exports = {
     routes
