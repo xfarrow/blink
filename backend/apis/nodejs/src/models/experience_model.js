@@ -33,16 +33,17 @@ async function insert(experience) {
     return insertedExperience[0];
 }
 
-async function findById(experienceId) {
+async function find(experienceId) {
     return await knex('Experience').where({
         id: experienceId
     }).select().first();
 }
 
-async function remove(experienceId) {
+async function remove(experienceId, personId) {
     await knex('Experience')
         .where({
-            id: experienceId
+            id: experienceId,
+            person_id: personId
         })
         .del();
 }
@@ -59,7 +60,7 @@ async function update(experience) {
 module.exports = {
     createExperience,
     insert,
-    findById,
+    find,
     remove,
     update
 };

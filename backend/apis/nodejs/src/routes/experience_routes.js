@@ -42,9 +42,21 @@ async function find(req, res) {
         if (experience == null) {
             return res.status(404).send();
         }
-        return res.status(200).json(jobApplication);
+        return res.status(200).json(experience);
     } catch (error) {
         console.error(`Error in function ${find.name}: ${error}`);
+        res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+}
+
+async function remove(req, res) {
+    try {
+        await Experience.remove(req.params.experienceId, req.jwt.person_id);
+        return res.status(204).send();
+    } catch (error) {
+        console.error(`Error in function ${remove.name}: ${error}`);
         res.status(500).json({
             error: 'Internal server error'
         });
@@ -54,6 +66,7 @@ async function find(req, res) {
 const routes = express.Router();
 routes.post('/', jwtUtils.extractToken, insert);
 routes.get('/:experienceId', jwtUtils.extractToken, find);
+routes.delete('/:experienceId', jwtUtils.extractToken, remove);
 
 module.exports = {
     routes
