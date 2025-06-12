@@ -63,10 +63,58 @@ async function remove(req, res) {
     }
 }
 
+async function update(req, res) {
+    try {
+        const updatedExperience = {};
+        updatedExperience.person_id = req.jwt.person_id;
+        updatedExperience.id = req.params.experienceId;
+
+        if (req.body.title !== undefined) {
+            updatedExperience.title = req.body.title;
+        }
+
+        if (req.body.description !== undefined) {
+            updatedExperience.description = req.body.description;
+        }
+
+        if (req.body.organizationId !== undefined ^ req.body.organizationName !== undefined) {
+            if (req.body.organizationId !== undefined) {
+                updatedExperience.organizationId = req.body.organizationId;
+            } else {
+                updatedExperience.organizationName = req.body.organizationName;
+            }
+        }
+
+        if (req.body.date !== undefined) {
+            updatedExperience.date = req.body.date;
+        }
+
+        if (req.body.type !== undefined) {
+            updatedExperience.type = req.body.type;
+        }
+
+        if (Object.keys(updatedExperience).length === 2) { // 2 because at least person_id and id are set
+            return res.status(400).json({
+                error: 'Bad request. No data to update'
+            });
+        }
+
+        Experience.update(updatedExperience);
+        return res.status(204).send();
+
+    } catch (error) {
+        console.error(`Error in function ${update.name}: ${error}`);
+        res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+}
+
 const routes = express.Router();
 routes.post('/', jwtUtils.extractToken, insert);
 routes.get('/:experienceId', jwtUtils.extractToken, find);
 routes.delete('/:experienceId', jwtUtils.extractToken, remove);
+routes.patch('/:experienceId', jwtUtils.extractToken, update);
 
 module.exports = {
     routes

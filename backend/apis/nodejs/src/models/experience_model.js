@@ -14,6 +14,9 @@
 const knex = require('../utils/knex_config');
 
 function createExperience(title, description, organizationId, organizationName, date, person_id, type) {
+    if (organizationId !== undefined && organizationName !== undefined) {
+        throw new ValidationError("Either organization_id or organization_name must be populated, but not both."); // If they were both populated, what organization are they working for?
+    }
     const experience = {
         title,
         description,
@@ -50,7 +53,10 @@ async function remove(experienceId, personId) {
 
 async function update(experience) {
     await knex('Experience')
-        .where('id', experience.id)
+        .where({
+            id: experience.id,
+            person_id: experience.person_id
+        })
         .update(experience);
 }
 

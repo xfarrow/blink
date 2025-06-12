@@ -1,0 +1,18 @@
+meta {
+  name: UpdateExperience
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:3000/api/experiences/5
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Senior Software Engineer",
+    "description": "I worked as a SENIOR software engineer in this company."
+  }
+}
