@@ -112,7 +112,7 @@ async function update(req, res) {
 
 async function allExperiences(req, res){
     try {
-        const experiences = await Experience.getAllExperiences(req.body.personId);
+        const experiences = await Experience.getAllExperiences(req.params.personId);
         return res.status(200).json(experiences);
     } catch (error) {
         console.error(`Error in function ${remove.name}: ${error}`);
@@ -125,10 +125,13 @@ async function allExperiences(req, res){
 const routes = express.Router();
 routes.post('/', jwtUtils.extractToken, insert);
 routes.get('/:experienceId', jwtUtils.extractToken, find);
-routes.get('/', jwtUtils.extractToken, allExperiences);
 routes.delete('/:experienceId', jwtUtils.extractToken, remove);
 routes.patch('/:experienceId', jwtUtils.extractToken, update);
 
+const peopleRoutes = express.Router();
+peopleRoutes.get('/:personId/experiences', allExperiences);
+
 module.exports = {
-    routes
+    routes,
+    peopleRoutes
 };

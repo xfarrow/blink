@@ -53,12 +53,13 @@ app.use(rateLimiter); // Apply the rate limiter middleware to all routes
 app.use('/api/server', serverRoutes.routes);
 app.use('/api/people', personRoutes.publicRoutes);
 app.use('/api/people', personRoutes.protectedRoutes);
+app.use('/api/people', personContactInfosRoutes.routes);
+app.use('/api/people', experienceRoutes.peopleRoutes);
 app.use('/api/organizations', organizationRoutes.routes);
 app.use('/api/organizations', jobOffersRoutes.routes);
 app.use('/api/organizations', organizationAdminRoutes.routes);
 app.use('/api/resetpassword', resetPasswordRoutes.routes);
 app.use('/api/organizations', applicationRoutes.routes);
-app.use('/api/people', personContactInfosRoutes.routes);
 app.use('/api/experiences', experienceRoutes.routes);
 /*
 ===== END ROUTE HANDLING =====
