@@ -110,9 +110,22 @@ async function update(req, res) {
     }
 }
 
+async function allExperiences(req, res){
+    try {
+        const experiences = await Experience.getAllExperiences(req.body.personId);
+        return res.status(200).json(experiences);
+    } catch (error) {
+        console.error(`Error in function ${remove.name}: ${error}`);
+        res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+}
+
 const routes = express.Router();
 routes.post('/', jwtUtils.extractToken, insert);
 routes.get('/:experienceId', jwtUtils.extractToken, find);
+routes.get('/', jwtUtils.extractToken, allExperiences);
 routes.delete('/:experienceId', jwtUtils.extractToken, remove);
 routes.patch('/:experienceId', jwtUtils.extractToken, update);
 

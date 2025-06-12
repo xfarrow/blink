@@ -60,6 +60,11 @@ async function update(experience) {
         .update(experience);
 }
 
+async function getAllExperiences(person_id){
+    return await knex('Experience')
+        .where('person_id', person_id);
+}
+
 // Exporting a function
 // means making a JavaScript function defined in one
 // module available for use in another module.
@@ -68,5 +73,6 @@ module.exports = {
     insert,
     find,
     remove,
-    update
+    update,
+    getAllExperiences
 };
