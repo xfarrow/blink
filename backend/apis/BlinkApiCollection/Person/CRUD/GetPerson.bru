@@ -1,11 +1,11 @@
 meta {
-  name: DeletePerson
+  name: GetPerson
   type: http
-  seq: 9
+  seq: 2
 }
 
-delete {
-  url: http://localhost:3000/api/people/me
+get {
+  url: http://localhost:3000/api/people/1/details
   body: none
   auth: none
 }
